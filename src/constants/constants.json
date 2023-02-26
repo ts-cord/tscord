@@ -1,0 +1,4 @@
+{
+    "api": "https://discord.com/api/v10/",
+    "wss": "wss://gateway.discord.gg/?v=10"
+}
