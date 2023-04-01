@@ -4,8 +4,10 @@ import { IUser } from "./IUser";
 import { IChannel } from "./IChannel";
 import { ISticker } from "./ISticker";
 import { IReaction } from "./IReaction";
+import { Guild } from '../managers/Guild';
 import { IAttachment } from "./IAttachment";
 import { IApplication } from "./IApplication";
+import { Channel } from "../managers/Channel";
 import { IChannelMention } from "./IChannelMention";
 import { IMessageActivity } from './IMessageActivity';
 import { IMessageReference } from "./IMessageReference";
@@ -14,7 +16,8 @@ import { IRoleSubscriptionData } from "./IRoleSubscriptionData";
 
 export interface IMessage {
     id: string,
-    channel_id: string,
+    guild: Guild,
+    channel: Channel,
     author: IUser,
     content?: string,
     timestamp: number,

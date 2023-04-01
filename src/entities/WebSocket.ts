@@ -1,5 +1,6 @@
 import WebSocket from 'ws';
 import { Client } from './Client';
+import { TypeCordError } from '../errors/TypeCordError';
 
 export interface WebSocketProps {
   readonly url: string;
@@ -10,7 +11,7 @@ export interface WebSocketProps {
 export class WebSocketStructure {
   private readonly props: WebSocketProps;
   private readonly ws: WebSocket;
-  private readonly bot = { token: '', intents: 0 };
+  #bot = { token: '', intents: 0 };
 
   public heartbeat_interval?: number;
   public connected_interval?: any;
@@ -18,8 +19,8 @@ export class WebSocketStructure {
 
   constructor(props: WebSocketProps, token: string, intents: number) {
     this.props = props;
-    this.bot.token = token;
-    this.bot.intents = intents;
+    this.#bot.token = token;
+    this.#bot.intents = intents;
     this.ws = new WebSocket(props.url);
   };
 
@@ -30,10 +31,7 @@ export class WebSocketStructure {
     this.ws.on('close', this.close);
   };
 
-  private identify(token: string, intents: number) {
-    if (!token) return //error: token?
-    if (!intents) return //error: intents?
-
+  private identify(token: string, intents: number): void {
     const properties = { os: 'linux', browser: 'typecord', device: 'typecord' };
 
     const ido = {
@@ -50,7 +48,7 @@ export class WebSocketStructure {
       this.heartbeat_interval = data.d.heartbeat_interval;
 
       this.stay_connected();
-      this.identify(this.bot.token, this.bot.intents);
+      this.identify(this.#bot.token, this.#bot.intents);
     };
 
     if (data.op == 11) {
@@ -63,12 +61,14 @@ export class WebSocketStructure {
       event(data, this.props.client)
     };
   };
-  private close = (code: number) => { };
+  private close = (code: number, reason: string) => {
+    throw new TypeCordError(reason)
+   };
 
   private stay_connected = () => {
     this.last_hello_timestamp = Date.now();
 
-    this.connected_interval = setInterval(() => {
+    this.connected_interval = setInterval((): void => {
       const hello = { op: 1, d: null };
 
       this.ws.send(JSON.stringify(hello));

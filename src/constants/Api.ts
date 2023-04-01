@@ -1,6 +1,6 @@
-import axios from 'axios';
-import * as constants from './constants.json';
+import { AxiosInstance, default as axios } from 'axios';
+import { api as DiscordAPIURL } from './constants.json';
 
-export const api = axios.create({
-  baseURL: constants.api
+export const api: AxiosInstance = axios.create({
+  baseURL: DiscordAPIURL
 });

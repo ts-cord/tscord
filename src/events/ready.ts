@@ -4,7 +4,6 @@ import { IApplication } from "../interfaces/IApplication";
 import { ClientApplication } from "../entities/ClientApplication";
 
 export default function (payload: any, client: Client) {
-
   const user: IUser = {
     id: payload.d.user.id,
     username: payload.d.user.username,

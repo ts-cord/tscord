@@ -1,14 +1,14 @@
 import { IUser } from "./IUser";
 import { IMember } from "./IMember";
 import { IMessage } from "./IMessage";
-import { IInteractionData } from "./IInteractionData";
 import { Guild } from '../managers/Guild';
+import { IInteractionData } from "./IInteractionData";
 
 export interface IInteraction {
     id: string,
     application_id: string,
     type: number,
-    data?: IInteractionData,
+    data?: IInteractionData
     guild: Guild,
     channel_id?: string,
     member?: IMember,

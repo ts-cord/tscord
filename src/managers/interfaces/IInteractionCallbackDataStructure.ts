@@ -1,12 +1,15 @@
-import { IAttachment } from "../../interfaces/IAttachment";
 import { IEmbed } from "../../interfaces/IEmbed";
+import { IActionRow } from "../../interfaces/IActionRow";
+import { IAttachment } from "../../interfaces/IAttachment";
+import { IAllowedMentions } from "../../interfaces/IAllowedMentions";
 
 export interface IInteractionCallbackDataStructure {
     tts?: boolean,
     content?: string,
     embeds?: IEmbed[],
-    allowed_mentions?: any[], //fazer interface depois
+    allowed_mentions?: IAllowedMentions[],
     flags?: number,
-    components?: any[], //fazer também
+    components?: IActionRow[],
     attachments?: IAttachment[],
+    ephemeral?: boolean
 };

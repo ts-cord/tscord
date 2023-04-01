@@ -1,6 +1,6 @@
-import { IApplicationTeam } from "./IApplicationTeam";
-import { IInstallParams } from "./IInstallParams";
 import { IUser } from "./IUser";
+import { IInstallParams } from "./IInstallParams";
+import { IApplicationTeam } from "./IApplicationTeam";
 
 export interface IApplication {
     id: string,

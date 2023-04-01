@@ -1,7 +1,1 @@
-export type EmbedTypes =
-    | "rich"
-    | "image"
-    | "video"
-    | "gifv"
-    | "article"
-    | "link";
+export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link';

@@ -34,5 +34,5 @@ export class ContextMenu {
         return this.data;
     };
 
-    static MaxContextMenusPerApplication: number = 5;
+    static MaxContextMenusPerApplication: number = 10;
 };

@@ -1,12 +1,10 @@
 import { IRole } from "./IRole";
 import { IEmoji } from "./IEmoji";
-import { ISticker } from "./ISticker";
-import { IChannel } from "./IChannel";
 import { IMember } from "./IMember";
-import { IWelcomeScreen } from "./IWelcomeScreen";
-
+import { ISticker } from "./ISticker";
 import { Group } from "../entities/Group";
-
+import { Channel } from "../managers/Channel";
+import { IWelcomeScreen } from "./IWelcomeScreen";
 
 export interface IGuild {
     id: string,
@@ -26,7 +24,7 @@ export interface IGuild {
     explicit_content_filter: number,
     roles: Group<string, IRole>,
     emojis: Group<string, IEmoji>,
-    channels: Group<string, IChannel>,
+    channels: Group<string, Channel>,
     members: Group<string, IMember>,
     features: string[],
     mfa_level: number,
@@ -50,5 +48,3 @@ export interface IGuild {
     stickers?: Group<string, ISticker>,
     premium_progress_bar_enabled: boolean
 };
-
-//cade o channels fez igual o bumbum a interface

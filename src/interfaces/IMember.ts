@@ -5,7 +5,7 @@ export interface IMember {
     user?: IUser,
     nick?: string,
     avatar?: string,
-    roles: Pick<IRole, 'id'>[],
+    roles: string[],
     joined_at: number,
     premium_sice?: number,
     deaf: boolean,

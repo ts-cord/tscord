@@ -1,4 +1,4 @@
-export const PermissionFlagsBits = {
+export const PermissionFlagsBits: { [permissionName: string]: bigint } = {
     CreateInstanteInvite: BigInt(1 << 0),
     KickMembers: BigInt(1 << 1),
     BanMembers: BigInt(1 << 2),

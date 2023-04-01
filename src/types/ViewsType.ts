@@ -1,1 +1,0 @@
-export type ViewsType = 'banner' | 'splash' | 'icon';

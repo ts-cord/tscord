@@ -1,1 +1,4 @@
-{}
+{
+  "invalid-token": "Invalid Token has been provided!",
+  "disabled-intents": "Client intents is disabled!"
+}
