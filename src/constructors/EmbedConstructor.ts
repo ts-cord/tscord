@@ -10,8 +10,6 @@ import { IEmbedProvider } from "../interfaces/IEmbedProvider";
 
 export class EmbedContructor {
     data: IEmbed = { type: 'rich' };
-
-    constructor(){};
     
     setColor(color: string): EmbedContructor {
         this.data.color = color;

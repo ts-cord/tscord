@@ -4,8 +4,6 @@ import { ISelectMenuOptions } from "../interfaces/ISelectMenuOptions";
 export class MessageStringSelectMenu {
     data: ISelectMenu = { custom_id: undefined, type: 3 };
 
-    constructor(){};
-
     setCustomId(customId: string): MessageStringSelectMenu {
         this.data.custom_id = customId;
 
@@ -44,8 +42,8 @@ export class MessageStringSelectMenu {
     JSON(): ISelectMenu {
         return this.data;
     };
-    setDataFrom(d: ISelectMenu): MessageStringSelectMenu {
-        this.data = d;
+    setDataFrom(JSONData: ISelectMenu): MessageStringSelectMenu {
+        this.data = JSONData;
 
         return this;
     };

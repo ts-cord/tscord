@@ -1,7 +1,7 @@
 import { MessageButton } from "./MessageButton";
 import { IButton } from "../interfaces/IButton";
 import { IActionRow } from "../interfaces/IActionRow";
-import { ITextInput } from "../interfaces/ITextInputComponents";
+import { ITextInput } from "../interfaces/ITextInput";
 import { ISelectMenu } from "../interfaces/ISelectMenu";
 import { MessageStringSelectMenu } from "./MessageStringSelectMenu";
 
@@ -28,8 +28,7 @@ export class MessageActionRow {
 
         return this;
     };
-
-    static MaxActionRowPerMessage: number = 5;
+    
     static MaxButtonsPerActionRow: number = 5;
     static MaxCustomIdLength: number = 100;
 };

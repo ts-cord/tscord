@@ -4,8 +4,6 @@ import { IButtonStyles } from "../interfaces/IButtonStyles";
 export class MessageButton {
     data: IButton = { type: 2, style: undefined };
 
-    constructor(){};
-
     setCustomId(customId: string): MessageButton {
         this.data.custom_id = customId;
 
@@ -22,9 +20,7 @@ export class MessageButton {
         return this;
     };
     setStyle(style: 'Primary' | 'Secondary' | 'Success' | 'Danger' | 'Link' | number): MessageButton {
-        const styles: IButtonStyles = { Primary: 1, Secondary: 2, Success: 3, Danger: 4, Link: 5 };
-
-        this.data.style =  (styles[style as keyof IButtonStyles] ?? style);
+        this.data.style =  ({ Primary: 1, Secondary: 2, Success: 3, Danger: 4, Link: 5 }[style as keyof IButtonStyles] ?? style);
 
         return this;
     };

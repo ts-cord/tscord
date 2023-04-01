@@ -5,8 +5,6 @@ import { IContextMenuTypes } from "../interfaces/IContextMenuTypes";
 export class ContextMenu {
     data: IContextMenu = { name: undefined, type: undefined };
 
-    constructor(){};
-
     setName(name: string): ContextMenu {
         this.data.name = name;
 
@@ -22,8 +20,8 @@ export class ContextMenu {
 
         return this;
     };
-    setDmPermission(perm: boolean): ContextMenu {
-        this.data.dm_permission = perm;
+    setDmPermission(permission: boolean): ContextMenu {
+        this.data.dm_permission = permission;
 
         return this;
     };
@@ -36,5 +34,5 @@ export class ContextMenu {
         return this.data;
     };
 
-    static MaxAppsPerApplication: number = 5;
+    static MaxContextMenusPerApplication: number = 5;
 };

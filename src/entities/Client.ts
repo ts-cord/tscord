@@ -1,7 +1,7 @@
 import { Group } from "./Group";
 import EventEmitter from "events";
 import { IUser } from "../interfaces/IUser";
-import { IGuild } from "../interfaces/IGuild";
+import { Guild } from "../managers/Guild";
 import constants from '../constants/constants.json';
 import { ClientApplication } from './ClientApplication'
 import { IApplication } from "../interfaces/IApplication";
@@ -20,7 +20,7 @@ export class Client extends EventEmitter {
   public user: IUser | undefined;
   public app: ClientApplication | undefined;
   
-  public readonly guilds: Group<string, IGuild> = new Group();
+  public readonly guilds: Group<string, Guild> = new Group();
   public readonly users: Group<string, IUser> = new Group();
   
   constructor(props: ClientProps) {

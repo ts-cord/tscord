@@ -1,7 +1,9 @@
-import { IGuild } from "../interfaces/IGuild";
-import { IRole } from "../interfaces/IRole";
 import { Client } from "../entities/Client";
 import { Group } from "../entities/Group";
+import { Guild } from "../managers/Guild";
+
+import { IGuild } from "../interfaces/IGuild";
+import { IRole } from "../interfaces/IRole";
 import { ISticker } from "../interfaces/ISticker";
 import { IMember } from "../interfaces/IMember";
 import { IEmoji } from "../interfaces/IEmoji";
@@ -35,5 +37,5 @@ export default function (data: any, client: Client) {
   })
   guild.members = members
 
-  client.guilds.set(guild.id, guild);
+  client.guilds.set(guild.id, new Guild(guild, client));
 };
