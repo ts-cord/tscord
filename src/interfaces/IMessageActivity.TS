@@ -1,4 +1,6 @@
-export interface IMessageActivity {
-    type: number,
-    party_id?: string
+import { Snowflake } from "../types/Snowflake";
+
+export interface MessageActivity {
+    type: number;
+    party_id?: Snowflake;
 };

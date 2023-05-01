@@ -1,9 +1,9 @@
 import { Client } from "../entities/Client";
-import { IUser } from "../interfaces/IUser";
+import { IUser } from "../interfaces/IRawUserData";
 import { IApplication } from "../interfaces/IApplication";
 import { ClientApplication } from "../entities/ClientApplication";
 
-export default function (payload: any, client: Client) {
+export default function (payload: { d: any }, client: Client): void {
   const user: IUser = {
     id: payload.d.user.id,
     username: payload.d.user.username,

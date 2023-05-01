@@ -1,4 +1,4 @@
-export interface IContextMenuTypes {
-    User?: number,
-    Message?: number
+export interface ContextMenuTypes {
+    User?: 2;
+    Message?: 3;
 };

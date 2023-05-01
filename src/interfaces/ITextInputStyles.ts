@@ -1,4 +1,4 @@
-export interface ITextInputStyles {
-    Short?: number,
-    Paragraph?: number
+export interface TextInputStyles {
+    Short?: number;
+    Paragraph?: number;
 };

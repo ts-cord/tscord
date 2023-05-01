@@ -1,4 +1,4 @@
-export interface IEmbedProvider {
-    name?: string,
-    url?: string
+export interface EmbedProvider {
+    name?: string;
+    url?: string;
 };

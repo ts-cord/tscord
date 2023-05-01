@@ -1,4 +1,4 @@
-export interface IInstallParams {
-    scopes: string[],
-    permissions: string
+export interface InstallParams {
+    scopes: string[];
+    permissions: string;
 };

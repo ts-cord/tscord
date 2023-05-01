@@ -1,9 +1,7 @@
 import { Client } from "../entities/Client";
-import { IChannel } from "../interfaces/IChannel";
 import { ChannelDelete } from "../managers/ChannelDelete";
+import { GuildChannelData } from "../interfaces/IGuildChannelData";
 
-export default function(payload: any, client: Client) {
-    delete payload.d.guild_hashes, delete payload.d.hashes;
-
-    client.emit('channelDelete', new ChannelDelete(payload.d as IChannel, client));
+export default function(payload: { d: GuildChannelData }, client: Client): void {
+    client.emit('channelDelete', new ChannelDelete(payload.d));
 };

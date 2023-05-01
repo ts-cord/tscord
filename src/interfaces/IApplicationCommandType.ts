@@ -1,5 +1,5 @@
-export interface IApplicationCommandType {
-    ChatInput: number,
-    User: number,
-    Message: number
+export interface ApplicationCommandType {
+    ChatInput: number;
+    User: number;
+    Message: number;
 };

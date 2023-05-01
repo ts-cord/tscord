@@ -1,40 +1,50 @@
-import { Group } from "../entities/Group";
+import { GuildRole } from "../managers/GuildRole";
+import { User } from "../managers/User";
+import { Group } from "../utils/Group";
 import { Guild } from "../managers/Guild";
+import { GuildEmoji } from "../managers/GuildEmoji";
 import { Client } from "../entities/Client";
-import { IRole } from "../interfaces/IRole";
-import { IUser } from "../interfaces/IUser";
+import { GuildMember } from "../managers/GuildMember";
 import { Channel } from '../managers/Channel';
-import { IGuild } from "../interfaces/IGuild";
-import { IEmoji } from "../interfaces/IEmoji";
-import { IMember } from "../interfaces/IMember";
-import { ISticker } from "../interfaces/ISticker";
+import { RawGuildData } from "../interfaces/IRawGuildData";
+import { RawGuildEmoji } from "../interfaces/IRawGuildEmoji";
+import { GuildSticker } from "../managers/GuildSticker";
+import { RawGuildStickerData } from "../interfaces/IRawGuildStickerData";
+import { GuildChannelData } from "../interfaces/IGuildChannelData";
+import { GuildRoleData } from "../interfaces/IGuildRoleData";
 
-export default function (data: any, client: Client) {
-  const guild: IGuild = data.d;
+export default function (data: { d: RawGuildData }, client: Client): void {
+  const guild: RawGuildData = data.d;
+  const roles: Group<string, GuildRole> = new Group();
 
-  const roles: Group<string, IRole> = new Group();
-  guild.roles.forEach(role => roles.set(role.id, role));
+  guild.roles.forEach((role: GuildRoleData) => roles.set(role.id, new GuildRole(role, client, guild.id)));
   guild.roles = roles;
 
-  const emojis: Group<string, IEmoji> = new Group();
-  guild.emojis.forEach(emoji => emojis.set(emoji.id, emoji));
+  const emojis: Group<string, GuildEmoji> = new Group();
+
+  guild.emojis.forEach((emoji: RawGuildEmoji) => emojis.set(emoji.id, new GuildEmoji(emoji, client, guild.id)));
   guild.emojis = emojis;
 
   const channels: Group<string, Channel> = new Group();
-  guild.channels.forEach(channel => channels.set(channel.id, new Channel(channel, client)));
+  
+  guild.channels.forEach((channel: GuildChannelData) => channels.set(channel.id, new Channel(channel, client)));
   guild.channels = channels;
 
-  const stickers: Group<string, ISticker> = new Group();
-  guild.stickers?.forEach(sticker => stickers.set(sticker.id, sticker));
+  const stickers: Group<string, Sticker> = new Group();
+
+  guild.stickers?.forEach((sticker: ISticker) => stickers.set(sticker.id, new Sticker(sticker, client)));
   guild.stickers = stickers;
 
-  const members: Group<string, IMember> = new Group();
-  guild.members.forEach(member => {
-    members.set(member.user?.id as string, member);
+  const members: Group<string, Member> = new Group();
 
-    client.users.set(member?.user?.id as string, member?.user as IUser);
+  guild.members.forEach((member: Member) => {
+    members.set(member.user!.id, new Member(member, client, guild.id));
+
+    client.users.set(member.user!.id, member!.user as User);
   });
   guild.members = members;
 
   client.guilds.set(guild.id, new Guild(guild, client));
+
+  client.emit('guildCreate', new Guild(guild, client));
 };

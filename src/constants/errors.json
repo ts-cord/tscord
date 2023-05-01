@@ -1,4 +1,5 @@
 {
-  "invalid-token": "Invalid Token has been provided!",
-  "disabled-intents": "Client intents is disabled!"
+  "invalid_token": "Invalid Token has been provided",
+  "disabled_intents": "Client intents is disabled",
+  "websocked_not_connected": "Websocket not connected"
 }

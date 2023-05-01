@@ -1,7 +1,7 @@
-export interface IButtonStyles <N = number> {
-    Primary: N,
-    Secondary: N,
-    Success: N,
-    Danger: N,
-    Link: N
+export interface ButtonStyles {
+    Primary: number;
+    Secondary: number;
+    Success: number;
+    Danger: number;
+    Link: number;
 };

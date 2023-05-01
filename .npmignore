@@ -1,0 +1,15 @@
+# Visual Studio Code
+
+.vscode/
+
+# TypeScript config
+
+tsconfig.json
+
+# Examples
+
+examples
+
+# Tests
+
+test.ts

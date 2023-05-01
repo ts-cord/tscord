@@ -1,9 +1,10 @@
-import { IApplicationTeamMember } from "./IApplicationTeamMember";
+import { Snowflake } from "../types/Snowflake";
+import { TeamMember } from "./IApplicationTeamMember";
 
-export interface IApplicationTeam {
-    icon: string,
-    id: string,
-    members: IApplicationTeamMember[],
-    name: string,
-    owner_user_id: string
+export interface ApplicationTeam {
+    icon: string;
+    id: Snowflake;
+    members: TeamMember[];
+    name: string;
+    owner_user_id: Snowflake;
 };

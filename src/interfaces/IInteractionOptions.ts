@@ -1,7 +1,9 @@
-export interface IInteractionOptions {
-    name: string,
-    type: number,
-    value?: string | number | boolean,
-    options?: IInteractionOptions[],
-    focused?: boolean
+import { SlashCommandTypes } from "../props/SlashCommandTypes";
+
+export interface InteractionOptions {
+    name: string;
+    type: SlashCommandTypes;
+    value?: string | number | boolean;
+    options?: InteractionOptions[];
+    focused?: boolean;
 };

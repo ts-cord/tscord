@@ -1,1 +1,0 @@
-export default 'Wow, some words here';

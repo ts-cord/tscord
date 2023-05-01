@@ -1,0 +1,243 @@
+export class Group<K, V> extends Map<K, V> {
+  /**
+   * Returns the value of the first element in the array where predicate is true, and undefined otherwise.
+   * @param func
+   * find calls predicate once for each element of the array, in ascending order, until it finds one where predicate returns true. If such an element is found, find immediately returns that element value. Otherwise, find returns undefined.
+   * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/find
+   */
+
+  public find(func: (value: V, index: number, obj: V[]) => unknown): V | undefined {
+    return [...this.values()].find(func);
+  };
+
+  /**
+   * Calls a defined callback function on each element of an array, and returns an array that contains the results.
+   * @param func — A function that accepts up to three arguments. The map method calls the callbackfn function one time for each element in the array.
+   * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/map
+   */
+
+  public map(func: (value: [K, V], index: number, array: [K, V][]) => unknown): unknown[] {
+    return [...this.entries()].map(func);
+  };
+
+  /**
+   * Returns the elements of an array that meet the condition specified in a callback function.
+   * @param func — A function that accepts up to three arguments. The filter method calls the predicate function one,  time for each element in the array.
+   * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
+   */
+
+  public filter(func: (value: V, index: number, array: V[]) => value is V): V[] {
+    return [...this.values()].filter(func);
+  };
+
+  /**
+   * Determines whether all the members of an array satisfy the specified test.
+   * @param func
+   * A function that accepts up to three arguments. The every method calls the predicate function for each element in the array until the predicate returns a value which is coercible to the Boolean value false, or until the end of the array.
+   * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/every
+   */
+
+  public every(func: (value: V, index: number, array: V[]) => value is V): this is V[] {
+    return [...this.values()].every(func);
+  };
+
+  /**
+  * Determines whether the specified callback function returns true for any element of an array.
+  * @param func 
+  * A function that accepts up to three arguments. The some method calls the predicate function for each element in the array until the predicate returns a value which is coercible to the Boolean value true, or until the end of the array.
+  * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/some
+  */
+
+  public some(func: (value: V, index: number, array: V[]) => unknown): boolean {
+    return [...this.values()].some(func);
+  };
+
+  /**
+   * Determines whether all keys of the Group satisfy the specified test.
+   * @param func - A function that accepts up to three arguments. The every method calls the predicate function for each element in the array until the predicate returns a value which is coercible to the Boolean value false, or until the end of the array.
+   * @returns {this is K[]}
+   */
+
+  public everyKey(func: (value: K, index: number, array: K[]) => value is K,): this is K[] {
+    return [...this.keys()].every(func);
+  };
+
+  /**
+   * Determines whether all values of the Group satisfy the specified test.
+   * @param func - A function that accepts up to three arguments. The every method calls the predicate function for each element in the array until the predicate returns a value which is coercible to the Boolean value false, or until the end of the array.
+   * @returns {this is K[]}
+   */
+
+  public everyValue(func: (value: V, index: number, array: V[]) => value is V): this is V[] {
+    return [...this.values()].every(func);
+  };
+
+  /**
+   * Return the Group values
+   * @param {boolean} groupKeyAndValue - Return the key and value or just the value
+   * @returns {[K, V][] | V[]}
+   */
+
+  public toArray<T extends boolean = true>(groupKeyAndValue?: T): T extends true ? [K, V][] : V[] {
+    return (groupKeyAndValue ? [...this.entries()] : [...this.values()]) as T extends true ? [K, V][] : V[];
+  };
+
+  /**
+   * Return the Group in JSON format
+   * @returns { { [k: string]: V } }
+   */
+
+  public toJSON(): { [k: string]: V } {
+    return Object.fromEntries(Object.entries(this.entries));
+  };
+
+  /**
+   * Get a item by a index
+   * @param {number} index - Index to get the value
+   * @returns {V | undefined}
+   * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/at
+   */
+
+  public at(index: number): V | undefined {
+    return [...this.values()].at(index);
+  };
+
+  /**
+   * Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function
+   * @param callbackfn - A function that accepts up to four arguments. The reduce method calls the callbackfn function one time for each element in the array
+   * @returns {V}
+   * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
+   */
+
+  public reduce(callbackfn: (previousValue: V, currentValue: V, currentIndex: number, array: V[]) => V): V {
+    return [...this.values()].reduce(callbackfn);
+  };
+
+  /**
+   * Returns true if all keys is in Group keys
+   * @param {K[]} keys - Keys to be checked
+   * @returns {boolean}
+   */
+
+  public hasAllOf(...keys: K[]): boolean {
+    return keys.every((key: K) => super.has(key));
+  };
+
+  /**
+   * Returns true if any key is in Group keys
+   * @param {K[]} keys - Keys to be checked 
+   * @returns {boolean}
+   */
+
+  public hasAnyOf(...keys: K[]): boolean {
+    return keys.some((key: K) => super.has(key));
+  };
+
+  /**
+   * Get the first x entries of the Group
+   * @param {number} amount - The amount of items to return
+   * @returns { { [key: string]: V } }
+   */
+
+  public first<T extends number | undefined>(amount?: T): T extends undefined ? V : { [key: string]: V } {
+    return amount ? Object.fromEntries([...this.entries()].slice(0, amount)) : [...this.entries()].at(0);
+  };
+
+  /**
+   * Get the last x entries of the Group
+   * @param {number} amount - The amount of items to return 
+   * @returns { { [key: string]: V } }
+   */
+
+  public last(amount: number = this.size): { [key: string]: V } {
+    return Object.fromEntries([...this.entries()].slice(-amount));
+  };
+
+  /**
+   * Calls a defined callback function on each value of the Group, and returns an array that contains the results.
+   * @param callbackfn — A function that accepts up to three arguments. The map method calls the callbackfn function one time for each element in the array.
+   * @param thisArg — An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value.
+   * @returns {U[]}
+   */
+
+  public mapValues<U>(callbackfn: (value: V, index: number, array: V[]) => U): U[] {
+    return [...this.values()].map(callbackfn);
+  };
+
+  /**
+   * Calls a defined callback function on each key of the Group, and returns an array that contains the results.
+   * @param callbackfn — A function that accepts up to three arguments. The map method calls the callbackfn function one time for each element in the array.
+   * @param thisArg — An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value.
+   * @returns {U[]}
+   */
+
+  public mapKeys<U>(callbackfn: (value: K, index: number, array: K[]) => U): U[] {
+    return [...this.keys()].map(callbackfn);
+  };
+
+  /**
+   * Combines the elements of two groups into a new group. If a key already exists in the current group, its value will be updated with the value from the other group.
+   * @param group - The other group to merge with the current group.
+   * @returns {this} - The merged group.
+   */
+
+  public merge(group: Group<K, V> | Map<K, V>): this {
+    group.forEach((value: V, key: K) => this.set(key, value));
+
+    return this;
+  };
+
+  /**
+   * Pick a random element in the Group, if the Group is empty, so returns undefined
+   * @returns {V}
+   */
+
+  public random(): V {
+    const values: V[] = [...this.values()];
+
+    return values[Math.random() * values.length];
+  };
+
+  /**
+   * Check if the Group is empty
+   * @returns {boolean}
+   */
+
+  public empty(): boolean {
+    return this.size === 0;
+  };
+
+  /**
+   * Returns the index of the first element in the array where predicate is true, and -1 otherwise.
+   * @param predicate find calls predicate once for each element of the array, in ascending order, until it finds one where predicate returns true. If such an element is found, findIndex immediately returns that element index. Otherwise, findIndex returns -1.
+   * @returns {number}
+   * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex
+   */
+
+  public findIndex(predicate: (value: V, index: number, obj: V[]) => unknown): number {
+    return this.toArray(false).findIndex(predicate);
+  };
+
+  /**
+   * Calls the specified callback function for all the elements in an array, in descending order. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
+   * @param callbackfn A function that accepts up to four arguments. The reduceRight method calls the callbackfn function one time for each element in the array.
+   * @returns {V}
+   * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/reduceRight
+   */
+
+  public reduceRight(callbackfn: (previousValue: V, currentValue: V, currentIndex: number, array: V[]) => V): V {
+    return this.toArray(false).reduceRight(callbackfn);
+  };
+
+  /**
+   * Returns the index of the first occurrence of a value in an array, or -1 if it is not present.
+   * @param {K} searchElement The value to locate in the array.
+   * @param {number} fromIndex The array index at which to begin the search. If fromIndex is omitted, the search starts at index 0.
+   * @returns {number}
+   * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
+   */
+
+  public indexOf(searchElement: K, fromIndex?: number): number {
+    return [...this.keys()].indexOf(searchElement, fromIndex);
+  };
+};

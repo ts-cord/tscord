@@ -1,6 +1,6 @@
-export interface IEmbedVideo {
-    url?: string,
-    proxy_url?: string,
-    height?: string,
-    width?: string
+export interface EmbedVideo {
+    url?: string;
+    proxy_url?: string;
+    height?: string;
+    width?: string;
 };

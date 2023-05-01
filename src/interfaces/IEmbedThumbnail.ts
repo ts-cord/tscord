@@ -1,6 +1,6 @@
-export interface IEmbedThumbnail {
-    url: string,
-    proxy_url?: string,
-    height?: string,
-    width?: string
+export interface EmbedThumbnail {
+    url: string;
+    proxy_url?: string;
+    height?: string;
+    width?: string;
 };

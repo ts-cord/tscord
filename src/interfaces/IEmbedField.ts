@@ -1,5 +1,5 @@
-export interface IEmbedField {
-    name: string,
-    value: string,
-    inline?: boolean
+export interface EmbedField {
+    name: string;
+    value: string;
+    inline?: boolean;
 };

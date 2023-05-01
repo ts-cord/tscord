@@ -1,97 +1,106 @@
-import { Group } from "./Group";
 import EventEmitter from "events";
+import { Group } from "../utils/Group";
 import { api } from "../constants/Api";
-import { Guild } from "../managers/Guild";
-import { IUser } from "../interfaces/IUser";
-import constants from '../constants/constants.json';
-import { ClientApplication } from './ClientApplication'
-import { WebSocketStructure, WebSocketProps } from "./WebSocket";
-
-interface ClientProps {
-  token: string;
-  intents: number;
-};
+import { User } from "../structures/User";
+//import { Channel } from "../managers/Channel";
+import { Snowflake } from "../types/Snowflake";
+import { WebSocketStructure } from "./WebSocket";
+import { OauthCurrentUser } from "../utils/Routes";
+import { UserManager } from "../managers/UserManager";
+//import { GuildManager } from "../structures/GuildManager";
+import { ClientApplication } from "./ClientApplication";
+import { ClientProps } from "../interfaces/IClientProps";
+import { RawUserData } from "../interfaces/IRawUserData";
+import { ClientEvents } from "../interfaces/IClientEvents";
+import { wss as DiscordWss } from "../constants/constants.json";
+import { ClientEditOptions } from "../interfaces/IClientEditOptions";
+import { ClientWebSocketProps } from "../interfaces/IClientWebSocketProps";
 
 export class Client extends EventEmitter {
+  public user: User | undefined;
   public readonly token: string;
   public readonly intents: number;
   public readonly ws: WebSocketStructure;
+  public readonly options: ClientProps['options'];
+  public readonly sweepers: ClientProps['sweepers'];
+  public readonly app: ClientApplication | undefined;
+  public readonly users: UserManager = new UserManager(this);
+  //public readonly guilds: GuildManager = new GuildManager(this);
+  //public readonly channels: Group<Snowflake, Channel> = new Group<Snowflake, Channel>();
 
-  public user: IUser | undefined;
-  public app: ClientApplication | undefined;
-
-  public readonly guilds: Group<string, Guild> = new Group();
-  public readonly users: Group<string, IUser> = new Group();
-
-  constructor(props: ClientProps) {
+  constructor(data: ClientProps) {
     super();
 
-    this.token = props.token;
-    this.intents = props.intents;
+    this.token = data.token;
+    this.intents = data.intents;
+    this.sweepers = data.sweepers;
+    this.options = { default_image_format: data.options?.default_image_format ?? 'png', default_image_size: data.options?.default_image_size ?? 1024 };
 
-    const ws_props: WebSocketProps = {
-      url: constants.wss,
+    const wsProps: ClientWebSocketProps = {
+      url: DiscordWss,
       events: ['READY', 'INTERACTION_CREATE', 'GUILD_CREATE', 'MESSAGE_CREATE', 'CHANNEL_DELETE', 'CHANNEL_CREATE', 'CHANNEL_PINS_UPDATE'],
       client: this
     };
 
-    this.ws = new WebSocketStructure(ws_props, this.token, this.intents);
+    this.ws = new WebSocketStructure(wsProps, this.token, this.intents);
+  };
+
+  on<E extends keyof ClientEvents>(event: E, listener: ClientEvents[E]): this {
+    return super.on(event, listener);
+  };
+
+  once<E extends keyof ClientEvents>(event: E, listener: ClientEvents[E]): this {
+    return super.once(event, listener);
   };
 
   /**
-   * @description Connect the client
+   * Connect the client to Discord
    * @returns {void}
    */
 
   connect(): void {
-    return void this.ws.setup();
+    return this.ws.setup();
   };
 
   /**
-   * @description Fetch client connections
-   * @requires `connections` OAuth2 scope
-   * @returns {Promise<object>}
-   */
-
-  async fetchConnections(): Promise<object> {
-    const d = await api.get(`/users/@me/connections`, { headers: { Authorization: `Bot ${this.token}` } });
-
-    return new Promise((resolve) => resolve(d.data));
-  };
-
-  /**
-   * @description Set the client username
+   * Set the client username
    * @param {string} name - The name that will be set 
-   * @returns {Promise<IUser>}
+   * @returns {Promise<User>}
    */
 
-  async setName(name: string): Promise<IUser> {
-    const d = await api.patch('/users/@me', { username: name }, { headers: { Authorization: `Bot ${this.token}` } });
+  /* async setName(name: string): Promise<User> {
+    const { data }: { data: RawUserData } = await api.patch(OauthCurrentUser, { username: name }, { headers: { Authorization: `Bot ${this.token}` } });
 
-    return new Promise((resolve) => resolve(d.data));
-  };
+    this.user = new User(data, this);
+
+    return this.user;
+  }; */
 
   /**
-   * @description Set the client avatar
-   * @param {string} avatar - The avatar URL that will be set 
-   * @returns {Promise<IUser>}
+   * @ Set the client avatar
+   * @param {string} avatarURL - The avatar URL that will be set 
+   * @returns {Promise<User>}
    */
 
-  async setAvatar(avatar: string): Promise<IUser> {
-    const d = await api.patch('/users/@me', { avatar: avatar }, { headers: { Authorization: `Bot ${this.token}` } });
+  /* async setAvatar(avatarURL: string): Promise<User> {
+    const { data }: { data: RawUserData } = await api.patch(OauthCurrentUser, { avatar: avatarURL }, { headers: { Authorization: `Bot ${this.token}` } });
 
-    return new Promise((resolve) => resolve(d.data));
-  };
+    this.user = new User(data, this);
+
+    return this.user;
+  }; */
 
   /**
-   * @description Edit client options
-   * @param {object} params - The options that will be changed
-   * @returns {Promise<IUser>}
+   * Edit the client options
+   * @param {ClientEditOptions} options - The options that will be changed
+   * @returns {Promise<User>}
    */
 
-  async edit(params: { username?: string, avatar?: string }): Promise<IUser> {
-    const d = await api.patch('/users/@me', params, { headers: { Authorization: `Bot ${this.token}` } });
+  /* async edit(options: ClientEditOptions): Promise<User> {
+    const { data }: { data: RawUserData } = await api.patch(OauthCurrentUser, options, { headers: { Authorization: `Bot ${this.token}` } });
 
-    return new Promise((resolve) => resolve(d.data));
-  };
+    this.user = new User(data, this);
+
+    return this.user;
+  }; */
 };
