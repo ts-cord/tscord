@@ -1,17 +1,14 @@
 import { BasicBuilder } from "./BasicBuilder";
-import { ILocalizations } from "../interfaces/ILocalizations";
-import { SlashCommandTypes } from "../props/SlashCommandTypes";
-import { SlashCommandData } from "../interfaces/ISlashCommandData";
-import { SlashCommandOptionsData } from "../interfaces/ISlashCommandOptionsData";
+import type { Locales, ApplicationCommandOptionType, ApplicationCommandOptionsData, ApplicationCommandData } from "../types";
 
-export class SlashCommandBuilder extends BasicBuilder<SlashCommandData> {
+export class SlashCommandBuilder extends BasicBuilder<ApplicationCommandData> {
     /**
      * Create slash command data by the constructor
-     * @param {SlashCommandData} data - Data to be set
+     * @param {ApplicationCommandData} data - Data to be set
      * @constructor
      */
 
-    constructor(data?: SlashCommandData) {
+    constructor(data?: ApplicationCommandData) {
         super(data);
     };
 
@@ -41,11 +38,11 @@ export class SlashCommandBuilder extends BasicBuilder<SlashCommandData> {
 
     /**
      * Set the type of this Slash Command
-     * @param {SlashCommandTypes.SubCommand | SlashCommandTypes.SubCommandGroup} type - The type to be set
+     * @param {ApplicationCommandOptionType.SubCommand | ApplicationCommandOptionType.SubCommandGroup} type - The type to be set
      * @returns {this}
      */
 
-    setType(type: SlashCommandTypes.SubCommand | SlashCommandTypes.SubCommandGroup): this {
+    setType(type: ApplicationCommandOptionType.SubCommand | ApplicationCommandOptionType.SubCommandGroup): this {
         this.data.type = type;
 
         return this;
@@ -65,11 +62,11 @@ export class SlashCommandBuilder extends BasicBuilder<SlashCommandData> {
 
     /**
      * Set default permissions for this Slash Command
-     * @param {number} permissions - The default permissions
+     * @param {string} permissions - The default permissions
      * @returns {this}
      */
 
-    setDefaultMemberPermissions(permissions: number): this {
+    setDefaultMemberPermissions(permissions: string): this {
         this.data.default_member_permissions = permissions;
 
         return this;
@@ -77,11 +74,11 @@ export class SlashCommandBuilder extends BasicBuilder<SlashCommandData> {
 
     /**
      * Set the descriptions localizations for this Slash Command
-     * @param {ILocalizations} descriptions - The descriptions localizations
+     * @param {Locales} descriptions - The descriptions localizations
      * @returns {this}
      */
 
-    setDescriptionLocalizations(descriptions: ILocalizations): this {
+    setDescriptionLocalizations(descriptions: Locales): this {
         this.data.description_localizations = descriptions;
 
         return this;
@@ -89,11 +86,11 @@ export class SlashCommandBuilder extends BasicBuilder<SlashCommandData> {
 
     /**
      * Set the names localizations for this Slash Command
-     * @param {ILocalizations} names - The names localizations
+     * @param {Locales} names - The names localizations
      * @returns {this}
      */
 
-    setNameLocalizations(names: ILocalizations): this {
+    setNameLocalizations(names: Locales): this {
         this.data.name_localizations = names;
 
         return this;
@@ -113,11 +110,11 @@ export class SlashCommandBuilder extends BasicBuilder<SlashCommandData> {
 
     /**
      * Add any options
-     * @param {SlashCommandOptionsData[]} options - The options that will be added
+     * @param {ApplicationCommandOptionsData[]} options - The options that will be added
      * @returns {this}
      */
 
-    addAnyOptions(...options: SlashCommandOptionsData[]): this {
+    addAnyOptions(...options: ApplicationCommandOptionsData[]): this {
         this.data.options ? this.data.options.push(...options) : this.data.options = options;
 
         return this;
@@ -125,11 +122,11 @@ export class SlashCommandBuilder extends BasicBuilder<SlashCommandData> {
 
     /**
      * Set any options
-     * @param {SlashCommandOptionsData[]} options - The options that will be set
+     * @param {ApplicationCommandOptionsData[]} options - The options that will be set
      * @returns {this}
      */
 
-    setAnyOptions(...options: SlashCommandOptionsData[]): this {
+    setAnyOptions(...options: ApplicationCommandOptionsData[]): this {
         this.data.options = options;
 
         return this;

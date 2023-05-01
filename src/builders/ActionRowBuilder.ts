@@ -2,15 +2,15 @@ import { BasicBuilder } from "./BasicBuilder";
 import { ButtonBuilder } from "./ButtonBuilder";
 import { TextInputBuilder } from "./TextInputBuilder";
 import { SelectMenuBuilder } from "./SelectMenuBuilder";
-import { ComponentTypes } from "../props/ComponentTypes";
-import { ActionRowData } from "../interfaces/IActionRowData";
+import { ComponentTypes, MessageComponentData } from "../types";
 
-export class ActionRowBuilder<T extends ButtonBuilder | TextInputBuilder | SelectMenuBuilder> extends BasicBuilder<ActionRowData> {
-    components: ActionRowData['components'] = this.data.components;
+export class ActionRowBuilder<T extends ButtonBuilder | TextInputBuilder | SelectMenuBuilder> extends BasicBuilder<MessageComponentData> {
+    components: MessageComponentData['components'] = this.data.components;
 
     /**
      * @param { { type: ComponentTypes.ActionRow, components: T['data'][] } } data - The data to be set
      * @constructor
+     * @see https://discord.com/developers/docs/interactions/message-components#action-rows
      */
     
     constructor(data?: { type: ComponentTypes.ActionRow, components: Array<T['data']> }) {
@@ -44,4 +44,5 @@ export class ActionRowBuilder<T extends ButtonBuilder | TextInputBuilder | Selec
     };
 
     static MaxActionRowsPerMessage: number = 5;
+    static MaxCustomIdLength: number = 100;
 };

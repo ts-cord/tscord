@@ -1,10 +1,14 @@
 import { BasicBuilder } from "./BasicBuilder";
-import { ChannelTypes } from "../props/ChannelTypes";
-import { SelectMenuTypes } from "../props/SelectMenuTypes";
-import { SelectMenuData } from "../interfaces/ISelectMenuData";
-import { SelectMenuOptionsData } from "../interfaces/ISelectMenuOptionsData";
+import { ChannelTypes, SelectMenuTypes } from "../types";
+import type { SelectMenuData, SelectMenuOptionsData } from "../types";
 
 export class SelectMenuBuilder extends BasicBuilder<SelectMenuData> {
+    /**
+     * Set the select menu data
+     * @param {SelectMenuData} data - The data
+     * @see https://discord.com/developers/docs/interactions/message-components#select-menus
+     */
+
     constructor(data?: SelectMenuData) {
         super(data);
     };
@@ -117,10 +121,4 @@ export class SelectMenuBuilder extends BasicBuilder<SelectMenuData> {
 
         return this;
     };
-
-    /**
-     * The max custom id length for a select menu
-     */
-
-    static readonly MaxCustomIdLength: number = 100;
 };

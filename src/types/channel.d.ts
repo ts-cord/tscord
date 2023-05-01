@@ -1,7 +1,6 @@
 import { Snowflake } from "./Snowflake";
 import { Guild } from "../structures/Guild";
 import type { AttachmentData } from "./misc";
-import { ChannelTypes } from "../props/ChannelTypes";
 import type { MessageComponentData, MessageFlags, MessageInteractionData } from "./interaction";
 import type { RawApplication, RawDiscordAPIUserData, RawGuildEmoji, RawSticker, StickerFormatTypes, StickerItemData } from ".";
 import { Message } from "../structures/Message";
@@ -12,6 +11,21 @@ export interface BasicChannelData {
     flags: ChannelFlags;
     creation_timestamp: number;
     creation_date: Date;
+};
+
+export enum ChannelTypes {
+    GuildText,
+    DM,
+    GuildVoice,
+    GroupDM,
+    GuildCategory,
+    GuildAnnouncement,
+    AnnouncementThread = 10,
+    PublicThread,
+    PrivateThread,
+    GuildStageVoice,
+    GuildDirectory,
+    GuildForum
 };
 
 export interface GuildChannelData extends BasicChannelData {

@@ -6,3 +6,4 @@ export * from './interaction';
 export * from './misc';
 export * from './webhook';
 export * from './application';
+export * from './app-commands';

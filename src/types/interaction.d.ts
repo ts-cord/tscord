@@ -1,10 +1,9 @@
-import { Locales } from "./index";
-import { ApplicationCommand } from "../structures/ApplicationCommand";
-import { ChannelTypes } from "../props/ChannelTypes";
+import { ChannelTypes, Locales } from "./index";
 import { Snowflake } from "./Snowflake";
-import type { BasicFetchOptions, Locales } from "./misc";
 import { RawDiscordAPIUserData } from "./user";
-import { GuildMemberData } from ".";
+import type { GuildMemberData } from "./index";
+import type { BasicFetchOptions, Locales } from "./misc";
+import { ApplicationCommand } from "../structures/ApplicationCommand";
 
 export enum ComponentTypes {
     ActionRow = 1,
@@ -19,7 +18,38 @@ export enum ComponentTypes {
 
 export interface MessageComponentData {
     type: ComponentTypes.ActionRow;
-    components: Array<object> //do later
+    components: (ButtonData | TextInputData | SelectMenuData)[];
+};
+
+export interface SelectMenuData {
+    type: SelectMenuTypes;
+    custom_id: string;
+    options?: SelectMenuOptionsData[];
+    channel_types?: ChannelTypes[];
+    placeholder?: string;
+    min_values?: number;
+    max_values?: number;
+    disabled?: boolean;
+};
+
+export interface SelectMenuOptionsData {
+    label: string;
+    value: string;
+    description?: string;
+    emoji?: {
+        name: string;
+        id?: string;
+        animated?: boolean;
+    };
+    default?: boolean;
+};
+
+export enum SelectMenuTypes {
+    StringSelect = 3,
+    UserSelect = 5,
+    RoleSelect,
+    MentionableSelect,
+    ChannelSelect
 };
 
 export enum MessageFlags {
@@ -43,23 +73,6 @@ export enum ApplicationCommandTypes {
 
 export type ApplicationCommandResolvable = ApplicationCommand | Snowflake;
 
-export interface ApplicationCommandData {
-    id: Snowflake;
-    type: ApplicationCommandTypes;
-    application_id: Snowflake;
-    guild_id?: Snowflake;
-    name: string;
-    name_localizations?: Locales;
-    description: string;
-    description_localizations?: Locales;
-    options?: Array<ApplicationCommandOptionsData>;
-    default_member_permissions?: string;
-    dm_permission?: boolean;
-    default_permission?: boolean;
-    nsfw?: boolean;
-    version: string;
-};
-
 export interface MessageInteractionData {
     id: Snowflake;
     type: InteractionType;
@@ -76,47 +89,41 @@ export enum InteractionType {
     ModalSubmit
 };
 
-export interface CreateApplicationCommandOptions extends EditApplicationCommandOptions {};
-export interface EditApplicationCommandOptions extends Pick<ApplicationCommandData, 'name' | 'name_localizations' | 'description' | 'description_localizations' | 'options' | 'default_member_permissions' | 'default_permission' | 'nsfw'> {};
-
-export enum ApplicationCommandOptionType {
-    SubCommand = 1,
-    SubCommandGroup,
-    String,
-    Integer,
-    Boolean,
-    User,
-    Channel,
-    Role,
-    Mentionable,
-    Number,
-    Attachment
+export interface ButtonData {
+    type: ComponentTypes.Button;
+    style: ButtonStyles;
+    label?: string;
+    emoji?: {
+        name?: string;
+        id?: string;
+        animated: boolean;
+    };
+    custom_id?: string;
+    url?: string;
+    disabled?: boolean;
 };
 
-export interface FetchApplicationCommandOptions extends BasicFetchOptions {
-    guild_id?: Snowflake;
-    with_localizations?: boolean;
+export enum ButtonStyles {
+    Primary = 1,
+    Secondary,
+    Success,
+    Danger,
+    Link
 };
 
-export interface ApplicationCommandOptionChoicesData {
-    name: string;
-    value: string | number;
-    name_localizations?: Locales;
-};
-
-export interface ApplicationCommandOptionsData {
-    type: ApplicationCommandOptionType;
-    name: string;
-    name_localizations?: Locales;
-    description: string;
-    description_localizations?: Locales;
+export interface TextInputData {
+    type: ComponentTypes.TextInput;
+    custom_id: string;
+    style: TextInputStyles;
+    label: string;
+    min_length?: number;
+    max_length?: number;
     required?: boolean;
-    choices?: Array<ApplicationCommandOptionChoicesData>;
-    options?: Array<ApplicationCommandOptionsData>;
-    channel_types?: Array<ChannelTypes>;
-    min_value?: ApplicationCommandOptionsData['type'] extends ApplicationCommandOptionType.Number | ApplicationCommandOptionType.Integer ? number : never;
-    max_value?: ApplicationCommandOptionsData['type'] extends ApplicationCommandOptionType.Number | ApplicationCommandOptionType.Integer ? number : never;
-    min_length?: ApplicationCommandOptionsData['type'] extends ApplicationCommandOptionType.String ? number : never;
-    max_length?: ApplicationCommandOptionsData['type'] extends ApplicationCommandOptionType.String ? number : never;
-    autocomplete?: number;
+    value?: string;
+    placeholder?: string;
+};
+
+export enum TextInputStyles {
+    Short = 1,
+    Paragraph
 };

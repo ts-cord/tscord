@@ -1,7 +1,6 @@
+import { Locales } from "../types";
 import { BasicBuilder } from "./BasicBuilder";
-import { ContextMenuTypes } from "../props/ContextMenuTypes";
-import { ILocalizations } from "../interfaces/ILocalizations";
-import { ContextMenuData } from "../interfaces/IContextMenuData";
+import type { ContextMenuData, ContextMenuTypes } from "../types/app-commands";
 
 export class ContextMenuBuilder extends BasicBuilder<ContextMenuData> {
     /**
@@ -52,11 +51,11 @@ export class ContextMenuBuilder extends BasicBuilder<ContextMenuData> {
 
     /**
      * Set the names localizations for this Context's Menu
-     * @param {ILocalizations} names - The names localizations
+     * @param {Locales} names - The names localizations
      * @returns {this}
      */
 
-    setNameLocalizations(names: ILocalizations): this {
+    setNameLocalizations(names: Locales): this {
         this.data.name_localizations = names;
 
         return this;
@@ -64,11 +63,11 @@ export class ContextMenuBuilder extends BasicBuilder<ContextMenuData> {
 
     /**
      * Set default permissions for this Context's Menu
-     * @param {number} permissions - The default permissions
+     * @param {string} permissions - The default permissions
      * @returns {this}
      */
 
-    setDefaultMemberPermissions(permissions: number): this {
+    setDefaultMemberPermissions(permissions: string): this {
         this.data.default_member_permissions = permissions;
 
         return this;

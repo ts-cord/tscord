@@ -1,10 +1,12 @@
+import type { ButtonData } from "../types";
 import { BasicBuilder } from "./BasicBuilder";
-import { ButtonStyles } from "../props/ButtonStyles";
-import { ButtonData } from "../interfaces/IButtonData";
+import { ComponentTypes, ButtonStyles } from "../types";
 
 export class ButtonBuilder extends BasicBuilder<ButtonData> {
     constructor(data?: ButtonData) {
         super(data);
+
+        this.data.type = ComponentTypes.Button;
     };
 
     /**
@@ -33,11 +35,11 @@ export class ButtonBuilder extends BasicBuilder<ButtonData> {
 
     /**
      * Set the button emoji
-     * @param {Pick<ButtonData, 'emoji'>['emoji'] | string} emoji - The unicode emoji or custom
+     * @param {ButtonData['emoji'] | string} emoji - The unicode emoji or custom
      * @returns {this}
      */
 
-    setEmoji(emoji: Pick<ButtonData, 'emoji'>['emoji'] | string): this {
+    setEmoji(emoji: ButtonData['emoji'] | string): this {
         this.data.emoji = typeof emoji === 'string' ? { name: emoji, animated: false } : emoji;
 
         return this;
@@ -78,10 +80,4 @@ export class ButtonBuilder extends BasicBuilder<ButtonData> {
 
         return this;
     };
-    
-    /**
-     * The max custom id length for a button
-     */
-
-    static MaxCustomIdLength: number = 100;
 };
