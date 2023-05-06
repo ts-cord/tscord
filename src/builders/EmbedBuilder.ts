@@ -1,8 +1,14 @@
+import { EmbedTypes } from "../types";
 import { BasicBuilder } from "./BasicBuilder";
-import { EmbedTypes } from "../types/channel";
 import type { EmbedData, EmbedFieldData, EmbedImageData, EmbedVideoData, EmbedFooterData, EmbedAuthorData, EmbedProviderData, EmbedThumbnailData } from "../types/channel";
 
 export class EmbedBuilder extends BasicBuilder<EmbedData> {
+    /**
+     * Create embed data by the constructor
+     * @param {EmbedData} data - Data to be set
+     * @see https://discord.com/developers/docs/resources/channel#embed-object
+     */
+
     constructor(data?: EmbedData) {
         super(data);
 
@@ -170,11 +176,31 @@ export class EmbedBuilder extends BasicBuilder<EmbedData> {
         return this;
     };
 
+    /** Maximum embed title length */
+
     static MaxTitleLength: number = 256;
+
+    /** Maximum embed fields length */
+
     static MaxFieldsLength: number = 25;
+
+    /** Maximum embed field name length */
+
     static MaxFieldNameLength: number = 256;
+
+    /** Maximum embed author name length */
+
     static MaxAuthorNameLength: number = 256;
+
+    /** Maximum embed field value length */
+
     static MaxFieldValueLength: number = 1024;
+
+    /** Maximum embed footer text length */
+
     static MaxFooterTextLength: number = 2048;
+
+    /** Maximum embed description length */
+
     static MaxDescriptionLength: number = 4096;
 };

@@ -1,10 +1,10 @@
+import { Events } from "../types";
+import { User } from "../structures/User";
 import { Client } from "../entities/Client";
-import { IUser } from "../interfaces/IRawUserData";
-import { IApplication } from "../interfaces/IApplication";
-import { ClientApplication } from "../entities/ClientApplication";
+import type { RawDiscordAPIUserData, ReadyEventPayload } from "../types";
 
-export default function (payload: { d: any }, client: Client): void {
-  const user: IUser = {
+export default function (payload: ReadyEventPayload, client: Client): void {
+  const user: RawDiscordAPIUserData = {
     id: payload.d.user.id,
     username: payload.d.user.username,
     discriminator: payload.d.user.discriminator,
@@ -12,13 +12,7 @@ export default function (payload: { d: any }, client: Client): void {
     avatar: payload.d.user.avatar
   };
 
-  const application: IApplication = {
-    id: payload.d.application.id as string,
-    flags: payload.d.application?.flags as number
-  };
+  client.user = new User(user, client);
 
-  client.user = user;
-  client.app = new ClientApplication(application, client);
-
-  client.emit('connect');
+  client.emit(Events.Connect, client.user, payload.d.guilds);
 };

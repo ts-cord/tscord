@@ -1,18 +1,18 @@
 import * as errors from '../constants/errors.json';
 
 declare class TypeCordError<T extends boolean = true> extends Error {
-    constructor(message: T extends true ? keyof typeof errors : string, cause?: ErrorOptions);
+    constructor(message: T extends true ? keyof typeof errors : string, options?: ErrorOptions);
 
     toString(): string;
-    toJSON(): { name: string; message: string; stack?: string; cause?: unknown; };
+    toJSON(): { name: string; message: string; stack?: string; options?: unknown; };
     log(): void;
 };
 
 declare class TypeCordRangeError extends RangeError {
-    constructor(message: string, cause?: ErrorOptions);
+    constructor(message: string, options?: ErrorOptions);
 
     toString(): string
-    toJSON(): { name: string; message: string; stack?: string; cause?: unknown };
+    toJSON(): { name: string; message: string; stack?: string; options?: unknown };
     log(): void;
 };
 
@@ -28,15 +28,15 @@ declare class Group<K, V> extends Map<K, V> {
     public toJSON(): { [k: string]: V };
     public at(index: number): V | undefined;
     public reduce(callbackfn: (previousValue: V, currentValue: V, currentIndex: number, array: V[]) => V): V;
-    public hasAllOf(...keys: K[]): boolean;
-    public hasAnyOf(...keys: K[]): boolean;
+    public hasAll(...keys: K[]): boolean;
+    public hasAny(...keys: K[]): boolean;
     public first(amount: number = 1): { [key: string]: V };
     public last(amount: number = this.size): { [key: string]: V };
     public mapValues<U>(callbackfn: (value: V, index: number, array: V[]) => U): U[];
     public mapKeys<U>(callbackfn: (value: K, index: number, array: K[]) => U): U[];
     public merge(group: Group<K, V> | Map<K, V>): this;
-    public random(): V;
-    public empty(): boolean;
+    public get random(): V;
+    public get empty(): boolean;
     public findIndex(predicate: (value: V, index: number, obj: V[]) => unknown): V;
     public reduceRight(callbackfn: (previousValue: V, currentValue: V, currentIndex: number, array: V[]) => V): V;
     public indexOf(searchElement: K, fromIndex?: number): number;

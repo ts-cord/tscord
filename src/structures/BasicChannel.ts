@@ -1,10 +1,9 @@
 import { Basic } from "./Basic";
 import { api } from "../constants/Api";
+import { ChannelTypes } from "../types";
 import { Client } from "../entities/Client";
-import { Channel } from "../managers/Channel";
 import { Snowflake } from "../types/Snowflake";
-import { ChannelTypes } from "../props/ChannelTypes";
-import type { BasicChannelData } from "../types/channel";
+import type { BasicChannelData } from "../types";
 import { Channel as ChannelRoute } from "../utils/Routes";
 
 export class BasicChannel extends Basic implements BasicChannelData {
@@ -44,18 +43,13 @@ export class BasicChannel extends Basic implements BasicChannelData {
 
     /**
      * Fetch the channel's
-     * @param {boolean} force - If you want to skip the cache check and make a request in the API
-     * @returns {Promise<BasicChannel | Channel>}
+     * @returns {Promise<BasicChannel>}
      */
 
-    async fetch(force?: boolean): Promise<BasicChannel | Channel> {
-        if (force) {
-            const { data }: { data: BasicChannelData } = await api.get(this.route, this.axios_config);
+    async fetch(): Promise<BasicChannel> {
+        const { data }: { data: BasicChannelData } = await api.get(this.route, this.axios_config);
 
-            return new BasicChannel(data, this.client);
-        };
-
-        return this.client.channels.get(this.id)!;
+        return new BasicChannel(data, this.client);
     };
 
     /**

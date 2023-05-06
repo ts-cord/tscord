@@ -1,4 +1,4 @@
-import type { GenericBuilderTypes } from "../types/misc";
+import type { GenericBuilderTypes } from "../types";
 
 export class BasicBuilder<T extends GenericBuilderTypes> {
     data: T;

@@ -1,42 +1,40 @@
 import EventEmitter from "events";
-import { Group } from "../utils/Group";
 import { api } from "../constants/Api";
 import { User } from "../structures/User";
-//import { Channel } from "../managers/Channel";
-import { Snowflake } from "../types/Snowflake";
 import { WebSocketStructure } from "./WebSocket";
 import { OauthCurrentUser } from "../utils/Routes";
 import { UserManager } from "../managers/UserManager";
-//import { GuildManager } from "../structures/GuildManager";
+import { GuildManager } from "../managers/GuildManager";
 import { ClientApplication } from "./ClientApplication";
-import { ClientProps } from "../interfaces/IClientProps";
-import { RawUserData } from "../interfaces/IRawUserData";
-import { ClientEvents } from "../interfaces/IClientEvents";
+import { ChannelManager } from "../managers/ChannelManager";
 import { wss as DiscordWss } from "../constants/constants.json";
-import { ClientEditOptions } from "../interfaces/IClientEditOptions";
-import { ClientWebSocketProps } from "../interfaces/IClientWebSocketProps";
+import { ClientOptions, ClientWebSocketOptions } from "../types";
+import type { ClientEvents, ClientEditOptions, RawDiscordAPIUserData } from "../types";
 
 export class Client extends EventEmitter {
   public user: User | undefined;
-  public readonly token: string;
-  public readonly intents: number;
-  public readonly ws: WebSocketStructure;
-  public readonly options: ClientProps['options'];
-  public readonly sweepers: ClientProps['sweepers'];
-  public readonly app: ClientApplication | undefined;
-  public readonly users: UserManager = new UserManager(this);
-  //public readonly guilds: GuildManager = new GuildManager(this);
-  //public readonly channels: Group<Snowflake, Channel> = new Group<Snowflake, Channel>();
+  public token: string;
+  public intents: number;
+  public ws: WebSocketStructure;
+  public options: ClientOptions['options'];
+  public cache_sweepers: ClientOptions['cache_sweepers'];
+  public rest: ClientOptions['rest'];
+  public app: ClientApplication | undefined;
+  public users: UserManager = new UserManager(this);
+  public guilds: GuildManager = new GuildManager(this);
+  public channels: ChannelManager = new ChannelManager(this);
+  private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
 
-  constructor(data: ClientProps) {
+  constructor(options: ClientOptions) {
     super();
 
-    this.token = data.token;
-    this.intents = data.intents;
-    this.sweepers = data.sweepers;
-    this.options = { default_image_format: data.options?.default_image_format ?? 'png', default_image_size: data.options?.default_image_size ?? 1024 };
+    this.token = options.token;
+    this.intents = options.intents ?? 0;
+    this.axios_config = { headers: { Authorization: `Bot ${this.token}` } };
+    this.rest = { baseURL: options.rest?.baseURL ?? 'https://discord.com/api/v10/', request_timeout: options.rest?.request_timeout ?? 15000 };
+    this.options = { default_image_format: options.options?.default_image_format ?? 'png', default_image_size: options.options?.default_image_size ?? 1024 };
 
-    const wsProps: ClientWebSocketProps = {
+    const wsProps: ClientWebSocketOptions = {
       url: DiscordWss,
       events: ['READY', 'INTERACTION_CREATE', 'GUILD_CREATE', 'MESSAGE_CREATE', 'CHANNEL_DELETE', 'CHANNEL_CREATE', 'CHANNEL_PINS_UPDATE'],
       client: this
@@ -45,9 +43,23 @@ export class Client extends EventEmitter {
     this.ws = new WebSocketStructure(wsProps, this.token, this.intents);
   };
 
+  /**
+   * Listens for an event when triggered
+   * @param {E} event - The event to trigger
+   * @param {ClientEvents[E]} listener - The listener to the event
+   * @returns {this}
+   */
+
   on<E extends keyof ClientEvents>(event: E, listener: ClientEvents[E]): this {
     return super.on(event, listener);
   };
+
+  /**
+   * Listens **one-time** an event
+   * @param {E} event - The event to trigger
+   * @param {ClientEvents[E]} listener - The listener to the event
+   * @returns {this}
+   */
 
   once<E extends keyof ClientEvents>(event: E, listener: ClientEvents[E]): this {
     return super.once(event, listener);
@@ -63,44 +75,40 @@ export class Client extends EventEmitter {
   };
 
   /**
-   * Set the client username
-   * @param {string} name - The name that will be set 
+   * Set client's username
+   * @param {string} username - New username
    * @returns {Promise<User>}
    */
 
-  /* async setName(name: string): Promise<User> {
-    const { data }: { data: RawUserData } = await api.patch(OauthCurrentUser, { username: name }, { headers: { Authorization: `Bot ${this.token}` } });
+  async setUsername(username: string): Promise<User> {
+    const data: User = await this.edit({ username });
 
-    this.user = new User(data, this);
-
-    return this.user;
-  }; */
+    return data;
+  };
 
   /**
-   * @ Set the client avatar
-   * @param {string} avatarURL - The avatar URL that will be set 
+   * Set client's avatar
+   * @param {string} avatar - New avatar URL
    * @returns {Promise<User>}
    */
 
-  /* async setAvatar(avatarURL: string): Promise<User> {
-    const { data }: { data: RawUserData } = await api.patch(OauthCurrentUser, { avatar: avatarURL }, { headers: { Authorization: `Bot ${this.token}` } });
+  async setAvatar(avatar: string): Promise<User> {
+    const data: User = await this.edit({ avatar });
 
-    this.user = new User(data, this);
-
-    return this.user;
-  }; */
+    return data;
+  };
 
   /**
-   * Edit the client options
-   * @param {ClientEditOptions} options - The options that will be changed
+   * Edit client's options
+   * @param {ClientEditOptions} options - Options to edit
    * @returns {Promise<User>}
    */
 
-  /* async edit(options: ClientEditOptions): Promise<User> {
-    const { data }: { data: RawUserData } = await api.patch(OauthCurrentUser, options, { headers: { Authorization: `Bot ${this.token}` } });
+  async edit(options: ClientEditOptions): Promise<User> {
+    const { data }: { data: RawDiscordAPIUserData } = await api.patch(OauthCurrentUser, options, this.axios_config);
 
     this.user = new User(data, this);
 
     return this.user;
-  }; */
+  };
 };

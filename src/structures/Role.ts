@@ -3,8 +3,7 @@ import { api } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import { GuildRole, RoleIcon } from "../utils/Routes";
-import { ViewOptions } from "../interfaces/IViewOptions";
-import type { EditRoleOptions, GuildRoleTags, RawGuildRole, RawRole } from "../types";
+import type { EditRoleOptions, GuildRoleTags, RawGuildRole, RawRole, ViewOptions } from "../types";
 
 export class Role extends Basic implements RawRole {
     public id: Snowflake;
@@ -17,7 +16,7 @@ export class Role extends Basic implements RawRole {
     public permissions: string;
     public managed: boolean;
     public mentionable: boolean;
-    public tags?: GuildRoleTags | undefined;
+    public tags: GuildRoleTags | undefined;
     public creation_date: Date;
     public creation_timestamp: number;
     public readonly guildId: Snowflake;
@@ -43,22 +42,55 @@ export class Role extends Basic implements RawRole {
         Object.assign(this, data);
     };
 
+    /**
+     * Delete the role
+     * @param {string} reason - Reason for delete the role
+     * @returns {Promise<Role>}
+     */
+
     async delete(reason?: string): Promise<Role> {
         await api.delete(GuildRole(this.guildId, this.id), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return this;
     };
+
+    /**
+     * Edit role's options
+     * @param {EditRoleOptions} options - Options to edit
+     * @returns {Promise<Role>}
+     */
+
     async edit(options: EditRoleOptions): Promise<Role> {
         const { data }: { data: RawRole } = await api.patch(GuildRole(this.guildId, this.id), { name: options.name, permissions: options.permissions, color: options.color, hoist: options.hoist, icon: options.icon, unicode_emoji: options.unicode_emoji, mentionable: options.mentionable }, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': options.reason } });
 
         return new Role(data, this.client, this.guildId);
     };
+
+    /**
+     * Compare the positions between role's and other role
+     * @param {Role} role - The other role to compare
+     * @returns {number}
+     */
+
     comparePosition(role: Role): number {
         return this.position > role.position ? this.position - role.position : role.position - this.position;
     };
+
+    /**
+     * Stringify role's object into role's mention
+     * @returns {string}
+     */
+
     toString(): string {
         return `<@&${this.id}>`;
     };
+
+    /**
+     * Returns role's icon URL
+     * @param {ViewOptions} options - Optional image options
+     * @returns {string | undefined}
+     */
+
     iconURL(options: ViewOptions): string | undefined {
         return this.icon && RoleIcon(this.id, this.icon) + `.${options.format ?? this.client.options?.default_image_format}?size=${options.size ?? this.client.options?.default_image_size}`;
     };

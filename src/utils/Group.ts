@@ -6,7 +6,7 @@ export class Group<K, V> extends Map<K, V> {
    * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/find
    */
 
-  public find(func: (value: V, index: number, obj: V[]) => unknown): V | undefined {
+  find(func: (value: V, index: number, obj: V[]) => unknown): V | undefined {
     return [...this.values()].find(func);
   };
 
@@ -16,7 +16,7 @@ export class Group<K, V> extends Map<K, V> {
    * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/map
    */
 
-  public map(func: (value: [K, V], index: number, array: [K, V][]) => unknown): unknown[] {
+  map(func: (value: [K, V], index: number, array: [K, V][]) => unknown): unknown[] {
     return [...this.entries()].map(func);
   };
 
@@ -26,7 +26,7 @@ export class Group<K, V> extends Map<K, V> {
    * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
    */
 
-  public filter(func: (value: V, index: number, array: V[]) => value is V): V[] {
+  filter(func: (value: V, index: number, array: V[]) => value is V): V[] {
     return [...this.values()].filter(func);
   };
 
@@ -37,7 +37,7 @@ export class Group<K, V> extends Map<K, V> {
    * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/every
    */
 
-  public every(func: (value: V, index: number, array: V[]) => value is V): this is V[] {
+  every(func: (value: V, index: number, array: V[]) => value is V): this is V[] {
     return [...this.values()].every(func);
   };
 
@@ -48,7 +48,7 @@ export class Group<K, V> extends Map<K, V> {
   * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/some
   */
 
-  public some(func: (value: V, index: number, array: V[]) => unknown): boolean {
+  some(func: (value: V, index: number, array: V[]) => unknown): boolean {
     return [...this.values()].some(func);
   };
 
@@ -58,7 +58,7 @@ export class Group<K, V> extends Map<K, V> {
    * @returns {this is K[]}
    */
 
-  public everyKey(func: (value: K, index: number, array: K[]) => value is K,): this is K[] {
+  everyKey(func: (value: K, index: number, array: K[]) => value is K,): this is K[] {
     return [...this.keys()].every(func);
   };
 
@@ -68,37 +68,37 @@ export class Group<K, V> extends Map<K, V> {
    * @returns {this is K[]}
    */
 
-  public everyValue(func: (value: V, index: number, array: V[]) => value is V): this is V[] {
+  everyValue(func: (value: V, index: number, array: V[]) => value is V): this is V[] {
     return [...this.values()].every(func);
   };
 
   /**
-   * Return the Group values
-   * @param {boolean} groupKeyAndValue - Return the key and value or just the value
+   * Returns the Group values.
+   * @param {boolean} groupKeyAndValue - Return the key and value or just the value.
    * @returns {[K, V][] | V[]}
    */
 
-  public toArray<T extends boolean = true>(groupKeyAndValue?: T): T extends true ? [K, V][] : V[] {
+  toArray<T extends boolean = true>(groupKeyAndValue?: T): T extends true ? [K, V][] : V[] {
     return (groupKeyAndValue ? [...this.entries()] : [...this.values()]) as T extends true ? [K, V][] : V[];
   };
 
   /**
-   * Return the Group in JSON format
+   * Returns the Group in JSON format.
    * @returns { { [k: string]: V } }
    */
 
-  public toJSON(): { [k: string]: V } {
+  toJSON(): { [k: string]: V } {
     return Object.fromEntries(Object.entries(this.entries));
   };
 
   /**
-   * Get a item by a index
-   * @param {number} index - Index to get the value
+   * Get a item by an index.
+   * @param {number} index - Index to get the value.
    * @returns {V | undefined}
    * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/at
    */
 
-  public at(index: number): V | undefined {
+  at(index: number): V | undefined {
     return [...this.values()].at(index);
   };
 
@@ -109,47 +109,47 @@ export class Group<K, V> extends Map<K, V> {
    * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
    */
 
-  public reduce(callbackfn: (previousValue: V, currentValue: V, currentIndex: number, array: V[]) => V): V {
+  reduce(callbackfn: (previousValue: V, currentValue: V, currentIndex: number, array: V[]) => V): V {
     return [...this.values()].reduce(callbackfn);
   };
 
   /**
-   * Returns true if all keys is in Group keys
-   * @param {K[]} keys - Keys to be checked
+   * Returns true if all keys is in this group keys.
+   * @param {K[]} keys - Keys to be checked.
    * @returns {boolean}
    */
 
-  public hasAllOf(...keys: K[]): boolean {
+  hasAll(...keys: K[]): boolean {
     return keys.every((key: K) => super.has(key));
   };
 
   /**
-   * Returns true if any key is in Group keys
-   * @param {K[]} keys - Keys to be checked 
+   * Returns true if any keys is in this group keys.
+   * @param {K[]} keys - Keys to be checked .
    * @returns {boolean}
    */
 
-  public hasAnyOf(...keys: K[]): boolean {
+  hasAny(...keys: K[]): boolean {
     return keys.some((key: K) => super.has(key));
   };
 
   /**
-   * Get the first x entries of the Group
-   * @param {number} amount - The amount of items to return
+   * Get the first x entries of this group.
+   * @param {number} amount - The amount of items to return.
    * @returns { { [key: string]: V } }
    */
 
-  public first<T extends number | undefined>(amount?: T): T extends undefined ? V : { [key: string]: V } {
+  first<T extends number | undefined>(amount?: T): T extends undefined ? V : { [key: string]: V } {
     return amount ? Object.fromEntries([...this.entries()].slice(0, amount)) : [...this.entries()].at(0);
   };
 
   /**
-   * Get the last x entries of the Group
-   * @param {number} amount - The amount of items to return 
+   * Get the last x entries of this group.
+   * @param {number} amount - The amount of items to return.
    * @returns { { [key: string]: V } }
    */
 
-  public last(amount: number = this.size): { [key: string]: V } {
+  last(amount: number = this.size): { [key: string]: V } {
     return Object.fromEntries([...this.entries()].slice(-amount));
   };
 
@@ -160,7 +160,7 @@ export class Group<K, V> extends Map<K, V> {
    * @returns {U[]}
    */
 
-  public mapValues<U>(callbackfn: (value: V, index: number, array: V[]) => U): U[] {
+  mapValues<U>(callbackfn: (value: V, index: number, array: V[]) => U): U[] {
     return [...this.values()].map(callbackfn);
   };
 
@@ -171,7 +171,7 @@ export class Group<K, V> extends Map<K, V> {
    * @returns {U[]}
    */
 
-  public mapKeys<U>(callbackfn: (value: K, index: number, array: K[]) => U): U[] {
+  mapKeys<U>(callbackfn: (value: K, index: number, array: K[]) => U): U[] {
     return [...this.keys()].map(callbackfn);
   };
 
@@ -181,29 +181,29 @@ export class Group<K, V> extends Map<K, V> {
    * @returns {this} - The merged group.
    */
 
-  public merge(group: Group<K, V> | Map<K, V>): this {
+  merge(group: Group<K, V> | Map<K, V>): this {
     group.forEach((value: V, key: K) => this.set(key, value));
 
     return this;
   };
 
   /**
-   * Pick a random element in the Group, if the Group is empty, so returns undefined
+   * Pick a random element in the Group, if the Group is empty, so returns undefined.
    * @returns {V}
    */
 
-  public random(): V {
+  get random(): V {
     const values: V[] = [...this.values()];
 
     return values[Math.random() * values.length];
   };
 
   /**
-   * Check if the Group is empty
+   * Check if the Group is empty.
    * @returns {boolean}
    */
 
-  public empty(): boolean {
+  get empty(): boolean {
     return this.size === 0;
   };
 
@@ -214,7 +214,7 @@ export class Group<K, V> extends Map<K, V> {
    * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex
    */
 
-  public findIndex(predicate: (value: V, index: number, obj: V[]) => unknown): number {
+  findIndex(predicate: (value: V, index: number, obj: V[]) => unknown): number {
     return this.toArray(false).findIndex(predicate);
   };
 
@@ -225,7 +225,7 @@ export class Group<K, V> extends Map<K, V> {
    * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/reduceRight
    */
 
-  public reduceRight(callbackfn: (previousValue: V, currentValue: V, currentIndex: number, array: V[]) => V): V {
+  reduceRight(callbackfn: (previousValue: V, currentValue: V, currentIndex: number, array: V[]) => V): V {
     return this.toArray(false).reduceRight(callbackfn);
   };
 
@@ -237,7 +237,7 @@ export class Group<K, V> extends Map<K, V> {
    * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
    */
 
-  public indexOf(searchElement: K, fromIndex?: number): number {
+  indexOf(searchElement: K, fromIndex?: number): number {
     return [...this.keys()].indexOf(searchElement, fromIndex);
   };
 };

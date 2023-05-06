@@ -8,12 +8,12 @@ export class TypeCordRangeError extends RangeError {
     toString(): string {
         return `${this.name}: ${this.message}`;
     };
-    toJSON(): { name: string; message: string; stack?: string; cause?: unknown; } {
+    toJSON(): { name: string; message: string; stack?: string; options?: unknown; } {
         return {
             name: this.name,
             message: this.message,
             stack: this.stack,
-            cause: this.cause
+            options: this.cause
         };
     };
     log(): void {

@@ -41,6 +41,8 @@ export class Message extends Basic {
     public position: number | undefined;
     public role_subscription_data: RoleSubscriptionData | undefined;
     public guild: Guild | undefined;
+    public creation_date: Date;
+    public creation_timestamp: number;
     private readonly auth: { headers: { Authorization: `Bot ${string}` } };
     private readonly url: string;
 
@@ -81,61 +83,139 @@ export class Message extends Basic {
         this.guild = guild;
         this.auth = { headers: { Authorization: `Bot ${this.client.token}` } };
         this.url = ChannelMessage(this.channel_id, this.id);
+        this.creation_date = new Date((+this.id / 4194304) + 1420070400000);
+        this.creation_timestamp = this.creation_date.getTime();
 
         Object.assign(this, data);
     };
+
+    /**
+     * Publishes the message in an announcement channel to all channels following it
+     * @returns {Promise<Message>}
+     */
 
     async crosspost(): Promise<Message> {
         const { data }: { data: RawDiscordAPIMessageData } = await api.post(this.url + '/crosspost', null, this.auth);
 
         return new Message(data, this.client, this.guild);
     };
+
+    /**
+     * Delete the Message
+     * @param {string} reason - Reason for delete the message
+     * @returns {Promise<Message>}
+     */
+
     async delete(reason?: string): Promise<Message> {
         await api.delete(this.url, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return this;
     };
+
+    /**
+     * Fetch the Message
+     * @returns {Promise<Message>}
+     */
+
     async fetch(): Promise<Message> {
         const { data }: { data: RawDiscordAPIMessageData } = await api.get(this.url, this.auth);
 
         return new Message(data, this.client, this.guild);
     };
+
+    /**
+     * Fetches the Message this crosspost/reply/pin-add references
+     * @returns {Promise<Message>}
+     */
+
     async fetchMessageReference(): Promise<Message> {
         const { data }: { data: RawDiscordAPIMessageData } = await api.get(ChannelMessage(this.channel_id, this.referenced_message!.id), this.auth);
 
         return new Message(data, this.client, this.guild);
     };
+
+    /**
+     * Fetches the Webhook used to create the Message
+     * @returns {Promise<Webhook>}
+     */
+
     async fetchWebhook(): Promise<Webhook> {
         const { data }: { data: RawDiscordAPIWebhookData } = await api.get(WebhookRoute(this.webhook_id!), this.auth);
 
         return new Webhook(data, this.client);
     };
+
+    /**
+     * Check if the Message belongs to a Guild
+     * @returns {boolean}
+     */
+
     inGuild(): boolean {
         return this.guild ? true : false;
     };
+
+    /**
+     * Check if the Message belongs to an uncached Guild
+     * @returns {boolean}
+     */
+
     inUncachedGuild(): boolean {
         return this.client.guilds.cache.has(this.guild?.id as string);
     };
+
+    /**
+     * Pin the Message
+     * @param {string} reason - Reason for pin the Message
+     * @returns {Promise<Message>}
+     */
+
     async pin(reason?: string): Promise<Message> {
         await api.put(this.url, null, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return this;
     };
+
+    /**
+     * Unpin the Message
+     * @param {string} reason - Reason for unpin the Message
+     * @returns {Promise<Message>}
+     */
+
     async unpin(reason?: string): Promise<Message> {
         await api.put(this.url, null, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return this;
     };
+
+    /**
+     * React to the Message
+     * @param {EmojiResolvable} emoji - The emoji to react
+     * @returns {Promise<Message>}
+     */
+
     async react(emoji: EmojiResolvable): Promise<Message> {
         await api.put(this.url + `/reactions/${encodeURIComponent(emoji)}/@me`, this.auth);
 
         return this;
     };
+
+    /**
+     * Start a thread from the Message
+     * @param {StartThreadOptions} options - The thread options
+     * @returns {Promise<RawDiscordAPIChannelData>}
+     */
+
     async setThreadFrom(options: StartThreadOptions): Promise<RawDiscordAPIChannelData> {
         const { data }: { data: RawDiscordAPIChannelData } = await api.post(this.url + `/threads`, options, this.auth);
 
         return data;
     };
+
+    /**
+     * Stringify the message's object into message's ID
+     * @returns {string}
+     */
+
     toString(): string {
         return this.id;
     };

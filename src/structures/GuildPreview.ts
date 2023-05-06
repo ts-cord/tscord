@@ -2,21 +2,20 @@ import { Basic } from "./Basic";
 import { api } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
-import { ViewOptions } from "../interfaces/IViewOptions";
 import { GuildPreview as GuildPreviewRoute, GuildDiscoverySplash, GuildIcon, GuildSplash } from "../utils/Routes";
-import type { GuildFeatures, RawDiscordAPIGuildPreviewData, RawGuildEmoji, RawGuildPreview, RawSticker } from "../types";
+import type { GuildFeatures, RawDiscordAPIGuildPreviewData, RawGuildEmoji, RawGuildPreview, RawSticker, ViewOptions } from "../types";
 
 export class GuildPreview extends Basic implements RawGuildPreview {
     id: Snowflake;
     name: string;
-    icon?: string;
-    splash?: string;
-    discovery_splash?: string;
+    icon: string | undefined;
+    splash: string | undefined;
+    discovery_splash: string | undefined;
     emojis: Array<RawGuildEmoji>;
     features: Array<GuildFeatures>;
     approximate_member_count: number;
     approximate_presence_count: number;
-    description?: string;
+    description: string | undefined;
     stickers: Array<RawSticker>;
     creation_timestamp: number;
     creation_date: Date;
@@ -43,20 +42,52 @@ export class GuildPreview extends Basic implements RawGuildPreview {
         Object.assign(this, data);
     };
 
+    /**
+     * Stringify the GuildPreview objecto into guild's name
+     * @returns {string}
+     */
+
     toString(): string {
         return this.name;
     };
+
+    /**
+     * Fetch guild's preview
+     * @returns {Promise<GuildPreview>}
+     */
+
     async fetch(): Promise<GuildPreview> {
         const { data }: { data: RawDiscordAPIGuildPreviewData } = await api.get(GuildPreviewRoute(this.id), this.auth);
 
         return new GuildPreview(data, this.client);
     };
+
+    /**
+     * Returns guild's discovery splash URL
+     * @param {ViewOptions} options - Optional image options
+     * @returns {string | undefined}
+     */
+
     discoverySplashURL(options?: ViewOptions): string | undefined {
         return this.discovery_splash && GuildDiscoverySplash(this.id, this.discovery_splash) + `.${options?.format ?? this.client.options?.default_image_format}?size=${options?.size ?? this.client.options?.default_image_size}`;
     };
+
+    /**
+     * Returns guild's icon URL
+     * @param {ViewOptions} options - Optional image options
+     * @returns {Promise<string | undefined>}
+     */
+
     iconURL(options?: ViewOptions): string | undefined {
         return this.icon && GuildIcon(this.id, this.icon) + `.${options?.format ?? this.client.options?.default_image_format}?size=${options?.size ?? this.client.options?.default_image_size}`;
     };
+
+    /**
+     * Returns guild's splash URL
+     * @param {ViewOptions} options - Optional image options
+     * @returns {string | undefined}
+     */
+
     splashURL(options?: ViewOptions): string | undefined {
         return this.splash && GuildSplash(this.id, this.splash) + `.${options?.format ?? this.client.options?.default_image_format}?size=${options?.size ?? this.client.options?.default_image_size}`;
     };

@@ -6,7 +6,7 @@ import { BasicManager } from "./BasicManager";
 import { Snowflake } from "../types/Snowflake";
 import { DMChannel } from "../structures/DMChannel";
 import { ChannelMessages, Channel } from "../utils/Routes";
-import type { CreateMessageOptions, UserResolvable } from "../types/index";
+import type { CreateMessageOptions, UserResolvable } from "../types";
 
 export class UserManager extends BasicManager {
     override cache: Group<Snowflake, User> = new Group<Snowflake, User>();

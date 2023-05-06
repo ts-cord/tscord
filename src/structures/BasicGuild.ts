@@ -1,10 +1,10 @@
 import { Basic } from "./Basic";
 import { Guild } from "./Guild";
 import { api } from "../constants/Api";
+import { GuildFeatures } from "../types";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
-import { ViewOptions } from "../interfaces/IViewOptions";
-import { BasicGuildData, GuildFeatures, RawGuild } from "../types/guild";
+import type { BasicGuildData,RawGuild, ViewOptions } from "../types";
 import { Guild as GuildRoute, GuildIcon as GuildIconRoute } from "../utils/Routes";
 
 export class BasicGuild extends Basic implements BasicGuildData {

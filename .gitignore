@@ -3,6 +3,6 @@
 /node_modules
 /package-lock.json
 
-# Test
+# Tests
 
-test.ts
+/test.ts

@@ -42,7 +42,12 @@ export class ActionRowBuilder<T extends ButtonBuilder | TextInputBuilder | Selec
 
         return this;
     };
+    
+    /** Maximum number of action rows a message can have */
 
     static MaxActionRowsPerMessage: number = 5;
+
+    /** Maximum custom ID length */
+
     static MaxCustomIdLength: number = 100;
 };

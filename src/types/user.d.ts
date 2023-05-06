@@ -1,6 +1,8 @@
 import { Locales } from "./index";
 import { User } from "../structures/User";
 import { Snowflake } from "./Snowflake";
+import { Message } from "../structures/Message";
+import { GuildMember } from "../structures/GuildMember";
 
 export interface RawDiscordAPIUserData {
     id: Snowflake;
@@ -25,7 +27,7 @@ export interface ClientUserEditOptions {
     avatar?: string;
 };
 
-export type UserResolvable = User | Snowflake;
+export type UserResolvable = User | Snowflake | Message | GuildMember;
 
 export interface RawUser extends RawDiscordAPIUserData {
     creation_timestamp: number;

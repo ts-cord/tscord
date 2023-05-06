@@ -19,6 +19,13 @@ export class WelcomeScreen extends Basic implements GuildWelcomeScreenData {
 
         Object.assign(this, data);
     };
+
+    /**
+     * Edit the welcome's screen's options
+     * @param {GuildWelcomeScreenEditOptions} options - Options to edit
+     * @returns {Promise<WelcomeScreen>}
+     */
+
     async edit(options: GuildWelcomeScreenEditOptions): Promise<WelcomeScreen> {
         const { data }: { data: GuildWelcomeScreenData } = await api.patch(GuildWelcomeScreen(this.guild.id), { enabled: options.enabled, welcome_channels: options.welcome_channels, description: options.description }, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': options.reason } });
 

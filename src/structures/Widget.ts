@@ -26,6 +26,11 @@ export class Widget extends Basic implements GuildWidgetData {
         Object.assign(this, data);
     };
 
+    /**
+     * Fetch guild's widget
+     * @returns {Promise<Widget>}
+     */
+
     async fetch(): Promise<Widget> {
         const { data }: { data: GuildWidgetData } = await api.get(GuildWidgetJSON(this.id), { headers: { Authorization: `Bot ${this.client.token}` } });
 

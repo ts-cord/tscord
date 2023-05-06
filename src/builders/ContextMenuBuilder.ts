@@ -1,12 +1,11 @@
-import { Locales } from "../types";
 import { BasicBuilder } from "./BasicBuilder";
-import type { ContextMenuData, ContextMenuTypes } from "../types/app-commands";
+import type { ContextMenuData, ContextMenuTypes, Locales } from "../types";
 
 export class ContextMenuBuilder extends BasicBuilder<ContextMenuData> {
     /**
      * Create context menu data by the constructor
      * @param {ContextMenuData} data - Data to be set
-     * @constructor
+     * @see https://discord.com/developers/docs/interactions/application-commands
      */
 
     constructor(data?: ContextMenuData) {

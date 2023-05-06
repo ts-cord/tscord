@@ -39,26 +39,62 @@ export class GuildTemplate extends Basic {
 
         Object.assign(this, data);
     };
+
+    /**
+     * Delete the template
+     * @returns {Promise<GuildTemplate>}
+     */
+
     async delete(): Promise<GuildTemplate> {
         const { data }: { data: GuildTemplateData } = await api.delete(GuildTemplateRoute(this.source_guild_id, this.code), this.axios_config);
 
         return new GuildTemplate(data, this.client);
     };
+
+    /**
+     * Edit template's options
+     * @param {string} name - New template's name
+     * @param {string} description - New template's description
+     * @returns {Promise<GuildTemplate>}
+     */
+
     async edit(name: string, description?: string): Promise<GuildTemplate> {
         const { data }: { data: GuildTemplateData } = await api.patch(GuildTemplateRoute(this.source_guild_id, this.code), { name: name, description: description }, this.axios_config);
 
         return new GuildTemplate(data, this.client);
     };
+
+    /**
+     * Sync the template
+     * @returns {Promise<GuildTemplate>}
+     */
+
     async sync(): Promise<GuildTemplate> {
         const { data }: { data: GuildTemplateData } = await api.put(GuildTemplateRoute(this.source_guild_id, this.code), null, this.axios_config);
 
         return new GuildTemplate(data, this.client);
     };
+
+    /**
+     * Create a new Guild from template's
+     * @param {string} name - Guild name
+     * @param {string1} icon - Guild icon URL
+     * @returns {Promise<Guild>}
+     */
+
     async createGuild(name: string, icon?: string): Promise<Guild> {
         const { data }: { data: RawGuild } = await api.post(GuildTemplateCode(this.code), { name: name, icon: icon }, this.axios_config);
 
-        return new Guild(data, this.client);
-    }
+        this.client.guilds.cache.set(data.id, new Guild(data, this.client));
+
+        return this.client.guilds.cache.get(data.id)!;
+    };
+
+    /**
+     * Stringify template's object into template's code
+     * @returns {string}
+     */
+
     toString(): string {
         return this.code;
     };

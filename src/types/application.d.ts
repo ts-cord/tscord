@@ -1,5 +1,6 @@
+import type { Locales } from "./misc";
 import { Snowflake } from "./Snowflake";
-import { RawDiscordAPIUserData } from "./user";
+import type { RawDiscordAPIUserData } from "./user";
 
 export interface RawApplication {
     id: Snowflake;
@@ -63,3 +64,25 @@ export interface ApplicationTeamMember {
     team_id: Snowflake;
     user: Pick<RawDiscordAPIUserData, 'avatar' | 'discriminator' | 'id' | 'username'>;
 };
+
+export interface ApplicationRoleConnectionMetadata {
+    type: ApplicationRoleConnectionMetadataType;
+    key: string;
+    name: string;
+    name_localizations?: Locales;
+    description: string;
+    description_localizations?: Locales;
+};
+
+export enum ApplicationRoleConnectionMetadataType {
+    IntegerLessThanOrEqual = 1,
+    IntegerGreaterThanOrEqual,
+    IntegerEqual,
+    IntegerNotEqual,
+    DatetimeLessThanOrEqual,
+    DatetimeGreaterThanOrEqual,
+    BooleanEqual,
+    BooleanNotEqual
+};
+
+export interface ApplicationRoleConnectionMetadataEditOptions extends ApplicationRoleConnectionMetadata {};

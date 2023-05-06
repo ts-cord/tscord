@@ -3,29 +3,29 @@ import { Locales } from "../types";
 import { api } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
-import type { ApplicationCommandData, ApplicationCommandOptionsData, ApplicationCommandTypes, EditApplicationCommandOptions } from "../types/interaction";
+import type { RawApplicationCommandData, ApplicationCommandOptionsData, ApplicationCommandTypes, EditApplicationCommandOptions } from "../types";
 
-export class ApplicationCommand extends Basic implements ApplicationCommandData {
+export class ApplicationCommand extends Basic implements RawApplicationCommandData {
     public id: Snowflake;
     public type: ApplicationCommandTypes;
     public application_id: Snowflake;
-    public guild_id?: Snowflake;
+    public guild_id: Snowflake | undefined;
     public name: string;
-    public name_localizations?: Locales;
+    public name_localizations: Locales | undefined;
     public description: string;
-    public description_localizations?: Locales;
-    public options?: Array<ApplicationCommandOptionsData>;
-    public default_member_permissions?: string;
-    public default_permission?: boolean;
-    public dm_permission?: boolean;
-    public nsfw?: boolean;
+    public description_localizations: Locales | undefined;
+    public options: Array<ApplicationCommandOptionsData> | undefined;
+    public default_member_permissions: string | undefined;
+    public default_permission: boolean | undefined;
+    public dm_permission: boolean | undefined;
+    public nsfw: boolean | undefined;
     public version: string;
     public creationTimestamp: number;
     public creationDate: Date;
     private readonly auth: { headers: { Authorization: `Bot ${string}` } };
     private readonly url: string;
 
-    constructor(data: ApplicationCommandData, client: Client) {
+    constructor(data: RawApplicationCommandData, client: Client) {
         super(client);
 
         this.id = data.id;
@@ -68,7 +68,7 @@ export class ApplicationCommand extends Basic implements ApplicationCommandData 
      */
 
     async edit(options: EditApplicationCommandOptions): Promise<ApplicationCommand> {
-        const { data }: { data: ApplicationCommandData } = await api.patch(this.url, options, this.auth);
+        const { data }: { data: RawApplicationCommandData } = await api.patch(this.url, options, this.auth);
 
         return new ApplicationCommand(data, this.client);
     };

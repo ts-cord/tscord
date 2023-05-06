@@ -6,8 +6,14 @@ import { SelectMenuData } from "../interfaces/ISelectMenuData";
 import { SlashCommandData } from "../interfaces/ISlashCommandData";
 import { TextInputData } from "../interfaces/ITextInputData";
 import { Snowflake } from "./Snowflake";
+import { Events } from "./client";
 
 export type GenericBuilderTypes = ButtonData | TextInputData | SelectMenuData | ActionRowData | ContextMenuData | SlashCommandData | EmbedData;
+
+export interface ViewOptions {
+    format?: 'png' | 'jpeg' | 'webp' | 'gif';
+    size?: number;
+};
 
 export interface AttachmentData {
     id: Snowflake;

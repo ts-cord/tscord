@@ -1,20 +1,20 @@
 import WebSocket from 'ws';
 import { TypeCordError } from '../utils/TypeCordError';
-import { ClientWebSocketProps } from '../interfaces/IClientWebSocketProps';
+import type { ClientWebSocketOptions } from '../types';
 
 export class WebSocketStructure {
-  private readonly props: ClientWebSocketProps;
   private readonly ws: WebSocket;
-  #bot: { token: string, intents: number } = { token: '', intents: 0 };
+  private readonly props: ClientWebSocketOptions;
+  private readonly client: { token: string; intents: number; } = { token: '', intents: 0 };
 
-  public heartbeat_interval?: number;
-  public connected_interval?: any;
-  public last_hello_timestamp?: number;
+  public heartbeat_interval: number | undefined;
+  public connected_interval: any | undefined;
+  public last_hello_timestamp: number | undefined;
 
-  constructor(props: ClientWebSocketProps, token: string, intents: number) {
+  constructor(props: ClientWebSocketOptions, token: string, intents: number) {
     this.props = props;
-    this.#bot.token = token;
-    this.#bot.intents = intents;
+    this.client.token = token;
+    this.client.intents = intents;
     this.ws = new WebSocket(props.url);
   };
 
@@ -52,7 +52,7 @@ export class WebSocketStructure {
       this.heartbeat_interval = data.d.heartbeat_interval;
 
       this.stay_connected();
-      this.identify(this.#bot.token, this.#bot.intents);
+      this.identify(this.client.token, this.client.intents);
     };
 
     if (data.op === 11) {

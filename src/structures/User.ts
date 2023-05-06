@@ -3,25 +3,25 @@ import { api } from "../constants/Api";
 import { DMChannel } from "./DMChannel";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
-import { ChannelMessages, User as UserRoute, OauthChannels } from "../utils/Routes";
-import type { CreateMessageOptions, Locales, RawDiscordAPIUserData, RawUser, UserFlags, UserPremiumTypes } from "../types/index";
+import { ChannelMessages, User as UserRoute, OauthChannels, UserAvatar, CndURL, Banner } from "../utils/Routes";
+import type { CreateMessageOptions, Locales, RawDiscordAPIUserData, RawUser, UserFlags, UserPremiumTypes, ViewOptions } from "../types/index";
 
 export class User extends Basic implements RawUser {
     public id: Snowflake;
     public username: string;
     public discriminator: string;
-    public avatar?: string;
-    public bot?: boolean;
-    public system?: boolean;
-    public mfa_enabled?: boolean;
-    public banner?: string;
-    public accent_color?: string;
-    public locale?: keyof Locales
-    public verified?: boolean;
-    public email?: string;
-    public flags?: UserFlags;
-    public premium_type?: UserPremiumTypes;
-    public public_flags?: UserFlags;
+    public avatar: string | undefined;
+    public bot: boolean | undefined;
+    public system: boolean | undefined;
+    public mfa_enabled: boolean | undefined;
+    public banner: string | undefined;
+    public accent_color: string | undefined;
+    public locale: (keyof Locales) | undefined
+    public verified: boolean | undefined;
+    public email: string | undefined;
+    public flags: UserFlags | undefined;
+    public premium_type: UserPremiumTypes | undefined;
+    public public_flags: UserFlags | undefined;
     public creation_timestamp: number;
     public creation_date: Date;
     private readonly auth: { headers: { Authorization: `Bot ${string}` } };
@@ -63,7 +63,13 @@ export class User extends Basic implements RawUser {
         return data;
     };
 
-    async fetch(force?: boolean) {
+    /**
+     * Fetches the user
+     * @param {boolean} force - Whether to skip the cache check and make a request
+     * @returns {Promise<User | undefined>}
+     */
+
+    async fetch(force?: boolean): Promise<User | undefined> {
         if (force) {
             const { data }: { data: RawUser } = await api.get(UserRoute(this.id), this.auth);
 
@@ -91,5 +97,25 @@ export class User extends Basic implements RawUser {
 
     toString(): string {
         return `<@${this.id}>`;
+    };
+
+    /**
+     * Returns user's avatar URL
+     * @param {ViewOptions} options - optional image options
+     * @returns {string | undefined}
+     */
+
+    avatarURL(options?: ViewOptions): string | undefined {
+        return this.avatar && CndURL + UserAvatar(this.id, this.avatar) + `.${options?.format ?? this.client.options?.default_image_format}?size=${options?.size ?? this.client.options?.default_image_size}`;
+    };
+
+    /**
+     * Returns user's banner URL
+     * @param {ViewOptions} options - Optional image options
+     * @returns {string | undefined}
+     */
+
+    bannerURL(options?: ViewOptions): string | undefined {
+        return this.banner && CndURL + Banner(this.id, this.banner) + `.${options?.format ?? this.client.options?.default_image_format}?size=${options?.size ?? this.client.options?.default_image_size}`;
     };
 };

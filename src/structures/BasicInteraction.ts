@@ -1,12 +1,11 @@
+import { User } from "./User";
 import { Basic } from "./Basic";
-import { User } from "../managers/User";
-import { Guild } from "../managers/Guild";
+import { Guild } from "./Guild";
+import { Message } from "./Message";
 import { Client } from "../entities/Client";
-import { Message } from "../managers/Message";
+import { GuildMember } from "./GuildMember";
 import { Snowflake } from "../types/Snowflake";
-import { GuildMember } from "../managers/GuildMember";
-import { ComponentTypes } from "../props/ComponentTypes";
-import { ContextMenuTypes } from "../props/ContextMenuTypes";
+import { ContextMenuTypes, ComponentTypes } from "../types";
 import { InteractionTypes } from "../props/InteractionTypes";
 import { IInteractionData } from "../interfaces/IInteractionData";
 import { RawInteractionData } from "../interfaces/IRawInteractionData";
@@ -46,7 +45,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
         this.data = data.data;
         this.guild = new Guild(data.guild, this.client);
         this.channel_id = data.channel_id;
-        this.member = data.member ? new GuildMember(data.member, this.client, this.guild.id) : void 0;
+        this.member = data.member ? new GuildMember(data.member, this.guild, this.client) : void 0;
         this.user = data.user ? new User(data.user, this.client) : void 0;
         this.token = data.token;
         this.version = data.version;

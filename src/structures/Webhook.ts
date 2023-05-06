@@ -9,9 +9,9 @@ import type { MessageResolvable, RawDiscordAPIChannelData, RawGuild, RawDiscordA
 export class Webhook extends Basic implements RawWebhook {
     public id: Snowflake;
     public type: WebhookTypes;
-    public guild_id?: Snowflake;
-    public channel_id?: Snowflake;
-    public user: User | undefined;
+    public guild_id: Snowflake | undefined;
+    public channel_id: Snowflake | undefined;
+    public user: User | undefined | undefined;
     public name: string | undefined;
     public avatar: string | undefined;
     public token: string | undefined;

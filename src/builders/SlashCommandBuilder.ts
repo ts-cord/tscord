@@ -5,7 +5,7 @@ export class SlashCommandBuilder extends BasicBuilder<ApplicationCommandData> {
     /**
      * Create slash command data by the constructor
      * @param {ApplicationCommandData} data - Data to be set
-     * @constructor
+     * @see https://discord.com/developers/docs/interactions/application-commands
      */
 
     constructor(data?: ApplicationCommandData) {
@@ -132,9 +132,7 @@ export class SlashCommandBuilder extends BasicBuilder<ApplicationCommandData> {
         return this;
     };
 
-    /**
-     * The max options per slash command
-     */
+    /** Maximum slash command options */
 
     static readonly MaxOptionsPerSlashCommand: number = 25;
 };

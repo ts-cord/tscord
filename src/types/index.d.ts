@@ -7,3 +7,5 @@ export * from './misc';
 export * from './webhook';
 export * from './application';
 export * from './app-commands';
+export * from './client';
+export * from './gateway';

@@ -2,8 +2,10 @@ import { Snowflake } from "./Snowflake";
 import { Guild } from "../structures/Guild";
 import type { AttachmentData } from "./misc";
 import type { MessageComponentData, MessageFlags, MessageInteractionData } from "./interaction";
-import type { RawApplication, RawDiscordAPIUserData, RawGuildEmoji, RawSticker, StickerFormatTypes, StickerItemData } from ".";
+import type { GuildMemberData, GuildScheduledEvent, RawApplication, RawDiscordAPIUserData, RawGuild, RawGuildEmoji, RawSticker, StickerFormatTypes, StickerItemData } from ".";
 import { Message } from "../structures/Message";
+import { BasicChannel } from "../structures/BasicChannel";
+import { GuildChannel } from "../structures/GuildChannel";
 
 export interface BasicChannelData {
     id: Snowflake;
@@ -26,6 +28,16 @@ export enum ChannelTypes {
     GuildStageVoice,
     GuildDirectory,
     GuildForum
+};
+
+export type ChannelResolvable = Snowflake | BasicChannel;
+export type GuildChannelResolvable = Snowflake | GuildChannel;
+
+export interface ChannelPositions {
+    channel: GuildChannelResolvable;
+    position?: number;
+    lock_permissions?: boolean;
+    parent_id?: Snowflake;
 };
 
 export interface GuildChannelData extends BasicChannelData {
@@ -393,4 +405,59 @@ export interface GuildChannelEditOptions {
     default_thread_rate_limit_per_user?: number;
     default_sort_order?: SortOrderTypes;
     default_forum_layout?: ForumLayoutTypes;
+};
+
+export interface GuildChannelCreateOptions {
+    name: string;
+    type?: ChannelTypes;
+    topic?: string;
+    bitrate?: number;
+    user_limit?: number;
+    rate_limit_per_user?: number;
+    position?: number;
+    permission_overwrites?: OverwriteData[];
+    parent_id?: Snowflake;
+    nsfw?: boolean;
+    rtc_region?: string;
+    video_quality_mode?: number;
+    default_auto_archive_duration?: number;
+    default_reaction_emoji?: DefaultReactionData[];
+    available_tags?: ForumChannelTagData[];
+    default_sort_order?: SortOrderTypes;
+};
+
+export interface RawInviteData {
+    code: string;
+    guild?: Partial<RawGuild>;
+    channel?: Partial<RawDiscordAPIChannelData>;
+    inviter?: Partial<RawDiscordAPIUserData>;
+    target_type: InviteTargetTypes;
+    target_user?: RawDiscordAPIUserData;
+    target_application?: Partial<RawApplication>;
+    approximate_presence_count?: number;
+    approximate_member_count?: number;
+    expires_at?: number;
+    guild_scheduled_event?: GuildScheduledEvent;
+    uses: number;
+    max_uses: number;
+    max_age: number;
+    temporary: boolean;
+    created_at: number;
+};
+
+export enum InviteTargetTypes {
+    Stream = 1,
+    EmbeddedApplication
+};
+
+export type InviteResolvable = string;
+
+export interface ChannelInviteCreateOptions {
+    max_age?: number;
+    max_uses?: number;
+    temporary?: boolean;
+    unique?: boolean;
+    target_type?: InviteTargetTypes;
+    target_user_id?: Snowflake;
+    target_application_id?: Snowflake;
 };

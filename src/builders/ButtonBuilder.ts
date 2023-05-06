@@ -3,6 +3,12 @@ import { BasicBuilder } from "./BasicBuilder";
 import { ComponentTypes, ButtonStyles } from "../types";
 
 export class ButtonBuilder extends BasicBuilder<ButtonData> {
+    /**
+     * Represents a button
+     * @param {ButtonData} data - The button data
+     * @see https://discord.com/developers/docs/interactions/message-components#buttons
+     */
+
     constructor(data?: ButtonData) {
         super(data);
 

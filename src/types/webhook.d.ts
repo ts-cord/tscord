@@ -1,5 +1,5 @@
 import { Snowflake } from "./Snowflake";
-import type { AttachmentData, BasicFetchOptions, BasicMessageOptions, MessageFlags, RawDiscordAPIChannelData, RawDiscordAPIUserData, RawGuild } from "./index";
+import type { AttachmentData, BasicFetchOptions, BasicMessageOptions, GuildChannelResolvable, MessageFlags, RawDiscordAPIChannelData, RawDiscordAPIUserData, RawGuild } from "./index";
 
 export interface RawDiscordAPIWebhookData {
     id: Snowflake;
@@ -53,4 +53,11 @@ export interface WebhookMessageCreateOptions extends BasicMessageOptions {
     thread_name?: string;
     thread_id?: Snowflake;
     wait?: boolean;
+};
+
+export interface WebhookCreateOptions {
+    name: string;
+    avatar?: string;
+    reason?: string;
+    channel: GuildChannelResolvable;
 };

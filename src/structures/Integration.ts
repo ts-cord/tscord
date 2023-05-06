@@ -23,7 +23,7 @@ export class Integration extends Basic {
     public subscriber_count: number | undefined;
     public revoked: boolean | undefined;
     public application: IntegrationApplicationData;
-    public scopes: Array<string> | undefined;
+    public scopes: string[] | undefined;
     public guild: Guild;
 
 
@@ -50,6 +50,12 @@ export class Integration extends Basic {
 
         Object.assign(this, data);
     };
+
+    /**
+     * Delete the integration
+     * @param {string} reason - Reason for delete the integration
+     * @returns {Promise<Integration>}
+     */
 
     async delete(reason?: string): Promise<Integration> {
         await api.delete(GuildIntegration(this.guild.id, this.id), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
