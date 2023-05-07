@@ -1,17 +1,17 @@
-import { ChannelTypes, ButtonStyles, SelectMenuTypes, ContextMenuData, ApplicationCommandOptionType, TextInputStyles } from "../types";
+import { ChannelTypes, ButtonStyles, SelectMenuTypes, ContextMenuData, ApplicationCommandOptionType, TextInputStyles, ChannelSelectMenuData, MentionableSelectMenuData, RoleSelectMenuData, StringSelectMenuData, UserSelectMenuData } from "../types";
 import type { Locales, SelectMenuOptionsData, ContextMenuData, ApplicationCommandData, ApplicationCommandOptionsData, EmbedThumbnailData, EmbedData, ButtonData, EmbedFieldData, EmbedVideoData, EmbedImageData, EmbedFooterData, EmbedAuthorData, GenericBuilderTypes, EmbedProviderData, SelectMenuData, TextInputData, MessageComponentData } from "../types";
 
 declare class BasicBuilder<T extends GenericBuilderTypes> {
     data: T;
 
-    constructor(data?: T);
+    constructor(data?: T): this;
 
     JSON(): T;
     setDataFrom(JSONData: T): this;
 };
 
 declare class ButtonBuilder extends BasicBuilder<ButtonData> {
-    constructor(data?: ButtonData);
+    constructor(data?: ButtonData): this;
 
     setLabel(label: string): this;
     setStyle(style: ButtonStyles): this;
@@ -22,7 +22,7 @@ declare class ButtonBuilder extends BasicBuilder<ButtonData> {
 };
 
 declare class TextInputBuilder extends BasicBuilder<TextInputData> {
-    constructor(data?: TextInputData);
+    constructor(data?: TextInputData): this;
 
     setLabel(label: string): this;
     setCustomId(customId: string): this;
@@ -35,7 +35,7 @@ declare class TextInputBuilder extends BasicBuilder<TextInputData> {
 };
 
 declare class SelectMenuBuilder extends BasicBuilder<SelectMenuData> {
-    constructor(data?: SelectMenuData);
+    constructor(data?: SelectMenuData): this;
 
     setCustomId(customId: string);
     setType(type: SelectMenuTypes): this;
@@ -51,7 +51,7 @@ declare class SelectMenuBuilder extends BasicBuilder<SelectMenuData> {
 declare class ActionRowBuilder<T extends ButtonBuilder | SelectMenuBuilder | TextInputBuilder> extends BasicBuilder<MessageComponentData> {
     components: MessageComponentData['components'];
 
-    constructor(data?: { type: 1, components: Array<T['data']> });
+    constructor(data?: { type: 1, components: Array<T['data']> }): this;
 
     setComponents(...components: Array<T>): this;
     addComponents(...components: Array<T>): this;
@@ -61,7 +61,7 @@ declare class ActionRowBuilder<T extends ButtonBuilder | SelectMenuBuilder | Tex
 };
 
 declare class EmbedBuilder extends BasicBuilder<EmbedData> {
-    constructor(data?: EmbedData);
+    constructor(data?: EmbedData): this;
 
     setColor(color: string): this;
     setDescription(description: string): this;
@@ -87,7 +87,7 @@ declare class EmbedBuilder extends BasicBuilder<EmbedData> {
 };
 
 declare class ContextMenuBuilder extends BasicBuilder<ContextMenuData> {
-    constructor(data?: ContextMenuData);
+    constructor(data?: ContextMenuData): this;
 
     setName(name: string): this;
     setType(type: ContextMenuTypes): this;
@@ -100,7 +100,7 @@ declare class ContextMenuBuilder extends BasicBuilder<ContextMenuData> {
 };
 
 declare class SlashCommandBuilder extends BasicBuilder<ApplicationCommandData> {
-    constructor(data?: ApplicationCommandData);
+    constructor(data?: ApplicationCommandData): this;
 
     setName(name: string): this;
     setDescription(description: string): this;
@@ -114,4 +114,66 @@ declare class SlashCommandBuilder extends BasicBuilder<ApplicationCommandData> {
     setAnyOptions(...options: Array<ApplicationCommandOptionsData>): this;
 
     static readonly MaxOptionsPerSlashCommand: number;
+};
+
+declare class BasicSelectMenuBuilder {
+    data: Partial<SelectMenuData>;
+
+    constructor(data: Partial<SelectMenuData>): this;
+
+    setCustomId(customId: string): this;
+    setDisabled(disabled: boolean): this;
+    setPlaceholder(placeholder: string): this;
+    setMinValues(value: number): this;
+    setMaxValues(value: number): this;
+    JSON(): Partial<SelectMenuData>
+};
+
+declare class ChannelSelectMenuBuilder extends BasicSelectMenuBuilder {
+    data: Partial<ChannelSelectMenuData>;
+
+    constructor(data: PageTransitionEvent<ChannelSelectMenuData>): this;
+
+    setChannelTypes(types: ChannelTypes[]): this;
+    addChanenlTypes(types: ChannelTypes[]): this;
+};
+
+declare class MentionableSelectMenuBuilder extends BasicSelectMenuBuilder {
+    data: Partial<MentionableSelectMenuData>;
+
+    constructor(data: Partial<MentionableSelectMenuData>): this;
+};
+
+declare class RoleSelectMenuBuilder extends BasicSelectMenuBuilder {
+    data: Partial<RoleSelectMenuData>;
+
+    constructor(data: Partial<RoleSelectMenuData>): this;
+};
+
+declare class StringSelectMenuBuilder extends BasicSelectMenuBuilder {
+    data: Partial<StringSelectMenuData>;
+    options: SelectMenuOptionsData[];
+
+    constructor(data: Partial<StringSelectMenuData>): this;
+
+    setOptions(...options: SelectMenuOptionsData[]): this;
+    addOptions(...options: SelectMenuOptionsData[]): this;
+};
+
+declare class UserSelectMenuBuilder extends BasicSelectMenuBuilder {
+    data: Partial<UserSelectMenuData>;
+
+    constructor(data: Partial<UserSelectMenuData>): this;
+};
+
+declare class AnySelectMenuBuilder extends BasicSelectMenuBuilder {
+    data: Partial<SelectMenuData>;
+    options: SelectMenuOptionsData[] | undefined;
+
+    constructor(data: Partial<SelectMenuData>): this;
+
+    setChannelTypes(types: ChannelTypes[]): this;
+    addChannelTypes(types: ChannelTypes[]): this;
+    setOptions(...options: SelectMenuOptionsData[]): this;
+    addOptions(...options: SelectMenuOptionsData[]): this;
 };

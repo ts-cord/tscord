@@ -1,5 +1,5 @@
 import { Basic } from "./Basic";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import { GuildWidgetJSON } from "../utils/Routes";
@@ -32,7 +32,7 @@ export class Widget extends Basic implements GuildWidgetData {
      */
 
     async fetch(): Promise<Widget> {
-        const { data }: { data: GuildWidgetData } = await api.get(GuildWidgetJSON(this.id), { headers: { Authorization: `Bot ${this.client.token}` } });
+        const { data }: { data: GuildWidgetData } = await rest.get(GuildWidgetJSON(this.id), { headers: { Authorization: `Bot ${this.client.token}` } });
 
         return new Widget(data, this.client);
     };

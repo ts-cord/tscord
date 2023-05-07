@@ -1,7 +1,7 @@
 import { User } from "./User";
 import { Basic } from "./Basic";
 import { Guild } from "./Guild";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import { GuildSticker, User as UserRoute } from "../utils/Routes";
@@ -53,7 +53,7 @@ export class Sticker extends Basic implements RawSticker {
      */
 
     async delete(reason?: string): Promise<Sticker> {
-        await api.delete(GuildSticker(this.guild_id as string, this.id), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        await rest.delete(GuildSticker(this.guild_id as string, this.id), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return this;
     };
@@ -66,7 +66,7 @@ export class Sticker extends Basic implements RawSticker {
      */
 
     async edit(options: GuildStickerEditOptions, reason?: string): Promise<Sticker> {
-        const { data }: { data: RawSticker } = await api.patch(GuildSticker(this.guild_id as string, this.id), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        const { data }: { data: RawSticker } = await rest.patch(GuildSticker(this.guild_id as string, this.id), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return new Sticker(data, this.client);
     };
@@ -79,7 +79,7 @@ export class Sticker extends Basic implements RawSticker {
     async fetch(): Promise<Sticker | undefined> {
         if (!this.guild_id) return;
 
-        const { data }: { data: RawSticker } = await api.get(GuildSticker(this.guild_id as string, this.id), this.axios_config);
+        const { data }: { data: RawSticker } = await rest.get(GuildSticker(this.guild_id as string, this.id), this.axios_config);
 
         return new Sticker(data, this.client);
     };
@@ -92,7 +92,7 @@ export class Sticker extends Basic implements RawSticker {
     async fetchUser(): Promise<User | undefined> {
         if (!this.user) return;
 
-        const { data }: { data: RawDiscordAPIUserData } = await api.get(UserRoute(this.user.id), this.axios_config);
+        const { data }: { data: RawDiscordAPIUserData } = await rest.get(UserRoute(this.user.id), this.axios_config);
 
         return new User(data, this.client);
     };

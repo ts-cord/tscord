@@ -1,5 +1,5 @@
 import { Group } from "../utils/Group";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Guild } from "../structures/Guild";
 import { Invite } from "../structures/Invite";
@@ -36,7 +36,7 @@ export class GuildInviteManager extends BasicManager {
      */
 
     async delete(invite: InviteResolvable, reason?: string): Promise<void> {
-        await api.delete(Inviter(this.resolveId(invite)), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        await rest.delete(Inviter(this.resolveId(invite)), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return;
     };
@@ -50,7 +50,7 @@ export class GuildInviteManager extends BasicManager {
      */
 
     async create(channel: Snowflake, options: ChannelInviteCreateOptions = {}, reason?: string): Promise<Invite> {
-        const { data }: { data: RawInviteData } = await api.post(ChannelInvites(channel), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        const { data }: { data: RawInviteData } = await rest.post(ChannelInvites(channel), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         this.cache.set(data.code, new Invite(data, this.client));
 

@@ -1,4 +1,4 @@
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Group } from "../utils/Group";
 import { Role } from "../structures/Role";
 import { Guild } from "../structures/Guild";
@@ -42,7 +42,7 @@ export class RoleManager extends BasicManager {
      */
 
     async create(options: CreateRoleOptions): Promise<Role> {
-        const { data }: { data: RawGuildRole } = await api.post(GuildRoles(this.guild.id), { name: options.name, permissions: options.permissions, color: options.color, hoist: options.hoist, icon: options.icon, unicode_emoji: options.unicode_emoji, mentionable: options.mentionable }, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': options.reason } });
+        const { data }: { data: RawGuildRole } = await rest.post(GuildRoles(this.guild.id), { name: options.name, permissions: options.permissions, color: options.color, hoist: options.hoist, icon: options.icon, unicode_emoji: options.unicode_emoji, mentionable: options.mentionable }, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': options.reason } });
 
         this.cache.set(data.id, new Role(data, this.client, this.guild.id));
 
@@ -57,7 +57,7 @@ export class RoleManager extends BasicManager {
      */
 
     async delete(role: RoleResolvable, reason?: string): Promise<void> {
-        await api.delete(GuildRole(this.guild.id, role.id), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        await rest.delete(GuildRole(this.guild.id, role.id), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         this.cache.delete(role.id);
 

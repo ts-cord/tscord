@@ -1,5 +1,5 @@
 import { Group } from "../utils/Group";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { User } from "../structures/User";
 import { Client } from "../entities/Client";
 import { BasicManager } from "./BasicManager";
@@ -36,7 +36,7 @@ export class UserManager extends BasicManager {
      */
 
     async send(user: UserResolvable, options: CreateMessageOptions | string): Promise<object> {
-        const { data }: { data: object /* replace to message object */ } = await api.post(ChannelMessages(this.resolveId(user)), typeof options === 'string' ? { content: options } : options, this.axios_config);
+        const { data }: { data: object /* replace to message object */ } = await rest.post(ChannelMessages(this.resolveId(user)), typeof options === 'string' ? { content: options } : options, this.axios_config);
 
         return data;
     };
@@ -48,7 +48,7 @@ export class UserManager extends BasicManager {
      */
 
     async deleteDM(user: UserResolvable): Promise<DMChannel> {
-        const { data } = await api.delete(Channel(this.resolveId(user)), this.axios_config);
+        const { data } = await rest.delete(Channel(this.resolveId(user)), this.axios_config);
 
         return data;
     };

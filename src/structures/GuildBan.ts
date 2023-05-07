@@ -1,7 +1,7 @@
 import { User } from "./User";
 import { Basic } from "./Basic";
 import { Guild } from "./Guild";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import type { RawGuildBanData } from "../types";
 import { GuildBan as GuildBanRoute } from "../utils/Routes";
@@ -27,7 +27,7 @@ export class GuildBan extends Basic implements RawGuildBanData {
      */
 
     async fetch(): Promise<GuildBan> {
-        const { data }: { data: RawGuildBanData } = await api.get(GuildBanRoute(this.guild.id, this.user.id), this.axios_config);
+        const { data }: { data: RawGuildBanData } = await rest.get(GuildBanRoute(this.guild.id, this.user.id), this.axios_config);
 
         return new GuildBan(data, this.guild, this.client);
     };

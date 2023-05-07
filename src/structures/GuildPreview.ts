@@ -1,5 +1,5 @@
 import { Basic } from "./Basic";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import { GuildPreview as GuildPreviewRoute, GuildDiscoverySplash, GuildIcon, GuildSplash } from "../utils/Routes";
@@ -57,7 +57,7 @@ export class GuildPreview extends Basic implements RawGuildPreview {
      */
 
     async fetch(): Promise<GuildPreview> {
-        const { data }: { data: RawDiscordAPIGuildPreviewData } = await api.get(GuildPreviewRoute(this.id), this.auth);
+        const { data }: { data: RawDiscordAPIGuildPreviewData } = await rest.get(GuildPreviewRoute(this.id), this.auth);
 
         return new GuildPreview(data, this.client);
     };

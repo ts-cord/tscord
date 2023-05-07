@@ -1,5 +1,5 @@
 import { BasicBuilder } from "./BasicBuilder";
-import type { Locales, ApplicationCommandOptionType, ApplicationCommandOptionsData, ApplicationCommandData } from "../types";
+import type { Locales, ApplicationCommandOptionType, ApplicationCommandOptionsData, ApplicationCommandData, SlashCommandStringOption } from "../types";
 
 export class SlashCommandBuilder extends BasicBuilder<ApplicationCommandData> {
     /**
@@ -130,6 +130,10 @@ export class SlashCommandBuilder extends BasicBuilder<ApplicationCommandData> {
         this.data.options = options;
 
         return this;
+    };
+
+    addStringOption(builder: (input: SlashCommandStringOption) => typeof input) {
+        
     };
 
     /** Maximum slash command options */

@@ -1,5 +1,5 @@
 import { Group } from "../utils/Group";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { BasicManager } from "./BasicManager";
 import { Snowflake } from "../types/Snowflake";
@@ -36,7 +36,7 @@ export class MessageManager extends BasicManager {
      */
 
     async crosspost(message: MessageResolvable): Promise<Message> {
-        const { data }: { data: RawDiscordAPIMessageData } = await api.post(ChannelMessageCrosspost(this.channel.id, this.resolveId(message)), null, this.axios_config);
+        const { data }: { data: RawDiscordAPIMessageData } = await rest.post(ChannelMessageCrosspost(this.channel.id, this.resolveId(message)), null, this.axios_config);
 
         this.cache.set(data.id, new Message(data, this.client));
 
@@ -50,7 +50,7 @@ export class MessageManager extends BasicManager {
      */
 
     async delete(message: MessageResolvable): Promise<void> {
-        await api.delete(ChannelMessage(this.channel.id, this.resolveId(message)), this.axios_config);
+        await rest.delete(ChannelMessage(this.channel.id, this.resolveId(message)), this.axios_config);
 
         return;
     };
@@ -63,7 +63,7 @@ export class MessageManager extends BasicManager {
 
     async fetchPinned(cache?: boolean): Promise<Group<Snowflake, Message>> {
         const groupOfMessages: Group<Snowflake, Message> = new Group<Snowflake, Message>();
-        const { data }: { data: RawDiscordAPIMessageData[] } = await api.get(ChannelPins(this.channel.id), this.axios_config);
+        const { data }: { data: RawDiscordAPIMessageData[] } = await rest.get(ChannelPins(this.channel.id), this.axios_config);
 
         data.forEach((message: RawDiscordAPIMessageData) => groupOfMessages.set(message.id, new Message(message, this.client)));
 
@@ -80,7 +80,7 @@ export class MessageManager extends BasicManager {
      */
 
     async pin(message: MessageResolvable, reason?: string): Promise<void> {
-        await api.put(ChannelPinnedMessage(this.channel.id, this.resolveId(message)), null, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        await rest.put(ChannelPinnedMessage(this.channel.id, this.resolveId(message)), null, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return;
     };
@@ -93,7 +93,7 @@ export class MessageManager extends BasicManager {
      */
 
     async unpin(message: MessageResolvable, reason?: string): Promise<void> {
-        await api.delete(ChannelPinnedMessage(this.channel.id, this.resolveId(message)), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        await rest.delete(ChannelPinnedMessage(this.channel.id, this.resolveId(message)), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return;
     };
@@ -106,7 +106,7 @@ export class MessageManager extends BasicManager {
      */
 
     async react(message: MessageResolvable, emoji: EmojiResolvable): Promise<void> {
-        await api.put(ChannelReactionsUser(this.channel.id, this.resolveId(message), encodeURIComponent(emoji), '@me'), null, this.axios_config);
+        await rest.put(ChannelReactionsUser(this.channel.id, this.resolveId(message), encodeURIComponent(emoji), '@me'), null, this.axios_config);
 
         return;
     };

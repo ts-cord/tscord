@@ -1,6 +1,6 @@
 import { Guild } from "./Guild";
 import { Message } from "./Message";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { ChannelTypes } from "../types";
 import { Client } from "../entities/Client";
 import { BasicChannel } from "./BasicChannel";
@@ -48,7 +48,7 @@ export class GuildChannel extends BasicChannel implements GuildChannelData {
      */
 
     async send(options: CreateMessageOptions): Promise<Message> {
-        const { data }: { data: RawDiscordAPIMessageData } = await api.post(ChannelMessages(this.id), options, this.axios_auth);
+        const { data }: { data: RawDiscordAPIMessageData } = await rest.post(ChannelMessages(this.id), options, this.axios_auth);
 
         return new Message(data, this.client, this.guild);
     };
@@ -61,7 +61,7 @@ export class GuildChannel extends BasicChannel implements GuildChannelData {
      */
 
     async edit(options: GuildChannelEditOptions, reason?: string): Promise<GuildChannel> {
-        const { data }: { data: GuildChannelData } = await api.patch(Channel(this.id), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        const { data }: { data: GuildChannelData } = await rest.patch(Channel(this.id), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return new GuildChannel(data, this.client, this.guild);
     };

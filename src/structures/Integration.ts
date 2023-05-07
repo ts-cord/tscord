@@ -1,7 +1,7 @@
 import { User } from "./User";
 import { Basic } from "./Basic";
 import { Guild } from "./Guild";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import { GuildIntegration } from "../utils/Routes";
@@ -58,7 +58,7 @@ export class Integration extends Basic {
      */
 
     async delete(reason?: string): Promise<Integration> {
-        await api.delete(GuildIntegration(this.guild.id, this.id), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        await rest.delete(GuildIntegration(this.guild.id, this.id), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return this;
     };

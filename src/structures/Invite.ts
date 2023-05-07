@@ -1,5 +1,5 @@
 import { Basic } from "./Basic";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Inviter } from "../utils/Routes";
 import { Client } from "../entities/Client";
 import type { GuildScheduledEvent, InviteTargetTypes, RawApplication, RawDiscordAPIChannelData, RawInviteData, RawDiscordAPIUserData, RawGuild } from "../types";
@@ -52,7 +52,7 @@ export class Invite extends Basic implements RawInviteData {
      */
 
     async delete(reason?: string): Promise<Invite> {
-        await api.delete(Inviter(this.code), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        await rest.delete(Inviter(this.code), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return this;
     };

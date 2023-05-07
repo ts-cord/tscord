@@ -14,7 +14,7 @@ export class EmbedBuilder extends BasicBuilder<EmbedData> {
 
         this.data.type = EmbedTypes.Rich;
     };
-    
+
     /**
      * Set the embed color
      * @param {number} color - The color in hex format, e.g. 0x1a

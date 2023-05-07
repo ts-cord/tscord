@@ -1,5 +1,5 @@
 import { Group } from "../utils/Group";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Guild } from "../structures/Guild";
 import { BasicManager } from "./BasicManager";
@@ -34,7 +34,7 @@ export class GuildManager extends BasicManager {
      */
 
     async fetch(guild: GuildResolvable): Promise<Guild> {
-        const { data }: { data: RawGuild } = await api.get(GuildRoute(this.resolveId(guild)), this.axios_config);
+        const { data }: { data: RawGuild } = await rest.get(GuildRoute(this.resolveId(guild)), this.axios_config);
 
         this.cache.set(data.id, new Guild(data, this.client));
 
@@ -48,7 +48,7 @@ export class GuildManager extends BasicManager {
      */
 
     async create(options: GuildCreateOptions): Promise<Guild> {
-        const { data }: { data: RawGuild } = await api.post(Guilds, options, this.axios_config);
+        const { data }: { data: RawGuild } = await rest.post(Guilds, options, this.axios_config);
 
         this.cache.set(data.id, new Guild(data, this.client));
 

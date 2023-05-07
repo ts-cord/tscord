@@ -1,7 +1,7 @@
 import { User } from "./User";
 import { Basic } from "./Basic";
 import { Guild } from "./Guild";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Group } from "../utils/Group";
 import { CndURL } from "../utils/Routes";
 import { Client } from "../entities/Client";
@@ -67,7 +67,7 @@ export class GuildScheduledEvent extends Basic {
      */
 
     async delete(): Promise<GuildScheduledEvent> {
-        await api.delete(GuildScheduledEventRoute(this.guild_id, this.id), this.axios_config);
+        await rest.delete(GuildScheduledEventRoute(this.guild_id, this.id), this.axios_config);
 
         return this;
     };
@@ -116,7 +116,7 @@ export class GuildScheduledEvent extends Basic {
      */
 
     async edit(options: GuildScheduledEventEditOptions, reason?: string): Promise<GuildScheduledEvent> {
-        const { data }: { data: GuildScheduledEventData } = await api.patch(GuildScheduledEventRoute(this.guild_id, this.id), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        const { data }: { data: GuildScheduledEventData } = await rest.patch(GuildScheduledEventRoute(this.guild_id, this.id), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return new GuildScheduledEvent(data, this.client);
     };
@@ -162,7 +162,7 @@ export class GuildScheduledEvent extends Basic {
     async fetchUsers(options?: FetchGuildScheduledEventUsersOptions): Promise<Group<Snowflake, GuildScheduledEventUserData>> {
         const queryStringParams: string = new URLSearchParams(options as {}).toString();
         const groupOfUsers: Group<Snowflake, GuildScheduledEventUserData> = new Group<Snowflake, GuildScheduledEventUserData>();
-        const { data }: { data: RawGuildScheduledEventUserData[] } = await api.get(GuildScheduledEventsUsers(this.guild_id, this.id) + (queryStringParams ? '?' + queryStringParams : ''), this.axios_config);
+        const { data }: { data: RawGuildScheduledEventUserData[] } = await rest.get(GuildScheduledEventsUsers(this.guild_id, this.id) + (queryStringParams ? '?' + queryStringParams : ''), this.axios_config);
 
         data.forEach((user: RawGuildScheduledEventUserData) => groupOfUsers.set(user.user.id, { guild_scheduled_event_id: user.guild_scheduled_event_id, user: new User(user.user, this.client), member: user.member as undefined }));
     

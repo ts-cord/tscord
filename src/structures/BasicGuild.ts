@@ -1,6 +1,6 @@
 import { Basic } from "./Basic";
 import { Guild } from "./Guild";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { GuildFeatures } from "../types";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
@@ -40,7 +40,7 @@ export class BasicGuild extends Basic implements BasicGuildData {
      */
 
     async fetch(): Promise<Guild> {
-        const { data }: { data: RawGuild } = await api.get(GuildRoute(this.id), this.axios_config);
+        const { data }: { data: RawGuild } = await rest.get(GuildRoute(this.id), this.axios_config);
 
         return new Guild(data, this.client);
     };

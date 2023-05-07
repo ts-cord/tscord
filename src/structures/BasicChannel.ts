@@ -1,5 +1,5 @@
 import { Basic } from "./Basic";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { ChannelTypes } from "../types";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
@@ -36,7 +36,7 @@ export class BasicChannel extends Basic implements BasicChannelData {
      */
 
     async delete(reason?: string): Promise<BasicChannel> {
-        await api.delete(this.route, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        await rest.delete(this.route, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return this;
     };
@@ -47,7 +47,7 @@ export class BasicChannel extends Basic implements BasicChannelData {
      */
 
     async fetch(): Promise<BasicChannel> {
-        const { data }: { data: BasicChannelData } = await api.get(this.route, this.axios_config);
+        const { data }: { data: BasicChannelData } = await rest.get(this.route, this.axios_config);
 
         return new BasicChannel(data, this.client);
     };

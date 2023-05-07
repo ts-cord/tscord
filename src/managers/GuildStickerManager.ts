@@ -1,5 +1,5 @@
 import { Group } from "../utils/Group";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { User } from "../structures/User";
 import { Client } from "../entities/Client";
 import { Guild } from "../structures/Guild";
@@ -38,7 +38,7 @@ export class GuildStickerManager extends BasicManager {
      */
 
     async fetchUser(sticker: Sticker): Promise<User> {
-        const { data }: { data: RawDiscordAPIUserData } = await api.get(UserRoute(sticker.user!.id), this.axios_config);
+        const { data }: { data: RawDiscordAPIUserData } = await rest.get(UserRoute(sticker.user!.id), this.axios_config);
 
         return new User(data, this.client);
     };
@@ -51,7 +51,7 @@ export class GuildStickerManager extends BasicManager {
      */
 
     async edit(sticker: StickerResolvable, options: GuildStickerEditOptions & { reason?: string; }): Promise<Sticker> {
-        const { data }: { data: RawSticker } = await api.patch(GuildSticker(this.guild.id, this.resolveId(sticker)), { name: options.name ?? null, description: options.name ?? null, tags: options.tags ?? null }, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': options.reason } });
+        const { data }: { data: RawSticker } = await rest.patch(GuildSticker(this.guild.id, this.resolveId(sticker)), { name: options.name ?? null, description: options.name ?? null, tags: options.tags ?? null }, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': options.reason } });
 
         this.cache.set(data.id, new Sticker(data, this.client, this.guild));
 
@@ -66,7 +66,7 @@ export class GuildStickerManager extends BasicManager {
      */
 
     async delete(sticker: StickerResolvable, reason?: string): Promise<void> {
-        await api.delete(GuildSticker(this.guild.id, this.resolveId(sticker)), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        await rest.delete(GuildSticker(this.guild.id, this.resolveId(sticker)), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return;
     };
@@ -82,7 +82,7 @@ export class GuildStickerManager extends BasicManager {
 
         delete options.reason;
 
-        const { data }: { data: RawSticker } = await api.post(GuildStickers(this.guild.id), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        const { data }: { data: RawSticker } = await rest.post(GuildStickers(this.guild.id), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         this.cache.set(data.id, new Sticker(data, this.client, this.guild));
 

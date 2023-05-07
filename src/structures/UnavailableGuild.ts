@@ -1,6 +1,6 @@
 import { Guild } from "./Guild";
 import { Basic } from "./Basic";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import { Guild as GuildRoute } from "../utils/Routes";
@@ -32,7 +32,7 @@ export class UnavailableGuild extends Basic implements UnavailableGuildData {
 
     async fetch(force: boolean = true): Promise<Guild | undefined> {
         if (force) {
-            const { data }: { data: RawGuild } = await api.get(GuildRoute(this.id), this.axios_config);
+            const { data }: { data: RawGuild } = await rest.get(GuildRoute(this.id), this.axios_config);
 
             return new Guild(data, this.client);
         };

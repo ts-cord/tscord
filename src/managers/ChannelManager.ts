@@ -1,5 +1,5 @@
 import { Group } from "../utils/Group";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Channel } from "../utils/Routes";
 import { Client } from "../entities/Client";
 import { BasicManager } from "./BasicManager";
@@ -34,7 +34,7 @@ export class ChannelManager extends BasicManager {
      */
 
     async fetch(channel: Snowflake): Promise<BasicChannel> {
-        const { data }: { data: RawDiscordAPIChannelData } = await api.get(Channel(channel), this.axios_config);
+        const { data }: { data: RawDiscordAPIChannelData } = await rest.get(Channel(channel), this.axios_config);
 
         this.cache.set(data.id, new BasicChannel(data, this.client));
 

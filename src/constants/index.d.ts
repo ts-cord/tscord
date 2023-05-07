@@ -1,3 +1,3 @@
 import { AxiosInstance } from "axios";
 
-declare const api: AxiosInstance;
+declare const rest: AxiosInstance;

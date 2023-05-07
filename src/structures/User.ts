@@ -1,5 +1,5 @@
 import { Basic } from "./Basic";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { DMChannel } from "./DMChannel";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
@@ -58,7 +58,7 @@ export class User extends Basic implements RawUser {
      */
 
     async send(options: CreateMessageOptions | string): Promise<object> {
-        const { data }: { data: object /* replace to message object */ } = await api.post(ChannelMessages(this.id), typeof options === 'string' ? { content: options } : options, this.auth);
+        const { data }: { data: object /* replace to message object */ } = await rest.post(ChannelMessages(this.id), typeof options === 'string' ? { content: options } : options, this.auth);
 
         return data;
     };
@@ -71,7 +71,7 @@ export class User extends Basic implements RawUser {
 
     async fetch(force?: boolean): Promise<User | undefined> {
         if (force) {
-            const { data }: { data: RawUser } = await api.get(UserRoute(this.id), this.auth);
+            const { data }: { data: RawUser } = await rest.get(UserRoute(this.id), this.auth);
 
             return new User(data, this.client);
         };
@@ -85,7 +85,7 @@ export class User extends Basic implements RawUser {
      */
 
     async createDM(): Promise<DMChannel> {
-        const { data } = await api.post(OauthChannels, { recipient_id: this.id }, this.auth);
+        const { data } = await rest.post(OauthChannels, { recipient_id: this.id }, this.auth);
 
         return data;
     };

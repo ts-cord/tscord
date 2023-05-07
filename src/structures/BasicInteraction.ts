@@ -5,34 +5,33 @@ import { Message } from "./Message";
 import { Client } from "../entities/Client";
 import { GuildMember } from "./GuildMember";
 import { Snowflake } from "../types/Snowflake";
-import { ContextMenuTypes, ComponentTypes } from "../types";
-import { InteractionTypes } from "../props/InteractionTypes";
 import { IInteractionData } from "../interfaces/IInteractionData";
 import { RawInteractionData } from "../interfaces/IRawInteractionData";
+import { ContextMenuTypes, ComponentTypes, InteractionType } from "../types";
 
 export class BasicInteraction extends Basic implements RawInteractionData {
     public id: Snowflake;
     public application_id: Snowflake;
-    public type: InteractionTypes;
-    public data?: IInteractionData;
+    public type: InteractionType;
+    public data: IInteractionData | undefined;
     public guild: Guild;
-    public channel_id?: Snowflake;
-    public member?: GuildMember;
-    public user?: User;
+    public channel_id: Snowflake | undefined;
+    public member: GuildMember | undefined;
+    public user: User | undefined;
     public token: string;
     public version: number;
-    public message?: Message;
-    public app_permissions?: string;
-    public locale?: string;
-    public guild_locale?: string;
-    public component_type?: ComponentTypes;
+    public message: Message | undefined;
+    public app_permissions: string | undefined;
+    public locale: string | undefined;
+    public guild_locale: string | undefined;
+    public component_type: ComponentTypes | undefined;
     public creation_timestamp: number;
     public creation_date: Date;
 
     /**
-     * Represents a basic interaction
-     * @param {RawInteractionData} data - The minimum data for a interaction
-     * @param {Client} client - The client for the BasicInteraction
+     * Represents a basic discord interaction
+     * @param {RawInteractionData} data - The minimum data for an interaction
+     * @param {Client} client - The client for this interaction
      * @constructor
      */
 
@@ -62,7 +61,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
     };
 
     /**
-     * Check if the interaction was used in a cached guild
+     * Check if this interaction was used in a cached guild
      * @returns {boolean}
      */
 
@@ -71,7 +70,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
     };
 
     /**
-     * Check if the interaction was used in an uncached guild
+     * Check if this interaction was used in an uncached guild
      * @returns {boolean}
      */
 
@@ -80,7 +79,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
     };
 
     /**
-     * Check if the interaction was used in a guild
+     * Check if this interaction was used in a guild
      * @returns {boolean}
      */
 
@@ -89,43 +88,43 @@ export class BasicInteraction extends Basic implements RawInteractionData {
     };
 
     /**
-     * Check if the interaction is an application command autocomplete
+     * Check if this interaction is an application command autocomplete
      * @returns {boolean}
      */
 
     isApplicationCommandAutocomplete(): boolean {
-        return this.type === InteractionTypes.ApplicationCommandAutocomplete;
+        return this.type === InteractionType.ApplicationCommandAutocomplete;
     };
 
     /**
-     * Check if the interaction is a modal submit interaction
+     * Check if this interaction is a modal submit interaction
      * @returns {boolean}
      */
 
     isModalSubmit(): boolean {
-        return this.type === InteractionTypes.ModalSubmit;
+        return this.type === InteractionType.ModalSubmit;
     };
 
     /**
-     * Check if the interaction is a message component interaction
+     * Check if this interaction is a message component interaction
      * @returns {boolean}
      */
 
     isMessageComponent(): boolean {
-        return this.type === InteractionTypes.MessageComponent;
+        return this.type === InteractionType.MessageComponent;
     };
 
     /**
-     * Check if the interaction is an application command
+     * Check if this interaction is an application command
      * @returns {boolean}
      */
 
     isApplicationCommand(): boolean {
-        return this.type === InteractionTypes.ApplicationCommand;
+        return this.type === InteractionType.ApplicationCommand;
     };
 
     /**
-     * Check if the interaction is a button
+     * Check if this interaction is a button
      * @returns {boolean}
      */
 
@@ -134,7 +133,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
     };
 
     /**
-     * Check if the interaction is a channel select menu
+     * Check if this interaction is a channel select menu
      * @returns {boolean}
      */
 
@@ -143,7 +142,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
     };
 
     /**
-     * Check if the interaction is a string select menu
+     * Check if this interaction is a string select menu
      * @returns {boolean}
      */
 
@@ -152,7 +151,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
     };
 
     /**
-     * Check if the interaction is an user select menu
+     * Check if this interaction is an user select menu
      * @returns {boolean}
      */
 
@@ -161,7 +160,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
     };
 
     /**
-     * Check if the interaction is a role select menu
+     * Check if this interaction is a role select menu
      * @returns {boolean}
      */
 
@@ -170,7 +169,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
     };
 
     /**
-     * Check if the interaction is a mentionable select menu
+     * Check if this interaction is a mentionable select menu
      * @returns {boolean}
      */
 
@@ -179,7 +178,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
     };
 
     /**
-     * Check if the interaction is any select menu (String, Channel, Mentionable, Role or User)
+     * Check if this interaction is any select menu (String, Channel, Mentionable, Role or User)
      * @returns {boolean}
      */
 
@@ -188,7 +187,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
     };
 
     /**
-     * Check if the interaction is a text input
+     * Check if this interaction is a text input
      * @returns {boolean}
      */
 
@@ -197,7 +196,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
     };
 
     /**
-     * Check if the interaction is message context menu
+     * Check if this interaction is message context menu
      * @returns {boolean}
      */
 
@@ -206,7 +205,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
     };
 
     /**
-     * Check if the interaction is user context menu
+     * Check if this interaction is user context menu
      * @returns {boolean}
      */
 
@@ -215,7 +214,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
     };
 
     /**
-     * Check if the interaction is any context menu (User or Message)
+     * Check if this interaction is any context menu (User or Message)
      * @returns {boolean}
      */
 

@@ -3,7 +3,7 @@ import { TypeCordError } from '../utils/TypeCordError';
 import type { ClientWebSocketOptions } from '../types';
 
 export class WebSocketStructure {
-  private readonly ws: WebSocket;
+  readonly ws: WebSocket;
   private readonly props: ClientWebSocketOptions;
   private readonly client: { token: string; intents: number; } = { token: '', intents: 0 };
 

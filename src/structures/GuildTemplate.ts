@@ -1,7 +1,7 @@
 import { User } from "./User";
 import { Basic } from "./Basic";
 import { Guild } from "./Guild";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import type { GuildTemplateData, RawGuild } from "../types";
@@ -46,7 +46,7 @@ export class GuildTemplate extends Basic {
      */
 
     async delete(): Promise<GuildTemplate> {
-        const { data }: { data: GuildTemplateData } = await api.delete(GuildTemplateRoute(this.source_guild_id, this.code), this.axios_config);
+        const { data }: { data: GuildTemplateData } = await rest.delete(GuildTemplateRoute(this.source_guild_id, this.code), this.axios_config);
 
         return new GuildTemplate(data, this.client);
     };
@@ -59,7 +59,7 @@ export class GuildTemplate extends Basic {
      */
 
     async edit(name: string, description?: string): Promise<GuildTemplate> {
-        const { data }: { data: GuildTemplateData } = await api.patch(GuildTemplateRoute(this.source_guild_id, this.code), { name: name, description: description }, this.axios_config);
+        const { data }: { data: GuildTemplateData } = await rest.patch(GuildTemplateRoute(this.source_guild_id, this.code), { name: name, description: description }, this.axios_config);
 
         return new GuildTemplate(data, this.client);
     };
@@ -70,7 +70,7 @@ export class GuildTemplate extends Basic {
      */
 
     async sync(): Promise<GuildTemplate> {
-        const { data }: { data: GuildTemplateData } = await api.put(GuildTemplateRoute(this.source_guild_id, this.code), null, this.axios_config);
+        const { data }: { data: GuildTemplateData } = await rest.put(GuildTemplateRoute(this.source_guild_id, this.code), null, this.axios_config);
 
         return new GuildTemplate(data, this.client);
     };
@@ -83,7 +83,7 @@ export class GuildTemplate extends Basic {
      */
 
     async createGuild(name: string, icon?: string): Promise<Guild> {
-        const { data }: { data: RawGuild } = await api.post(GuildTemplateCode(this.code), { name: name, icon: icon }, this.axios_config);
+        const { data }: { data: RawGuild } = await rest.post(GuildTemplateCode(this.code), { name: name, icon: icon }, this.axios_config);
 
         this.client.guilds.cache.set(data.id, new Guild(data, this.client));
 

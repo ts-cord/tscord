@@ -2,7 +2,7 @@ import { User } from "./User";
 import { Basic } from "./Basic";
 import { Guild } from "./Guild";
 import { Webhook } from "./Webhook";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import { ChannelMessage, Webhook as WebhookRoute } from "../utils/Routes";
@@ -95,7 +95,7 @@ export class Message extends Basic {
      */
 
     async crosspost(): Promise<Message> {
-        const { data }: { data: RawDiscordAPIMessageData } = await api.post(this.url + '/crosspost', null, this.auth);
+        const { data }: { data: RawDiscordAPIMessageData } = await rest.post(this.url + '/crosspost', null, this.auth);
 
         return new Message(data, this.client, this.guild);
     };
@@ -107,7 +107,7 @@ export class Message extends Basic {
      */
 
     async delete(reason?: string): Promise<Message> {
-        await api.delete(this.url, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        await rest.delete(this.url, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return this;
     };
@@ -118,7 +118,7 @@ export class Message extends Basic {
      */
 
     async fetch(): Promise<Message> {
-        const { data }: { data: RawDiscordAPIMessageData } = await api.get(this.url, this.auth);
+        const { data }: { data: RawDiscordAPIMessageData } = await rest.get(this.url, this.auth);
 
         return new Message(data, this.client, this.guild);
     };
@@ -129,7 +129,7 @@ export class Message extends Basic {
      */
 
     async fetchMessageReference(): Promise<Message> {
-        const { data }: { data: RawDiscordAPIMessageData } = await api.get(ChannelMessage(this.channel_id, this.referenced_message!.id), this.auth);
+        const { data }: { data: RawDiscordAPIMessageData } = await rest.get(ChannelMessage(this.channel_id, this.referenced_message!.id), this.auth);
 
         return new Message(data, this.client, this.guild);
     };
@@ -140,7 +140,7 @@ export class Message extends Basic {
      */
 
     async fetchWebhook(): Promise<Webhook> {
-        const { data }: { data: RawDiscordAPIWebhookData } = await api.get(WebhookRoute(this.webhook_id!), this.auth);
+        const { data }: { data: RawDiscordAPIWebhookData } = await rest.get(WebhookRoute(this.webhook_id!), this.auth);
 
         return new Webhook(data, this.client);
     };
@@ -170,7 +170,7 @@ export class Message extends Basic {
      */
 
     async pin(reason?: string): Promise<Message> {
-        await api.put(this.url, null, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        await rest.put(this.url, null, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return this;
     };
@@ -182,7 +182,7 @@ export class Message extends Basic {
      */
 
     async unpin(reason?: string): Promise<Message> {
-        await api.put(this.url, null, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        await rest.put(this.url, null, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return this;
     };
@@ -194,7 +194,7 @@ export class Message extends Basic {
      */
 
     async react(emoji: EmojiResolvable): Promise<Message> {
-        await api.put(this.url + `/reactions/${encodeURIComponent(emoji)}/@me`, this.auth);
+        await rest.put(this.url + `/reactions/${encodeURIComponent(emoji)}/@me`, this.auth);
 
         return this;
     };
@@ -206,7 +206,7 @@ export class Message extends Basic {
      */
 
     async setThreadFrom(options: StartThreadOptions): Promise<RawDiscordAPIChannelData> {
-        const { data }: { data: RawDiscordAPIChannelData } = await api.post(this.url + `/threads`, options, this.auth);
+        const { data }: { data: RawDiscordAPIChannelData } = await rest.post(this.url + `/threads`, options, this.auth);
 
         return data;
     };

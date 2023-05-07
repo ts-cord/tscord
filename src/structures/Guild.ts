@@ -3,7 +3,7 @@ import { Widget } from "./Widget";
 import { Locales } from "../types";
 import { Message } from "./Message";
 import { Webhook } from "./Webhook";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Group } from "../utils/Group";
 import { BasicGuild } from "./BasicGuild";
 import { Client } from "../entities/Client";
@@ -134,7 +134,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async createTemplate(name: string, description?: string): Promise<GuildTemplate> {
-        const { data }: { data: GuildTemplateData } = await api.post(GuildTemplatesRoute(this.id), { name, description }, this.axios_confg);
+        const { data }: { data: GuildTemplateData } = await rest.post(GuildTemplatesRoute(this.id), { name, description }, this.axios_confg);
 
         return new GuildTemplate(data, this.client);
     };
@@ -145,7 +145,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async delete(): Promise<Guild> {
-        await api.delete(GuildRoute(this.id), this.axios_confg);
+        await rest.delete(GuildRoute(this.id), this.axios_confg);
 
         return this;
     };
@@ -156,7 +156,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async leave(): Promise<Guild> {
-        await api.delete(OauthGuild(this.id), this.axios_confg);
+        await rest.delete(OauthGuild(this.id), this.axios_confg);
 
         return this;
     };
@@ -169,7 +169,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async edit(options: GuildEditOptions, reason?: string): Promise<Guild> {
-        const { data }: { data: RawGuild } = await api.patch(GuildRoute(this.id), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        const { data }: { data: RawGuild } = await rest.patch(GuildRoute(this.id), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return new Guild(data, this.client);
     };
@@ -180,7 +180,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async fetchPreview(): Promise<GuildPreview> {
-        const { data }: { data: RawGuildPreview } = await api.get(GuildPreviewRoute(this.id), this.axios_confg);
+        const { data }: { data: RawGuildPreview } = await rest.get(GuildPreviewRoute(this.id), this.axios_confg);
 
         return new GuildPreview(data, this.client);
     };
@@ -191,7 +191,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async fetchWidget(): Promise<Widget> {
-        const { data }: { data: GuildWidgetData } = await api.get(GuildWidgetJSON(this.id), this.axios_confg);
+        const { data }: { data: GuildWidgetData } = await rest.get(GuildWidgetJSON(this.id), this.axios_confg);
 
         return new Widget(data, this.client);
     };
@@ -202,7 +202,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async fetchWidgetSettings(): Promise<GuildWidgetSettingsData> {
-        const { data }: { data: GuildWidgetSettingsData } = await api.get(GuildWidget(this.id), this.axios_confg);
+        const { data }: { data: GuildWidgetSettingsData } = await rest.get(GuildWidget(this.id), this.axios_confg);
 
         return data;
     };
@@ -213,7 +213,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async fetchWelcomeScreen(): Promise<WelcomeScreen> {
-        const { data }: { data: GuildWelcomeScreenData } = await api.get(GuildWelcomeScreen(this.id), this.axios_confg);
+        const { data }: { data: GuildWelcomeScreenData } = await rest.get(GuildWelcomeScreen(this.id), this.axios_confg);
 
         return new WelcomeScreen(data, this.client, this);
     };
@@ -224,7 +224,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async fetchOwner(): Promise<User> {
-        const { data }: { data: RawDiscordAPIUserData } = await api.get(UserRoute(this.owner_id), this.axios_confg);
+        const { data }: { data: RawDiscordAPIUserData } = await rest.get(UserRoute(this.owner_id), this.axios_confg);
 
         return new User(data, this.client);
     };
@@ -235,7 +235,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async fetchVanityURL(): Promise<GuildVanityData> {
-        const { data }: { data: GuildVanityData } = await api.get(GuildVanityURL(this.id), this.axios_confg);
+        const { data }: { data: GuildVanityData } = await rest.get(GuildVanityURL(this.id), this.axios_confg);
 
         return data;
     };
@@ -247,7 +247,7 @@ export class Guild extends BasicGuild implements RawGuild {
 
     async fetchIntegrations(): Promise<Group<Snowflake, Integration>> {
         const integrationsGroup: Group<Snowflake, Integration> = new Group<Snowflake, Integration>();
-        const { data }: { data: Array<RawIntegrationData> } = await api.get(GuildIntegrations(this.id), this.axios_confg);
+        const { data }: { data: Array<RawIntegrationData> } = await rest.get(GuildIntegrations(this.id), this.axios_confg);
 
         data.forEach((integration: RawIntegrationData) => integrationsGroup.set(integration.id, new Integration(integration, this.client, this)));
 
@@ -262,7 +262,7 @@ export class Guild extends BasicGuild implements RawGuild {
 
     async fetchWebhooks(): Promise<Group<Snowflake, Webhook>> {
         const webhooksGroup: Group<Snowflake, Webhook> = new Group<Snowflake, Webhook>();
-        const { data }: { data: Array<RawDiscordAPIWebhookData> } = await api.get(GuildWebhooks(this.id), this.axios_confg);
+        const { data }: { data: Array<RawDiscordAPIWebhookData> } = await rest.get(GuildWebhooks(this.id), this.axios_confg);
 
         data.forEach((webhook: RawDiscordAPIWebhookData) => webhooksGroup.set(webhook.id, new Webhook(webhook, this.client)));
 
@@ -275,7 +275,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async fetchOnboarding(): Promise<GuildOnboardingData> {
-        const { data }: { data: GuildOnboardingData } = await api.get(GuildOnboarding(this.id), this.axios_confg);
+        const { data }: { data: GuildOnboardingData } = await rest.get(GuildOnboarding(this.id), this.axios_confg);
 
         return data;
     };

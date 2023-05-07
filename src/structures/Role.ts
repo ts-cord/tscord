@@ -1,5 +1,5 @@
 import { Basic } from "./Basic";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import { GuildRole, RoleIcon } from "../utils/Routes";
@@ -49,7 +49,7 @@ export class Role extends Basic implements RawRole {
      */
 
     async delete(reason?: string): Promise<Role> {
-        await api.delete(GuildRole(this.guildId, this.id), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        await rest.delete(GuildRole(this.guildId, this.id), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return this;
     };
@@ -61,7 +61,7 @@ export class Role extends Basic implements RawRole {
      */
 
     async edit(options: EditRoleOptions): Promise<Role> {
-        const { data }: { data: RawRole } = await api.patch(GuildRole(this.guildId, this.id), { name: options.name, permissions: options.permissions, color: options.color, hoist: options.hoist, icon: options.icon, unicode_emoji: options.unicode_emoji, mentionable: options.mentionable }, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': options.reason } });
+        const { data }: { data: RawRole } = await rest.patch(GuildRole(this.guildId, this.id), { name: options.name, permissions: options.permissions, color: options.color, hoist: options.hoist, icon: options.icon, unicode_emoji: options.unicode_emoji, mentionable: options.mentionable }, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': options.reason } });
 
         return new Role(data, this.client, this.guildId);
     };

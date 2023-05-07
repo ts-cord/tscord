@@ -1,5 +1,5 @@
 import EventEmitter from "events";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { User } from "../structures/User";
 import { WebSocketStructure } from "./WebSocket";
 import { OauthCurrentUser } from "../utils/Routes";
@@ -105,7 +105,7 @@ export class Client extends EventEmitter {
    */
 
   async edit(options: ClientEditOptions): Promise<User> {
-    const { data }: { data: RawDiscordAPIUserData } = await api.patch(OauthCurrentUser, options, this.axios_config);
+    const { data }: { data: RawDiscordAPIUserData } = await rest.patch(OauthCurrentUser, options, this.axios_config);
 
     this.user = new User(data, this);
 

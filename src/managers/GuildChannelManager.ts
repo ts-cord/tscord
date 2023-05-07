@@ -1,4 +1,4 @@
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Group } from "../utils/Group";
 import { Client } from "../entities/Client";
 import { Guild } from "../structures/Guild";
@@ -39,7 +39,7 @@ export class GuildChannelManager extends BasicManager {
      */
 
     async delete(channel: GuildChannelResolvable, reason?: string): Promise<void> {
-        await api.delete(Channel(this.resolveId(channel)), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        await rest.delete(Channel(this.resolveId(channel)), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return;
     };
@@ -52,7 +52,7 @@ export class GuildChannelManager extends BasicManager {
 
     async fetchWebhooks(channel: GuildChannelResolvable): Promise<Group<Snowflake, Webhook>> {
         const groupOfWebhooks: Group<Snowflake, Webhook> = new Group<Snowflake, Webhook>();
-        const { data }: { data: RawDiscordAPIWebhookData[] } = await api.get(ChannelWebhooks(this.resolveId(channel)), this.axios_config);
+        const { data }: { data: RawDiscordAPIWebhookData[] } = await rest.get(ChannelWebhooks(this.resolveId(channel)), this.axios_config);
 
         data.forEach((webhook: RawDiscordAPIWebhookData) => groupOfWebhooks.set(webhook.id, new Webhook(webhook, this.client)));
 
@@ -66,7 +66,7 @@ export class GuildChannelManager extends BasicManager {
      */
 
     async setPositions(options: ChannelPositions[]): Promise<Guild> {
-        await api.patch(GuildChannels(this.guild.id), options.map((option: ChannelPositions) => ({ channel: this.resolveId(option.channel), position: option.position, lock_permissions: option.lock_permissions, parent_id: option.parent_id })), this.axios_config);
+        await rest.patch(GuildChannels(this.guild.id), options.map((option: ChannelPositions) => ({ channel: this.resolveId(option.channel), position: option.position, lock_permissions: option.lock_permissions, parent_id: option.parent_id })), this.axios_config);
 
         return this.guild;
     };
@@ -80,7 +80,7 @@ export class GuildChannelManager extends BasicManager {
      */
 
     async edit(channel: GuildChannelResolvable, options: GuildChannelEditOptions, reason?: string): Promise<GuildChannel> {
-        const { data }: { data: GuildChannelData } = await api.patch(Channel(this.resolveId(channel)), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        const { data }: { data: GuildChannelData } = await rest.patch(Channel(this.resolveId(channel)), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         this.cache.set(data.id, new GuildChannel(data, this.client, this.guild));
 
@@ -94,7 +94,7 @@ export class GuildChannelManager extends BasicManager {
      */
 
     async createWebhook(options: WebhookCreateOptions): Promise<Webhook> {
-        const { data }: { data: RawDiscordAPIWebhookData } = await api.post(ChannelWebhooks(this.resolveId(options.channel)), { name: options.name, avatar: options.avatar }, { headers: { Authorization: `Bot ${this.client.token}` } });
+        const { data }: { data: RawDiscordAPIWebhookData } = await rest.post(ChannelWebhooks(this.resolveId(options.channel)), { name: options.name, avatar: options.avatar }, { headers: { Authorization: `Bot ${this.client.token}` } });
 
         return new Webhook(data, this.client);
     };
@@ -111,7 +111,7 @@ export class GuildChannelManager extends BasicManager {
      */
 
     async create(options: GuildChannelCreateOptions, reason?: string): Promise<GuildChannel> {
-        const { data }: { data: GuildChannelData } = await api.post(GuildChannels(this.guild.id), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        const { data }: { data: GuildChannelData } = await rest.post(GuildChannels(this.guild.id), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         this.cache.set(data.id, new GuildChannel(data, this.client, this.guild));
 

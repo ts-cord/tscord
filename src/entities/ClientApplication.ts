@@ -1,9 +1,9 @@
 import { Client } from './Client';
-import { api } from '../constants/Api';
+import { rest } from '../constants/Api';
 import { User } from '../structures/User';
 import { Snowflake } from '../types/Snowflake';
-import { RoleConnectionMetadata, ApplicationCover } from '../utils/Routes';
 import { ApplicationCommandManager } from '../managers/ApplicationCommandManager';
+import { RoleConnectionMetadata, ApplicationCover, CndURL } from '../utils/Routes';
 import type { ViewOptions, RawApplication, ApplicationTeam, InstallParams, ApplicationRoleConnectionMetadata, ApplicationRoleConnectionMetadataEditOptions } from '../types';
 
 export class ClientApplication implements RawApplication {
@@ -88,7 +88,7 @@ export class ClientApplication implements RawApplication {
    */
 
   async fetchRoleConnectionMetadataRecords(): Promise<Array<ApplicationRoleConnectionMetadata>> {
-    const { data }: { data: ApplicationRoleConnectionMetadata[] } = await api.get(RoleConnectionMetadata(this.id), this.axios_config);
+    const { data }: { data: ApplicationRoleConnectionMetadata[] } = await rest.get(RoleConnectionMetadata(this.id), this.axios_config);
 
     return data;
   };
@@ -100,7 +100,7 @@ export class ClientApplication implements RawApplication {
    */
 
   async updateRoleConnectionMetadataRecords(options: ApplicationRoleConnectionMetadataEditOptions): Promise<Array<ApplicationRoleConnectionMetadata>> {
-    const { data }: { data: Array<ApplicationRoleConnectionMetadata> } = await api.put(RoleConnectionMetadata(this.id), options, this.axios_config);
+    const { data }: { data: Array<ApplicationRoleConnectionMetadata> } = await rest.put(RoleConnectionMetadata(this.id), options, this.axios_config);
 
     return data;
   };
@@ -112,6 +112,6 @@ export class ClientApplication implements RawApplication {
    */
 
   coverURL(options?: ViewOptions): string | undefined {
-    return this.cover_image && ApplicationCover(this.id, this.cover_image) + `.${options?.format ?? this.client.options?.default_image_format}?size=${options?.size ?? this.client.options?.default_image_size}`;
+    return this.cover_image && CndURL + ApplicationCover(this.id, this.cover_image) + `.${options?.format ?? this.client.options?.default_image_format}?size=${options?.size ?? this.client.options?.default_image_size}`;
   };
 };

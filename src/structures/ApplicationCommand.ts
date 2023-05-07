@@ -1,6 +1,6 @@
 import { Basic } from "./Basic";
 import { Locales } from "../types";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import type { RawApplicationCommandData, ApplicationCommandOptionsData, ApplicationCommandTypes, EditApplicationCommandOptions } from "../types";
@@ -56,7 +56,7 @@ export class ApplicationCommand extends Basic implements RawApplicationCommandDa
      */
 
     async delete(): Promise<void> {
-        const { data }: { data: void } = await api.delete(this.url, this.auth);
+        const { data }: { data: void } = await rest.delete(this.url, this.auth);
 
         return data;
     };
@@ -68,7 +68,7 @@ export class ApplicationCommand extends Basic implements RawApplicationCommandDa
      */
 
     async edit(options: EditApplicationCommandOptions): Promise<ApplicationCommand> {
-        const { data }: { data: RawApplicationCommandData } = await api.patch(this.url, options, this.auth);
+        const { data }: { data: RawApplicationCommandData } = await rest.patch(this.url, options, this.auth);
 
         return new ApplicationCommand(data, this.client);
     };

@@ -1,5 +1,5 @@
 import { User } from "./User";
-import { api } from "../constants/Api";
+import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { OauthCurrentUser } from "../utils/Routes";
 import type { ClientUserEditOptions, RawDiscordAPIUserData } from "../types";
@@ -46,7 +46,7 @@ export class ClientUser extends User {
      */
 
     async edit(options: ClientUserEditOptions): Promise<ClientUser> {
-        const { data }: { data: RawDiscordAPIUserData } = await api.patch(this.route, options, this.axios_config);
+        const { data }: { data: RawDiscordAPIUserData } = await rest.patch(this.route, options, this.axios_config);
 
         return new ClientUser(data, this.client);
     };

@@ -32,6 +32,26 @@ export interface SelectMenuData {
     disabled?: boolean;
 };
 
+export interface StringSelectMenuData extends Omit<SelectMenuData, 'channel_types'> {
+    type: SelectMenuTypes.StringSelect;
+};
+
+export interface RoleSelectMenuData extends Omit<SelectMenuData, 'options' | 'channel_types'> {
+    type: SelectMenuTypes.RoleSelect;
+};
+
+export interface UserSelectMenuData extends Omit<SelectMenuData, 'options' | 'channel_types'> {
+    type: SelectMenuTypes.UserSelect;
+};
+
+export interface MentionableSelectMenuData extends UserSelectMenuData {
+    type: SelectMenuTypes.MentionableSelect;
+};
+
+export interface ChannelSelectMenuData extends Omit<SelectMenuData, 'options'> {
+    type: SelectMenuTypes.ChannelSelect;
+};
+
 export interface SelectMenuOptionsData {
     label: string;
     value: string;
