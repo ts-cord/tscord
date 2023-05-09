@@ -12,7 +12,7 @@ import { GuildBan, GuildMember as GuildMemberRoute, GuildMembers, GuildPrune, Gu
 import type { AddGuildMemberOptions, BanOptions, GuildListMembersOptions, GuildMemberData, GuildMemberEditOptions, GuildMemberResolvable, GuildPruneMembersOptions, GuildSearchMembersOptions, UserResolvable } from "../types";
 
 export class GuildMemberManager extends BasicManager {
-    public readonly guild: Guild;
+    public guild: Guild;
     public me: GuildMember | undefined;
     private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
     override cache: Group<Snowflake, GuildMember> = new Group<Snowflake, GuildMember>();
@@ -110,10 +110,10 @@ export class GuildMemberManager extends BasicManager {
     /**
      * Unban an user from the server
      * @param {UserResolvable} user - The user
-     * @returns {Promise<User | undefined>}
+     * @returns {Promise<User | void>}
      */
 
-    async unban(user: UserResolvable): Promise<User | undefined> {
+    async unban(user: UserResolvable): Promise<User | void> {
         await rest.delete(GuildBan(this.guild.id, this.resolveId(user)), this.axios_config);
 
         return user instanceof User || user instanceof Message ? user instanceof Message ? user.author : user : void 0;

@@ -1,5 +1,5 @@
-import { rest } from "../constants/Api";
 import { Group } from "../utils/Group";
+import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Guild } from "../structures/Guild";
 import { BasicManager } from "./BasicManager";
@@ -107,7 +107,7 @@ export class GuildChannelManager extends BasicManager {
      * @example 
      * import { ChannelTypes } from 'typecord';
      * 
-     * guild.channels.create({ name: 'new-support', type: ChannelTypes.GuildForum }, 'Need a new support channel').then(({ name }) => console.log(`Guild forum name: ` + name)).catch(console.error);
+     * guild.channels.create({ name: 'new-support', type: ChannelTypes.GuildForum }, 'Need a new support channel').then(({ name }) => console.log('Guild forum name: ' + name)).catch(console.error);
      */
 
     async create(options: GuildChannelCreateOptions, reason?: string): Promise<GuildChannel> {

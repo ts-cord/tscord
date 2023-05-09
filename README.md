@@ -1,6 +1,6 @@
 # TypeCord
 
-This repository is a representation of the [TypeCord](https://npmjs.com/package/TypeCord) package
+This repository is a representation of the [TypeCord](https://npmjs.com/package/TypeCord) package.
 
 - Light and powerful
 - 100% Promise-based
@@ -11,9 +11,9 @@ This repository is a representation of the [TypeCord](https://npmjs.com/package/
 
 ## Using (NodeJs)
 
-You must install the `typecord` npm package
+You must install the `typecord` npm package.
 
-```
+```bash
 npm i typecord
 ```
 
@@ -37,7 +37,7 @@ client.on('connect', (user): void => {
 
 client.on('interactionCreate', async (interaction): Promise<void> => {
     if (interaction.name === 'ping') {
-        await interaction.reply({ content: 'Pong', ephemeral: true }); // Send a message with ephemeral
+        await interaction.reply({ content: 'Pong', ephemeral: true }); // Send a message in ephemeral
 
         return;
     }; // Check if the interaction name is `ping`
@@ -46,7 +46,7 @@ client.on('interactionCreate', async (interaction): Promise<void> => {
 client.connect(); // Connect the client to Discord
 ```
 
-You can view more example in [folder examples](https://github.com/gitpionners/TypeCord/tree/main/examples)
+You can view more example in [folder examples](https://github.com/gitpionners/TypeCord/tree/main/examples).
 
 ## Contributing
 
@@ -54,5 +54,7 @@ If you want to contribute in any way, feel free to make a pull request. Both con
 
 ### TypeCord Packages
 
-- `@typecord` - Interact with the Discord API in an easy and powerful way
-- `@typecord/builders` - [TypeCord](https://github.com/gitpionners/TypeCord) related builders package
+- `@typecord` - Interact with the Discord API in an easy and powerful way.
+- `@typecord/builders` - [TypeCord](https://github.com/gitpionners/TypeCord) related builders package.
+
+<!-- END README.MD -->

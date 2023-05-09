@@ -83,7 +83,7 @@ export class ApplicationCommandManager extends BasicManager {
      * @returns {Promise<Group<Snowflake, ApplicationCommand>>}
      */
 
-    async bulkOverwrite(commands: Array<EditApplicationCommandOptions>, guildId?: string): Promise<Group<Snowflake, ApplicationCommand>> {
+    async bulkOverwrite(commands: Array<EditApplicationCommandOptions>, guildId?: Snowflake): Promise<Group<Snowflake, ApplicationCommand>> {
         const { data }: { data: Array<RawApplicationCommandData> } = await rest.put(guildId ? Routes.GuildApplicationCommands(this.client.app!.id, guildId) : Routes.ApplicationCommands(this.client.app!.id), commands, this.axios_config);
         const applicationCommandGroup: Group<Snowflake, ApplicationCommand> = new Group<Snowflake, ApplicationCommand>();
 

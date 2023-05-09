@@ -33,8 +33,8 @@ export class ChannelManager extends BasicManager {
      * @returns {Promise<BasicChannel>}
      */
 
-    async fetch(channel: Snowflake): Promise<BasicChannel> {
-        const { data }: { data: RawDiscordAPIChannelData } = await rest.get(Channel(channel), this.axios_config);
+    async fetch(channel: ChannelResolvable): Promise<BasicChannel> {
+        const { data }: { data: RawDiscordAPIChannelData } = await rest.get(Channel(this.resolveId(channel)), this.axios_config);
 
         this.cache.set(data.id, new BasicChannel(data, this.client));
 

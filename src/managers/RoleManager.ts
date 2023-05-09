@@ -10,11 +10,10 @@ import { Snowflake } from "../types/Snowflake";
 import type { CreateRoleOptions, EditRoleOptions, RawGuildRole, RoleResolvable } from "../types";
 
 export class RoleManager extends BasicManager {
+    public highest: Role;
+    public guild: Guild;
+    public everyone: Role;
     override cache: Group<Snowflake, Role> = new Group<Snowflake, Role>();
-
-    public readonly highest: Role;
-    public readonly guild: Guild;
-    public readonly everyone: Role;
 
     constructor(client: Client) {
         super(client);
