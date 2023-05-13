@@ -8,13 +8,13 @@ import { BasicChannel } from "../structures/BasicChannel";
 import type { ChannelResolvable, RawDiscordAPIChannelData } from "../types";
 
 export class ChannelManager extends BasicManager {
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
     override cache: Group<Snowflake, BasicChannel> = new Group<Snowflake, BasicChannel>();
 
     constructor(client: Client) {
         super(client);
 
-        this.axios_config = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
     };
 
     /**
@@ -34,7 +34,7 @@ export class ChannelManager extends BasicManager {
      */
 
     async fetch(channel: ChannelResolvable): Promise<BasicChannel> {
-        const { data }: { data: RawDiscordAPIChannelData } = await rest.get(Channel(this.resolveId(channel)), this.axios_config);
+        const { data }: { data: RawDiscordAPIChannelData } = await rest.get(Channel(this.resolveId(channel)), this.axiosConfig);
 
         this.cache.set(data.id, new BasicChannel(data, this.client));
 

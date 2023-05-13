@@ -1,4 +1,4 @@
-import { Locales } from "./misc";
+import { Locales } from "./index";
 
 export interface CreateApplicationCommandOptions extends EditApplicationCommandOptions {};
 export interface EditApplicationCommandOptions extends Pick<ApplicationCommandData, 'name' | 'name_localizations' | 'description' | 'description_localizations' | 'options' | 'default_member_permissions' | 'default_permission' | 'nsfw'> {};
@@ -86,3 +86,11 @@ export enum ContextMenuTypes {
 };
 
 export interface ContextMenuData extends Omit<ApplicationCommandData, 'description' | 'description_localizations'> {};
+
+export interface ApplicationCommandInteractionOptionData {
+    name: string;
+    type: ApplicationCommandOptionType;
+    value?: string | number | boolean;
+    options?: ApplicationCommandInteractionOptionData;
+    focused?: boolean;
+};

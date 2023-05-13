@@ -5,47 +5,47 @@ import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import type { RawApplicationCommandData, ApplicationCommandOptionsData, ApplicationCommandTypes, EditApplicationCommandOptions } from "../types";
 
-export class ApplicationCommand extends Basic implements RawApplicationCommandData {
+export class ApplicationCommand extends Basic {
     public id: Snowflake;
     public type: ApplicationCommandTypes;
-    public application_id: Snowflake;
-    public guild_id: Snowflake | undefined;
+    public applicationId: Snowflake;
+    public guildId: Snowflake | undefined;
     public name: string;
-    public name_localizations: Locales | undefined;
+    public nameLocalizations: Locales | undefined;
     public description: string;
-    public description_localizations: Locales | undefined;
+    public descriptionLocalizations: Locales | undefined;
     public options: Array<ApplicationCommandOptionsData> | undefined;
-    public default_member_permissions: string | undefined;
-    public default_permission: boolean | undefined;
-    public dm_permission: boolean | undefined;
+    public defaultMemberPermissions: string | undefined;
+    public defaultPermission: boolean | undefined;
+    public dmPermission: boolean | undefined;
     public nsfw: boolean | undefined;
     public version: string;
     public creationTimestamp: number;
     public creationDate: Date;
-    private readonly auth: { headers: { Authorization: `Bot ${string}` } };
     private readonly url: string;
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(data: RawApplicationCommandData, client: Client) {
         super(client);
 
         this.id = data.id;
         this.type = data.type;
-        this.application_id = data.application_id;
-        this.guild_id = data.guild_id;
+        this.applicationId = data.application_id;
+        this.guildId = data.guild_id;
         this.name = data.name;
-        this.name_localizations = data.name_localizations;
+        this.nameLocalizations = data.name_localizations;
         this.description = data.description;
-        this.description_localizations = data.description_localizations;
+        this.descriptionLocalizations = data.description_localizations;
         this.options = data.options;
-        this.default_member_permissions = data.default_member_permissions;
-        this.default_permission = data.default_permission;
-        this.dm_permission = data.dm_permission;
+        this.defaultMemberPermissions = data.default_member_permissions;
+        this.defaultPermission = data.default_permission;
+        this.dmPermission = data.dm_permission;
         this.nsfw = data.nsfw;
         this.version = data.version;
         this.creationTimestamp = new Date((+this.id / 4194304) + 1420070400000).getTime();
         this.creationDate = new Date(this.creationTimestamp);
-        this.auth = { headers: { Authorization: `Bot ${this.client.token}` } };
-        this.url = this.guild_id ? `/applications/${this.client.app?.id}/guilds/${this.guild_id}/commands/${this.id}` : `/applications/${this.client.app?.id}/commands/${this.id}`;
+        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.url = this.guildId ? `/applications/${this.client.app?.id}/guilds/${this.guildId}/commands/${this.id}` : `/applications/${this.client.app?.id}/commands/${this.id}`;
 
         Object.assign(this, data);
     };
@@ -56,7 +56,7 @@ export class ApplicationCommand extends Basic implements RawApplicationCommandDa
      */
 
     async delete(): Promise<void> {
-        const { data }: { data: void } = await rest.delete(this.url, this.auth);
+        const { data }: { data: void } = await rest.delete(this.url, this.axiosConfig);
 
         return data;
     };
@@ -68,7 +68,7 @@ export class ApplicationCommand extends Basic implements RawApplicationCommandDa
      */
 
     async edit(options: EditApplicationCommandOptions): Promise<ApplicationCommand> {
-        const { data }: { data: RawApplicationCommandData } = await rest.patch(this.url, options, this.auth);
+        const { data }: { data: RawApplicationCommandData } = await rest.patch(this.url, options, this.axiosConfig);
 
         return new ApplicationCommand(data, this.client);
     };

@@ -53,33 +53,12 @@ export class Group<K, V> extends Map<K, V> {
   };
 
   /**
-   * Determines whether all keys of the Group satisfy the specified test.
-   * @param func - A function that accepts up to three arguments. The every method calls the predicate function for each element in the array until the predicate returns a value which is coercible to the Boolean value false, or until the end of the array.
-   * @returns {this is K[]}
-   */
-
-  everyKey(func: (value: K, index: number, array: K[]) => value is K,): this is K[] {
-    return [...this.keys()].every(func);
-  };
-
-  /**
-   * Determines whether all values of the Group satisfy the specified test.
-   * @param func - A function that accepts up to three arguments. The every method calls the predicate function for each element in the array until the predicate returns a value which is coercible to the Boolean value false, or until the end of the array.
-   * @returns {this is K[]}
-   */
-
-  everyValue(func: (value: V, index: number, array: V[]) => value is V): this is V[] {
-    return [...this.values()].every(func);
-  };
-
-  /**
    * Returns the Group values.
-   * @param {boolean} groupKeyAndValue - Return the key and value or just the value.
-   * @returns {[K, V][] | V[]}
+   * @returns {V[]}
    */
 
-  toArray<T extends boolean = true>(groupKeyAndValue?: T): T extends true ? [K, V][] : V[] {
-    return (groupKeyAndValue ? [...this.entries()] : [...this.values()]) as T extends true ? [K, V][] : V[];
+  toArray(): V[] {
+    return Array.from(this.values());
   };
 
   /**
@@ -88,7 +67,7 @@ export class Group<K, V> extends Map<K, V> {
    */
 
   toJSON(): { [k: string]: V } {
-    return Object.fromEntries(Object.entries(this.entries));
+    return Object.fromEntries(this.entries());
   };
 
   /**
@@ -154,28 +133,6 @@ export class Group<K, V> extends Map<K, V> {
   };
 
   /**
-   * Calls a defined callback function on each value of the Group, and returns an array that contains the results.
-   * @param callbackfn — A function that accepts up to three arguments. The map method calls the callbackfn function one time for each element in the array.
-   * @param thisArg — An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value.
-   * @returns {U[]}
-   */
-
-  mapValues<U>(callbackfn: (value: V, index: number, array: V[]) => U): U[] {
-    return [...this.values()].map(callbackfn);
-  };
-
-  /**
-   * Calls a defined callback function on each key of the Group, and returns an array that contains the results.
-   * @param callbackfn — A function that accepts up to three arguments. The map method calls the callbackfn function one time for each element in the array.
-   * @param thisArg — An object to which the this keyword can refer in the callbackfn function. If thisArg is omitted, undefined is used as the this value.
-   * @returns {U[]}
-   */
-
-  mapKeys<U>(callbackfn: (value: K, index: number, array: K[]) => U): U[] {
-    return [...this.keys()].map(callbackfn);
-  };
-
-  /**
    * Combines the elements of two groups into a new group. If a key already exists in the current group, its value will be updated with the value from the other group.
    * @param group - The other group to merge with the current group.
    * @returns {this} - The merged group.
@@ -215,7 +172,7 @@ export class Group<K, V> extends Map<K, V> {
    */
 
   findIndex(predicate: (value: V, index: number, obj: V[]) => unknown): number {
-    return this.toArray(false).findIndex(predicate);
+    return this.toArray().findIndex(predicate);
   };
 
   /**
@@ -226,18 +183,6 @@ export class Group<K, V> extends Map<K, V> {
    */
 
   reduceRight(callbackfn: (previousValue: V, currentValue: V, currentIndex: number, array: V[]) => V): V {
-    return this.toArray(false).reduceRight(callbackfn);
-  };
-
-  /**
-   * Returns the index of the first occurrence of a value in an array, or -1 if it is not present.
-   * @param {K} searchElement The value to locate in the array.
-   * @param {number} fromIndex The array index at which to begin the search. If fromIndex is omitted, the search starts at index 0.
-   * @returns {number}
-   * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
-   */
-
-  indexOf(searchElement: K, fromIndex?: number): number {
-    return [...this.keys()].indexOf(searchElement, fromIndex);
+    return this.toArray().reduceRight(callbackfn);
   };
 };

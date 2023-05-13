@@ -5,20 +5,20 @@ import { Snowflake } from "../types/Snowflake";
 import { GuildRole, RoleIcon } from "../utils/Routes";
 import type { EditRoleOptions, GuildRoleTags, RawGuildRole, RawRole, ViewOptions } from "../types";
 
-export class Role extends Basic implements RawRole {
+export class Role extends Basic {
     public id: Snowflake;
     public name: string;
     public color: number;
     public hoist: boolean;
     public icon: string | undefined;
-    public unicode_emoji: string | undefined;
+    public unicodeEmoji: string | undefined;
     public position: number;
     public permissions: string;
     public managed: boolean;
     public mentionable: boolean;
     public tags: GuildRoleTags | undefined;
-    public creation_date: Date;
-    public creation_timestamp: number;
+    public creationDate: Date;
+    public creationTimestamp: number;
     public readonly guildId: Snowflake;
 
     constructor(data: RawGuildRole, client: Client, guildId: Snowflake) {
@@ -30,14 +30,14 @@ export class Role extends Basic implements RawRole {
         this.color = data.color;
         this.hoist = data.hoist;
         this.icon = data.icon;
-        this.unicode_emoji = data.unicode_emoji;
+        this.unicodeEmoji = data.unicode_emoji;
         this.position = data.position;
         this.permissions = data.permissions;
         this.managed = data.managed;
         this.mentionable = data.mentionable;
         this.tags = data.tags;
-        this.creation_date = new Date((+this.id / 4194304) + 1420070400000);
-        this.creation_timestamp = this.creation_date.getTime();
+        this.creationDate = new Date((+this.id / 4194304) + 1420070400000);
+        this.creationTimestamp = this.creationDate.getTime();
 
         Object.assign(this, data);
     };

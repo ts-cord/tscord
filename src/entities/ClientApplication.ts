@@ -6,33 +6,33 @@ import { ApplicationCommandManager } from '../managers/ApplicationCommandManager
 import { RoleConnectionMetadata, ApplicationCover, CndURL } from '../utils/Routes';
 import type { ViewOptions, RawApplication, ApplicationTeam, InstallParams, ApplicationRoleConnectionMetadata, ApplicationRoleConnectionMetadataEditOptions } from '../types';
 
-export class ClientApplication implements RawApplication {
+export class ClientApplication {
   private readonly client: Client;
-  public readonly rpc_origins: string[];
+  public readonly rpcOrigins: string[];
   public readonly summary: string;
-  public readonly install_params: InstallParams;
+  public readonly installParams: InstallParams;
   public readonly id: Snowflake;
   public readonly name: string;
   public readonly commands: ApplicationCommandManager;
   public readonly icon: string | undefined;
   public readonly description: string;
-  public readonly rcp_origins: string[] | undefined;
-  public readonly bot_public: boolean;
-  public readonly bot_require_code_grant: boolean;
-  public readonly terms_of_service_url: string | undefined;
-  public readonly privaci_policy_url: string | undefined;
+  public readonly rcpOrigins: string[] | undefined;
+  public readonly botPublic: boolean;
+  public readonly botRequireCodeGrant: boolean;
+  public readonly termsOfServiceUrl: string | undefined;
+  public readonly privaciPolicyUrl: string | undefined;
   public readonly owner: User | undefined;
-  public readonly verify_key: string;
+  public readonly verifyKey: string;
   public readonly team: ApplicationTeam;
-  public readonly guild_id: Snowflake | undefined;
-  public readonly primary_sku_id: Snowflake | undefined;
+  public readonly guildId: Snowflake | undefined;
+  public readonly primarySkuId: Snowflake | undefined;
   public readonly slug: string | undefined;
-  public readonly cover_image: string | undefined;
+  public readonly coverImage: string | undefined;
   public readonly flags: number | undefined;
   public readonly tags: string[] | undefined;
-  public readonly custom_install_url: string | undefined;
-  public readonly role_connections_verification_url: string | undefined;
-  private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+  public readonly customInstallUrl: string | undefined;
+  public readonly roleConnectionsVerificationUrl: string | undefined;
+  private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
   constructor(app: RawApplication, client: Client) {
     this.client = client;
@@ -41,24 +41,24 @@ export class ClientApplication implements RawApplication {
     this.name = app.name;
     this.icon = app.icon;
     this.description = app.description;
-    this.rpc_origins = app.rpc_origins;
-    this.bot_public = app.bot_public;
-    this.bot_require_code_grant = app.bot_require_code_grant;
-    this.terms_of_service_url = app.terms_of_service_url;
-    this.privaci_policy_url = app.privacy_policy_url;
+    this.rpcOrigins = app.rpc_origins;
+    this.botPublic = app.bot_public;
+    this.botRequireCodeGrant = app.bot_require_code_grant;
+    this.termsOfServiceUrl = app.terms_of_service_url;
+    this.privaciPolicyUrl = app.privacy_policy_url;
     this.owner = this.owner ? new User(this.owner, this.client) : void 0;
-    this.verify_key = app.verify_key;
+    this.verifyKey = app.verify_key;
     this.team = app.team;
-    this.guild_id = app.guild_id;
-    this.primary_sku_id = app.primary_sku_id;
+    this.guildId = app.guild_id;
+    this.primarySkuId = app.primary_sku_id;
     this.slug = app.slug;
-    this.cover_image = app.cover_image;
+    this.coverImage = app.cover_image;
     this.flags = app.flags;
-    this.custom_install_url = app.custom_install_url;
-    this.role_connections_verification_url = app.role_connections_verification_url;
-    this.axios_config = { headers: { Authorization: `Bot ${this.client.token}` } };
+    this.customInstallUrl = app.custom_install_url;
+    this.roleConnectionsVerificationUrl = app.role_connections_verification_url;
+    this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
     this.summary = app.summary;
-    this.install_params = app.install_params;
+    this.installParams = app.install_params;
 
     Object.assign(this, app);
   };
@@ -88,7 +88,7 @@ export class ClientApplication implements RawApplication {
    */
 
   async fetchRoleConnectionMetadataRecords(): Promise<Array<ApplicationRoleConnectionMetadata>> {
-    const { data }: { data: ApplicationRoleConnectionMetadata[] } = await rest.get(RoleConnectionMetadata(this.id), this.axios_config);
+    const { data }: { data: ApplicationRoleConnectionMetadata[] } = await rest.get(RoleConnectionMetadata(this.id), this.axiosConfig);
 
     return data;
   };
@@ -100,7 +100,7 @@ export class ClientApplication implements RawApplication {
    */
 
   async updateRoleConnectionMetadataRecords(options: ApplicationRoleConnectionMetadataEditOptions): Promise<Array<ApplicationRoleConnectionMetadata>> {
-    const { data }: { data: Array<ApplicationRoleConnectionMetadata> } = await rest.put(RoleConnectionMetadata(this.id), options, this.axios_config);
+    const { data }: { data: Array<ApplicationRoleConnectionMetadata> } = await rest.put(RoleConnectionMetadata(this.id), options, this.axiosConfig);
 
     return data;
   };
@@ -112,6 +112,6 @@ export class ClientApplication implements RawApplication {
    */
 
   coverURL(options?: ViewOptions): string | undefined {
-    return this.cover_image && CndURL + ApplicationCover(this.id, this.cover_image) + `.${options?.format ?? this.client.options?.default_image_format}?size=${options?.size ?? this.client.options?.default_image_size}`;
+    return this.coverImage && CndURL + ApplicationCover(this.id, this.coverImage) + `.${options?.format ?? this.client.options?.default_image_format}?size=${options?.size ?? this.client.options?.default_image_size}`;
   };
 };

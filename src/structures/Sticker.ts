@@ -7,22 +7,22 @@ import { Snowflake } from "../types/Snowflake";
 import { GuildSticker, User as UserRoute } from "../utils/Routes";
 import type { GuildStickerEditOptions, RawDiscordAPIUserData, RawSticker, StickerFormatTypes, StickerTypes } from "../types";
 
-export class Sticker extends Basic implements RawSticker {
+export class Sticker extends Basic {
     public id: Snowflake;
     public name: string;
     public description: string | undefined;
     public pack_id: Snowflake | undefined;
     public tags: string;
-    public format_type: StickerFormatTypes;
+    public formatType: StickerFormatTypes;
     public available: boolean | undefined;
-    public guild_id: Snowflake | undefined;
-    public sort_value: number | undefined;
+    public guildId: Snowflake | undefined;
+    public sortValue: number | undefined;
     public type: StickerTypes;
-    public creation_timesmtap: number;
-    public creation_date: Date;
+    public creationTimesmtap: number;
+    public creationDate: Date;
     public user: User | undefined;
     public guild: Guild | undefined;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(data: RawSticker, client: Client, guild?: Guild) {
         super(client);
@@ -32,16 +32,16 @@ export class Sticker extends Basic implements RawSticker {
         this.description = data.description;
         this.pack_id = data.pack_id;
         this.tags = data.tags;
-        this.format_type = data.format_type;
+        this.formatType = data.format_type;
         this.available = data.available;
-        this.guild_id = data.guild_id;
-        this.sort_value = data.sort_value;
+        this.guildId = data.guild_id;
+        this.sortValue = data.sort_value;
         this.type = data.type;
         this.user = data.user ? new User(data.user, this.client) : void 0;
-        this.creation_date = new Date((+this.id / 4194304) + 1420070400000);
-        this.creation_timesmtap = this.creation_date.getTime();
-        this.guild = guild ?? this.client.guilds.cache.get(this.guild_id as string);
-        this.axios_config = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.creationDate = new Date((+this.id / 4194304) + 1420070400000);
+        this.creationTimesmtap = this.creationDate.getTime();
+        this.guild = guild ?? this.client.guilds.cache.get(this.guildId as string);
+        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
 
         Object.assign(this, data);
     };
@@ -53,7 +53,7 @@ export class Sticker extends Basic implements RawSticker {
      */
 
     async delete(reason?: string): Promise<Sticker> {
-        await rest.delete(GuildSticker(this.guild_id as string, this.id), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        await rest.delete(GuildSticker(this.guildId as string, this.id), { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return this;
     };
@@ -66,7 +66,7 @@ export class Sticker extends Basic implements RawSticker {
      */
 
     async edit(options: GuildStickerEditOptions, reason?: string): Promise<Sticker> {
-        const { data }: { data: RawSticker } = await rest.patch(GuildSticker(this.guild_id as string, this.id), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        const { data }: { data: RawSticker } = await rest.patch(GuildSticker(this.guildId as string, this.id), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return new Sticker(data, this.client);
     };
@@ -77,9 +77,9 @@ export class Sticker extends Basic implements RawSticker {
      */
 
     async fetch(): Promise<Sticker | undefined> {
-        if (!this.guild_id) return;
+        if (!this.guildId) return;
 
-        const { data }: { data: RawSticker } = await rest.get(GuildSticker(this.guild_id as string, this.id), this.axios_config);
+        const { data }: { data: RawSticker } = await rest.get(GuildSticker(this.guildId as string, this.id), this.axiosConfig);
 
         return new Sticker(data, this.client);
     };
@@ -92,7 +92,7 @@ export class Sticker extends Basic implements RawSticker {
     async fetchUser(): Promise<User | undefined> {
         if (!this.user) return;
 
-        const { data }: { data: RawDiscordAPIUserData } = await rest.get(UserRoute(this.user.id), this.axios_config);
+        const { data }: { data: RawDiscordAPIUserData } = await rest.get(UserRoute(this.user.id), this.axiosConfig);
 
         return new User(data, this.client);
     };

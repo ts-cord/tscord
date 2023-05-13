@@ -11,14 +11,14 @@ import type { FetchGuildScheduledEventUsersOptions, GuildScheduledEventEditOptio
 
 export class GuildScheduledEventManager extends BasicManager {
     public guild: Guild;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
     override cache: Group<Snowflake, GuildScheduledEvent> = new Group<Snowflake, GuildScheduledEvent>();
 
     constructor(guild: Guild, client: Client) {
         super(client);
 
         this.guild = guild;
-        this.axios_config = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
     };
 
     /**
@@ -41,7 +41,7 @@ export class GuildScheduledEventManager extends BasicManager {
     async fetchUsers(guildScheduledEvent: GuildScheduledEventResolvable, options?: FetchGuildScheduledEventUsersOptions): Promise<Group<Snowflake, GuildScheduledEventUserData>> {
         const queryStringParams: string = new URLSearchParams(options as {}).toString();
         const groupOfUsers: Group<Snowflake, GuildScheduledEventUserData> = new Group<Snowflake, GuildScheduledEventUserData>();
-        const { data }: { data: RawGuildScheduledEventUserData[] } = await rest.get(GuildScheduledEventsUsers(this.guild.id, this.resolveId(guildScheduledEvent)) + (queryStringParams ? '?' + queryStringParams : ''), this.axios_config);
+        const { data }: { data: RawGuildScheduledEventUserData[] } = await rest.get(GuildScheduledEventsUsers(this.guild.id, this.resolveId(guildScheduledEvent)) + (queryStringParams ? '?' + queryStringParams : ''), this.axiosConfig);
 
         data.forEach((user: RawGuildScheduledEventUserData) => groupOfUsers.set(user.user.id, { guild_scheduled_event_id: user.guild_scheduled_event_id, user: new User(user.user, this.client), member: user.member as undefined }));
 

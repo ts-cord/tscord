@@ -12,13 +12,13 @@ import type { GuildStickerCreateOptions, GuildStickerEditOptions, RawDiscordAPIU
 export class GuildStickerManager extends BasicManager {
     public guild: Guild;
     override cache: Group<Snowflake, Sticker> = new Group<Snowflake, Sticker>();
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(guild: Guild, client: Client) {
         super(client);
         
         this.guild = guild;
-        this.axios_config = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
     };
 
     /**
@@ -38,7 +38,7 @@ export class GuildStickerManager extends BasicManager {
      */
 
     async fetchUser(sticker: Sticker): Promise<User> {
-        const { data }: { data: RawDiscordAPIUserData } = await rest.get(UserRoute(sticker.user!.id), this.axios_config);
+        const { data }: { data: RawDiscordAPIUserData } = await rest.get(UserRoute(sticker.user!.id), this.axiosConfig);
 
         return new User(data, this.client);
     };

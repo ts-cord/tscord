@@ -7,17 +7,17 @@ import { Snowflake } from "../types/Snowflake";
 import type { BasicGuildData,RawGuild, ViewOptions } from "../types";
 import { Guild as GuildRoute, GuildIcon as GuildIconRoute } from "../utils/Routes";
 
-export class BasicGuild extends Basic implements BasicGuildData {
+export class BasicGuild extends Basic {
     public id: Snowflake;
     public name: string;
     public features: Array<GuildFeatures>;
     public icon: string;
     public partnered: boolean;
     public verified: boolean;
-    public name_acronym: string;
-    public creation_timestamp: number;
-    public creation_date: Date;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    public nameAcronym: string;
+    public creationTimestamp: number;
+    public creationDate: Date;
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(data: BasicGuildData, client: Client) {
         super(client);
@@ -28,10 +28,10 @@ export class BasicGuild extends Basic implements BasicGuildData {
         this.icon = data.icon;
         this.partnered = this.features.includes(GuildFeatures.Partnered);
         this.verified = this.features.includes(GuildFeatures.Verified);
-        this.name_acronym = data.name_acronym;
-        this.axios_config = { headers: { Authorization: `Bot ${this.client.token}` } };
-        this.creation_date = new Date((+this.id / 4194304) + 1420070400000)
-        this.creation_timestamp = this.creation_date.getTime();
+        this.nameAcronym = data.name_acronym;
+        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.creationDate = new Date((+this.id / 4194304) + 1420070400000)
+        this.creationTimestamp = this.creationDate.getTime();
     };
 
     /**
@@ -40,7 +40,7 @@ export class BasicGuild extends Basic implements BasicGuildData {
      */
 
     async fetch(): Promise<Guild> {
-        const { data }: { data: RawGuild } = await rest.get(GuildRoute(this.id), this.axios_config);
+        const { data }: { data: RawGuild } = await rest.get(GuildRoute(this.id), this.axiosConfig);
 
         return new Guild(data, this.client);
     };
@@ -48,7 +48,7 @@ export class BasicGuild extends Basic implements BasicGuildData {
     /**
      * View the guild's icon url
      * @param {ViewOptions} options - Image format options
-     * @returns {boolean}
+     * @returns {string | undefined}
      */
 
     iconURL(options?: ViewOptions): string | undefined {
@@ -56,7 +56,7 @@ export class BasicGuild extends Basic implements BasicGuildData {
     };
 
     /**
-     * Stringify the guild object into a guild's name
+     * Stringify guild's object into guild's name
      * @returns {string}
      */
 

@@ -5,23 +5,25 @@ import { Snowflake } from "../types/Snowflake";
 import { GuildWidgetJSON } from "../utils/Routes";
 import type { GuildWidgetData, RawDiscordAPIChannelData, RawDiscordAPIUserData } from "../types";
 
-export class Widget extends Basic implements GuildWidgetData {
+export class Widget extends Basic {
     public id: Snowflake;
     public name: string;
-    public instant_invite: string | undefined;
+    public instantInvite: string | undefined;
     public channels: Partial<RawDiscordAPIChannelData>[];
     public members: Partial<RawDiscordAPIUserData>[];
-    public presence_count: number;
+    public presenceCount: number;
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(data: GuildWidgetData, client: Client) {
         super(client);
 
         this.id = data.id;
         this.name = data.name;
-        this.instant_invite = data.instant_invite;
+        this.instantInvite = data.instant_invite;
         this.channels = data.channels;
         this.members = data.members;
-        this.presence_count = data.presence_count;
+        this.presenceCount = data.presence_count;
+        this.axiosConfig = {  headers: { Authorization: `Bot ${this.client.token}` } };
 
         Object.assign(this, data);
     };
@@ -32,7 +34,7 @@ export class Widget extends Basic implements GuildWidgetData {
      */
 
     async fetch(): Promise<Widget> {
-        const { data }: { data: GuildWidgetData } = await rest.get(GuildWidgetJSON(this.id), { headers: { Authorization: `Bot ${this.client.token}` } });
+        const { data }: { data: GuildWidgetData } = await rest.get(GuildWidgetJSON(this.id), this.axiosConfig);
 
         return new Widget(data, this.client);
     };

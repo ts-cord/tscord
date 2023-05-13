@@ -5,14 +5,12 @@ import { OauthCurrentUser } from "../utils/Routes";
 import type { ClientUserEditOptions, RawDiscordAPIUserData } from "../types";
 
 export class ClientUser extends User {
-    private readonly route: string;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosSuperConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(data: RawDiscordAPIUserData, client: Client) {
         super(data, client);
 
-        this.route = OauthCurrentUser;
-        this.axios_config = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosSuperConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
     };
 
     /**
@@ -46,7 +44,7 @@ export class ClientUser extends User {
      */
 
     async edit(options: ClientUserEditOptions): Promise<ClientUser> {
-        const { data }: { data: RawDiscordAPIUserData } = await rest.patch(this.route, options, this.axios_config);
+        const { data }: { data: RawDiscordAPIUserData } = await rest.patch(OauthCurrentUser, options, this.axiosSuperConfig);
 
         return new ClientUser(data, this.client);
     };

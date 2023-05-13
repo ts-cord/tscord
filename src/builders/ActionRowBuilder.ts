@@ -3,9 +3,9 @@ import { BasicBuilder } from "./BasicBuilder";
 import { ButtonBuilder } from "./ButtonBuilder";
 import type { MessageComponentData } from "../types";
 import { TextInputBuilder } from "./TextInputBuilder";
-import { SelectMenuBuilder } from "./SelectMenuBuilder";
+import { StringSelectMenuBuilder } from "./StringSelectMenuBuilder";
 
-export class ActionRowBuilder<T extends ButtonBuilder | TextInputBuilder | SelectMenuBuilder> extends BasicBuilder<MessageComponentData> {
+export class ActionRowBuilder<T extends ButtonBuilder | TextInputBuilder | StringSelectMenuBuilder> extends BasicBuilder<MessageComponentData> {
     components: MessageComponentData['components'] = this.data.components;
 
     /**

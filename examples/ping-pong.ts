@@ -3,7 +3,7 @@
 import { Client, Message } from 'typecord';
 
 const client: Client = new Client({
-    token: '123',
+    token: 'TOKEN',
     intents: 0 // Use the correct intents
 });
 
@@ -17,10 +17,16 @@ client.on('connect', (): void => {
 // Triggered when a message is sent
 
 client.on('messageCreate', async (message: Message): Promise<void> => {
-    if (message.content?.startsWith('ping') || message.content?.startsWith('pong')) {
-        await message.channel.send({
-            content: message.content.startsWith('ping') ? 'pong' : 'ping'
-        }); // Send a message if the message content starts with `ping` or `pong`
+    if (!message.content) return; // Check that the message has content
+    if (message.content.startsWith('!ping')) {
+        await message.channel.send('Pong!');
+
+        return;
+    };
+    if (message.content.startsWith('!pong')) {
+        await message.channel.send('Ping!');
+
+        return;
     };
 });
 

@@ -16,54 +16,54 @@ import { WelcomeScreen } from "./WelcomeScreen";
 import { GuildTemplates as GuildTemplatesRoute, Guild as GuildRoute, OauthGuild, GuildPreview as GuildPreviewRoute, GuildWidget, GuildWidgetJSON, GuildWelcomeScreen, User as UserRoute, GuildVanityURL, GuildIntegrations, GuildWebhooks, GuildOnboarding } from "../utils/Routes";
 import type { ExplicitContentFilterLevels, GuildEditOptions, GuildFeatures, GuildMemberResolvable, GuildNSFWLevels, GuildOnboardingData, GuildPremiumTier, GuildTemplateData, GuildVanityData, GuildVerificationLevels, GuildWelcomeScreenData, GuildWidgetData, GuildWidgetSettingsData, RawDiscordAPIUserData, RawDiscordAPIWebhookData, RawGuild, RawGuildEmoji, RawGuildPreview, RawGuildRole, RawIntegrationData, RawSticker, SystemChannelFlags } from "../types";
 
-export class Guild extends BasicGuild implements RawGuild {
+export class Guild extends BasicGuild {
     public id: Snowflake;
     public name: string;
     public features: Array<GuildFeatures>;
     public icon: string;
     public partnered: boolean;
     public verified: boolean;
-    public name_acronym: string;
-    public icon_hash: string | undefined;
+    public nameAcronym: string;
+    public iconHash: string | undefined;
     public splash: string | undefined;
-    public discovery_splash: string | undefined;
+    public discoverySplash: string | undefined;
     public owner: boolean | undefined;
-    public owner_id: Snowflake;
+    public ownerId: Snowflake;
     public permissions: string | undefined;
-    public afk_channel_id: Snowflake | undefined;
-    public afk_timeout: number;
-    public widget_enabled: boolean | undefined;
-    public widget_channel_id: Snowflake | undefined;
-    public verification_level: GuildVerificationLevels;
-    public default_message_notifications: number;
-    public explicit_content_filter: ExplicitContentFilterLevels;
+    public afkChannelId: Snowflake | undefined;
+    public afkTimeout: number;
+    public widgetEnabled: boolean | undefined;
+    public widgetChannelId: Snowflake | undefined;
+    public verificationLevel: GuildVerificationLevels;
+    public defaultMessageNotifications: number;
+    public explicitContentFilter: ExplicitContentFilterLevels;
     public roles: Array<RawGuildRole>;
     public emojis: Array<RawGuildEmoji>;
     public mfa_level: number;
-    public application_id: Snowflake | undefined;
-    public system_channel_id: Snowflake | undefined;
-    public system_channel_flags: SystemChannelFlags;
-    public rules_channel_id: Snowflake | undefined;
-    public max_presences: number | undefined;
-    public max_members: number;
-    public vanity_url_code: string | undefined;
+    public applicationId: Snowflake | undefined;
+    public systemChannelId: Snowflake | undefined;
+    public systemChannelFlags: SystemChannelFlags;
+    public rulesChannelId: Snowflake | undefined;
+    public maxPresences: number | undefined;
+    public maxMembers: number;
+    public vanityUrlCode: string | undefined;
     public description: string | undefined;
     public banner: string | undefined;
-    public premium_tier: GuildPremiumTier;
-    public premium_subscription_count: number | undefined;
-    public preferred_locale: keyof Locales;
-    public public_updates_channel_id: Snowflake | undefined;
-    public max_video_channel_users: number | undefined;
-    public max_stage_video_channel_users: number | undefined;
-    public approximate_member_count: number | undefined;
-    public approximate_presence_count: number | undefined;
-    public welcome_screen: GuildWelcomeScreenData | undefined;
-    public nsfw_level: GuildNSFWLevels;
+    public premiumTier: GuildPremiumTier;
+    public premiumSubscriptionCount: number | undefined;
+    public preferredLocale: keyof Locales;
+    public publicUpdatesChannelId: Snowflake | undefined;
+    public maxVideoChannelUsers: number | undefined;
+    public maxStageVideoChannelUsers: number | undefined;
+    public approximateMemberCount: number | undefined;
+    public approximatePresenceCount: number | undefined;
+    public welcomeScreen: GuildWelcomeScreenData | undefined;
+    public nsfwLevel: GuildNSFWLevels;
     public stickers: Array<Required<Omit<RawSticker, 'pack_id' | 'sort_value'>>> | undefined;
-    public premium_progress_bar_enabled: boolean;
-    public creation_timestamp: number;
-    public creation_date: Date;
-    private readonly axios_confg: { headers: { Authorization: `Bot ${string}` } };
+    public premiumProgressBarEnabled: boolean;
+    public creationTimestamp: number;
+    public creationDate: Date;
+    private readonly axiosSuperConfig: { headers: { Authorization: `Bot ${string}` } };
 
     /**
      * Create a new Guild
@@ -81,47 +81,47 @@ export class Guild extends BasicGuild implements RawGuild {
         this.icon = super.icon;
         this.partnered = super.partnered;
         this.verified = super.verified;
-        this.name_acronym = super.name_acronym;
-        this.creation_timestamp = super.creation_timestamp;
-        this.creation_date = super.creation_date;
-        this.icon_hash = data.icon_hash;
+        this.nameAcronym = super.nameAcronym;
+        this.creationTimestamp = super.creationTimestamp;
+        this.creationDate = super.creationDate;
+        this.iconHash = data.icon_hash;
         this.splash = data.splash;
-        this.discovery_splash = data.discovery_splash;
+        this.discoverySplash = data.discovery_splash;
         this.owner = data.owner;
-        this.owner_id = data.owner_id;
+        this.ownerId = data.owner_id;
         this.permissions = data.permissions;
-        this.afk_channel_id = data.afk_channel_id;
-        this.afk_timeout = data.afk_timeout;
-        this.widget_enabled = data.widget_enabled;
-        this.widget_channel_id = data.widget_channel_id;
-        this.verification_level = data.verification_level;
-        this.default_message_notifications = data.default_message_notifications;
-        this.explicit_content_filter = data.explicit_content_filter;
+        this.afkChannelId = data.afk_channel_id;
+        this.afkTimeout = data.afk_timeout;
+        this.widgetEnabled = data.widget_enabled;
+        this.widgetChannelId = data.widget_channel_id;
+        this.verificationLevel = data.verification_level;
+        this.defaultMessageNotifications = data.default_message_notifications;
+        this.explicitContentFilter = data.explicit_content_filter;
         this.roles = data.roles;
         this.emojis = data.emojis;
         this.mfa_level = data.mfa_level;
-        this.application_id = data.application_id;
-        this.system_channel_flags = data.system_channel_flags;
-        this.system_channel_id = data.system_channel_id;
-        this.rules_channel_id = data.rules_channel_id;
-        this.max_presences = data.max_presences;
-        this.max_members = data.max_members;
-        this.vanity_url_code = data.vanity_url_code;
+        this.applicationId = data.application_id;
+        this.systemChannelFlags = data.system_channel_flags;
+        this.systemChannelId = data.system_channel_id;
+        this.rulesChannelId = data.rules_channel_id;
+        this.maxPresences = data.max_presences;
+        this.maxMembers = data.max_members;
+        this.vanityUrlCode = data.vanity_url_code;
         this.description = data.description;
         this.banner = data.banner;
-        this.premium_tier = data.premium_tier;
-        this.premium_subscription_count = data.premium_subscription_count;
-        this.preferred_locale = data.preferred_locale;
-        this.public_updates_channel_id = data.public_updates_channel_id;
-        this.max_video_channel_users = data.max_video_channel_users;
-        this.max_stage_video_channel_users = data.max_stage_video_channel_users;
-        this.approximate_member_count = data.approximate_member_count;
-        this.approximate_presence_count = data.approximate_presence_count;
-        this.welcome_screen = data.welcome_screen;
-        this.nsfw_level = data.nsfw_level;
+        this.premiumTier = data.premium_tier;
+        this.premiumSubscriptionCount = data.premium_subscription_count;
+        this.preferredLocale = data.preferred_locale;
+        this.publicUpdatesChannelId = data.public_updates_channel_id;
+        this.maxVideoChannelUsers = data.max_video_channel_users;
+        this.maxStageVideoChannelUsers = data.max_stage_video_channel_users;
+        this.approximateMemberCount = data.approximate_member_count;
+        this.approximatePresenceCount = data.approximate_presence_count;
+        this.welcomeScreen = data.welcome_screen;
+        this.nsfwLevel = data.nsfw_level;
         this.stickers = data.stickers;
-        this.premium_progress_bar_enabled = data.premium_progress_bar_enabled;
-        this.axios_confg = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.premiumProgressBarEnabled = data.premium_progress_bar_enabled;
+        this.axiosSuperConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
 
         Object.assign(this, data);
     };
@@ -134,7 +134,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async createTemplate(name: string, description?: string): Promise<GuildTemplate> {
-        const { data }: { data: GuildTemplateData } = await rest.post(GuildTemplatesRoute(this.id), { name, description }, this.axios_confg);
+        const { data }: { data: GuildTemplateData } = await rest.post(GuildTemplatesRoute(this.id), { name, description }, this.axiosSuperConfig);
 
         return new GuildTemplate(data, this.client);
     };
@@ -145,7 +145,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async delete(): Promise<Guild> {
-        await rest.delete(GuildRoute(this.id), this.axios_confg);
+        await rest.delete(GuildRoute(this.id), this.axiosSuperConfig);
 
         return this;
     };
@@ -156,7 +156,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async leave(): Promise<Guild> {
-        await rest.delete(OauthGuild(this.id), this.axios_confg);
+        await rest.delete(OauthGuild(this.id), this.axiosSuperConfig);
 
         return this;
     };
@@ -180,7 +180,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async fetchPreview(): Promise<GuildPreview> {
-        const { data }: { data: RawGuildPreview } = await rest.get(GuildPreviewRoute(this.id), this.axios_confg);
+        const { data }: { data: RawGuildPreview } = await rest.get(GuildPreviewRoute(this.id), this.axiosSuperConfig);
 
         return new GuildPreview(data, this.client);
     };
@@ -191,7 +191,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async fetchWidget(): Promise<Widget> {
-        const { data }: { data: GuildWidgetData } = await rest.get(GuildWidgetJSON(this.id), this.axios_confg);
+        const { data }: { data: GuildWidgetData } = await rest.get(GuildWidgetJSON(this.id), this.axiosSuperConfig);
 
         return new Widget(data, this.client);
     };
@@ -202,7 +202,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async fetchWidgetSettings(): Promise<GuildWidgetSettingsData> {
-        const { data }: { data: GuildWidgetSettingsData } = await rest.get(GuildWidget(this.id), this.axios_confg);
+        const { data }: { data: GuildWidgetSettingsData } = await rest.get(GuildWidget(this.id), this.axiosSuperConfig);
 
         return data;
     };
@@ -213,7 +213,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async fetchWelcomeScreen(): Promise<WelcomeScreen> {
-        const { data }: { data: GuildWelcomeScreenData } = await rest.get(GuildWelcomeScreen(this.id), this.axios_confg);
+        const { data }: { data: GuildWelcomeScreenData } = await rest.get(GuildWelcomeScreen(this.id), this.axiosSuperConfig);
 
         return new WelcomeScreen(data, this.client, this);
     };
@@ -224,7 +224,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async fetchOwner(): Promise<User> {
-        const { data }: { data: RawDiscordAPIUserData } = await rest.get(UserRoute(this.owner_id), this.axios_confg);
+        const { data }: { data: RawDiscordAPIUserData } = await rest.get(UserRoute(this.ownerId), this.axiosSuperConfig);
 
         return new User(data, this.client);
     };
@@ -235,7 +235,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async fetchVanityURL(): Promise<GuildVanityData> {
-        const { data }: { data: GuildVanityData } = await rest.get(GuildVanityURL(this.id), this.axios_confg);
+        const { data }: { data: GuildVanityData } = await rest.get(GuildVanityURL(this.id), this.axiosSuperConfig);
 
         return data;
     };
@@ -247,7 +247,7 @@ export class Guild extends BasicGuild implements RawGuild {
 
     async fetchIntegrations(): Promise<Group<Snowflake, Integration>> {
         const integrationsGroup: Group<Snowflake, Integration> = new Group<Snowflake, Integration>();
-        const { data }: { data: Array<RawIntegrationData> } = await rest.get(GuildIntegrations(this.id), this.axios_confg);
+        const { data }: { data: Array<RawIntegrationData> } = await rest.get(GuildIntegrations(this.id), this.axiosSuperConfig);
 
         data.forEach((integration: RawIntegrationData) => integrationsGroup.set(integration.id, new Integration(integration, this.client, this)));
 
@@ -262,7 +262,7 @@ export class Guild extends BasicGuild implements RawGuild {
 
     async fetchWebhooks(): Promise<Group<Snowflake, Webhook>> {
         const webhooksGroup: Group<Snowflake, Webhook> = new Group<Snowflake, Webhook>();
-        const { data }: { data: Array<RawDiscordAPIWebhookData> } = await rest.get(GuildWebhooks(this.id), this.axios_confg);
+        const { data }: { data: Array<RawDiscordAPIWebhookData> } = await rest.get(GuildWebhooks(this.id), this.axiosSuperConfig);
 
         data.forEach((webhook: RawDiscordAPIWebhookData) => webhooksGroup.set(webhook.id, new Webhook(webhook, this.client)));
 
@@ -275,7 +275,7 @@ export class Guild extends BasicGuild implements RawGuild {
      */
 
     async fetchOnboarding(): Promise<GuildOnboardingData> {
-        const { data }: { data: GuildOnboardingData } = await rest.get(GuildOnboarding(this.id), this.axios_confg);
+        const { data }: { data: GuildOnboardingData } = await rest.get(GuildOnboarding(this.id), this.axiosSuperConfig);
 
         return data;
     };
@@ -344,6 +344,12 @@ export class Guild extends BasicGuild implements RawGuild {
 
         return data;
     };
+
+    /**
+     * Stringify guild's object into guild's name
+     * @returns {string}
+     */
+
     toString(): string {
         return this.name;
     };

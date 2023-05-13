@@ -1,9 +1,6 @@
-import { ChannelTypes, Locales } from "./index";
 import { Snowflake } from "./Snowflake";
-import { RawDiscordAPIUserData } from "./user";
-import type { GuildMemberData } from "./index";
-import type { BasicFetchOptions, Locales } from "./misc";
 import { ApplicationCommand } from "../structures/ApplicationCommand";
+import type { GuildMemberData, Locales, BasicFetchOptions, RawDiscordAPIUserData, ChannelTypes, RawGuildRole, RawDiscordAPIChannelData, RawDiscordAPIMessageData, AttachmentData, ApplicationCommandInteractionOptionData } from "./index";
 
 export enum ComponentTypes {
     ActionRow = 1,
@@ -146,4 +143,39 @@ export interface TextInputData {
 export enum TextInputStyles {
     Short = 1,
     Paragraph
+};
+
+export interface RawInteraction {
+    id: Snowflake;
+    application_id: Snowflake;
+    type: InteractionType;
+    data?: RawInteractionData;
+    guild_id?: Snowflake;
+    channel?: Partial<RawDiscordAPIChannelData>;
+    channel_id?: Snowflake;
+    member?: GuildMemberData;
+    user?: RawDiscordAPIUserData;
+    token: string;
+    version: number;
+    message?: RawDiscordAPIMessageData;
+    app_permissions?: string;
+    locale?: keyof Locales;
+    guild_locale?: keyof Locales;
+};
+
+export interface RawInteractionData {
+    id: Snowflake;
+    name: string;
+    type: ApplicationCommandTypes;
+    resolved?: {
+        users?: { [ID: Snowflake]: RawDiscordAPIUserData; };
+        members?: { [ID: Snowflake]: Partial<GuildMemberData>; };
+        roles?: { [ID: Snowflake]: RawGuildRole; };
+        channels?: { [ID: Snowflake]: Partial<RawDiscordAPIChannelData>; };
+        messages?: { [ID: Snowflake]: Partial<RawDiscordAPIMessageData>; };
+        attachments?: { [ID: Snowflake]: AttachmentData; };
+    };
+    options?: ApplicationCommandInteractionOptionData[];
+    guild_id?: Snowflake;
+    target_id?: Snowflake;
 };

@@ -8,19 +8,19 @@ import { Snowflake } from "../types/Snowflake";
 import { Channel, ChannelMessages } from "../utils/Routes";
 import type { CreateMessageOptions, GuildChannelData, GuildChannelEditOptions, OverwriteData, RawDiscordAPIMessageData } from "../types";
 
-export class GuildChannel extends BasicChannel implements GuildChannelData {
+export class GuildChannel extends BasicChannel  {
     public id: Snowflake;
     public type: ChannelTypes;
     public flags: number;
-    public creation_timestamp: number;
-    public creation_date: Date;
-    public guild_id: Snowflake;
+    public creationTimestamp: number;
+    public creationDate: Date;
+    public guildId: Snowflake;
     public position: number;
-    public permission_overwrites: OverwriteData[];
+    public permissionOverwrites: OverwriteData[];
     public name: string;
-    public parent_id: string | undefined;
+    public parentId: string | undefined;
     public guild: Guild;
-    private readonly axios_auth: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(data: GuildChannelData, client: Client, guild: Guild) {
         super(data, client);
@@ -28,15 +28,15 @@ export class GuildChannel extends BasicChannel implements GuildChannelData {
         this.id = super.id;
         this.type = super.type;
         this.flags = data.flags;
-        this.creation_timestamp = super.creation_timestamp;
-        this.creation_date = super.creation_date;
+        this.creationTimestamp = super.creationTimestamp;
+        this.creationDate = super.creationDate;
         this.guild = guild;
-        this.guild_id = data.guild_id;
+        this.guildId = data.guild_id;
         this.position = data.position;
-        this.permission_overwrites = data.permission_overwrites;
+        this.permissionOverwrites = data.permission_overwrites;
         this.name = data.name;
-        this.parent_id = data.parent_id;
-        this.axios_auth = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.parentId = data.parent_id;
+        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
 
         Object.assign(this, data);
     };
@@ -48,7 +48,7 @@ export class GuildChannel extends BasicChannel implements GuildChannelData {
      */
 
     async send(options: CreateMessageOptions): Promise<Message> {
-        const { data }: { data: RawDiscordAPIMessageData } = await rest.post(ChannelMessages(this.id), options, this.axios_auth);
+        const { data }: { data: RawDiscordAPIMessageData } = await rest.post(ChannelMessages(this.id), options, this.axiosConfig);
 
         return new Message(data, this.client, this.guild);
     };

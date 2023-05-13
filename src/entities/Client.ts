@@ -17,20 +17,20 @@ export class Client extends EventEmitter {
   public intents: number;
   public ws: WebSocketStructure;
   public options: ClientOptions['options'];
-  public cache_sweepers: ClientOptions['cache_sweepers'];
+  public cacheSweepers: ClientOptions['cache_sweepers'];
   public rest: ClientOptions['rest'];
   public app: ClientApplication | undefined;
   public users: UserManager = new UserManager(this);
   public guilds: GuildManager = new GuildManager(this);
   public channels: ChannelManager = new ChannelManager(this);
-  private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+  private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
   constructor(options: ClientOptions) {
     super();
 
     this.token = options.token;
     this.intents = options.intents ?? 0;
-    this.axios_config = { headers: { Authorization: `Bot ${this.token}` } };
+    this.axiosConfig = { headers: { Authorization: `Bot ${this.token}` } };
     this.rest = { baseURL: options.rest?.baseURL ?? 'https://discord.com/api/v10/', request_timeout: options.rest?.request_timeout ?? 15000 };
     this.options = { default_image_format: options.options?.default_image_format ?? 'png', default_image_size: options.options?.default_image_size ?? 1024 };
 
@@ -105,7 +105,7 @@ export class Client extends EventEmitter {
    */
 
   async edit(options: ClientEditOptions): Promise<User> {
-    const { data }: { data: RawDiscordAPIUserData } = await rest.patch(OauthCurrentUser, options, this.axios_config);
+    const { data }: { data: RawDiscordAPIUserData } = await rest.patch(OauthCurrentUser, options, this.axiosConfig);
 
     this.user = new User(data, this);
 

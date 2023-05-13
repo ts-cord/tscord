@@ -1,5 +1,7 @@
 import { Snowflake } from "../types/Snowflake";
 
+// Image Base URL
+
 export const CndURL: string = "https://cdn.discordapp.com";
 
 // Webhooks

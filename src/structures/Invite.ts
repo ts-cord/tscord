@@ -4,23 +4,23 @@ import { Inviter } from "../utils/Routes";
 import { Client } from "../entities/Client";
 import type { GuildScheduledEvent, InviteTargetTypes, RawApplication, RawDiscordAPIChannelData, RawInviteData, RawDiscordAPIUserData, RawGuild } from "../types";
 
-export class Invite extends Basic implements RawInviteData {
-    code: string;
-    guild: Partial<RawGuild> | undefined;
-    channel: Partial<RawDiscordAPIChannelData> | undefined;
-    inviter: Partial<RawDiscordAPIUserData> | undefined;
-    target_type: InviteTargetTypes;
-    target_user: RawDiscordAPIUserData | undefined;
-    target_application: Partial<RawApplication> | undefined;
-    approximate_member_count: number | undefined;
-    approximate_presence_count: number | undefined;
-    expires_at: number | undefined;
-    guild_scheduled_event: GuildScheduledEvent | undefined;
-    uses: number;
-    max_age: number;
-    max_uses: number;
-    temporary: boolean;
-    created_at: number;
+export class Invite extends Basic {
+    public code: string;
+    public guild: Partial<RawGuild> | undefined;
+    public channel: Partial<RawDiscordAPIChannelData> | undefined;
+    public inviter: Partial<RawDiscordAPIUserData> | undefined;
+    public targetType: InviteTargetTypes;
+    public targetUser: RawDiscordAPIUserData | undefined;
+    public targetApplication: Partial<RawApplication> | undefined;
+    public approximateMemberCount: number | undefined;
+    public approximatePresenceCount: number | undefined;
+    public expiresAt: number | undefined;
+    public guildScheduledEvent: GuildScheduledEvent | undefined;
+    public uses: number;
+    public maxAge: number;
+    public maxUses: number;
+    public temporary: boolean;
+    public createdAt: number;
 
     constructor(data: RawInviteData, client: Client) {
         super(client);
@@ -29,18 +29,18 @@ export class Invite extends Basic implements RawInviteData {
         this.guild = data.guild;
         this.channel = data.channel;
         this.inviter = data.inviter;
-        this.target_type = data.target_type;
-        this.target_user = data.target_user;
-        this.target_application = data.target_application;
-        this.approximate_member_count = data.approximate_member_count;
-        this.approximate_presence_count = data.approximate_presence_count;
-        this.expires_at = data.expires_at ? new Date(data.expires_at).getTime() : void 0;
-        this.guild_scheduled_event = data.guild_scheduled_event;
+        this.targetType = data.target_type;
+        this.targetUser = data.target_user;
+        this.targetApplication = data.target_application;
+        this.approximateMemberCount = data.approximate_member_count;
+        this.approximatePresenceCount = data.approximate_presence_count;
+        this.expiresAt = data.expires_at ? new Date(data.expires_at).getTime() : void 0;
+        this.guildScheduledEvent = data.guild_scheduled_event;
         this.uses = data.uses;
-        this.max_age = data.max_age;
-        this.max_uses = data.max_uses;
+        this.maxAge = data.max_age;
+        this.maxUses = data.max_uses;
         this.temporary = data.temporary;
-        this.created_at = new Date(data.created_at).getTime();
+        this.createdAt = new Date(data.created_at).getTime();
 
         Object.assign(this, data);
     };

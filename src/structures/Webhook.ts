@@ -2,26 +2,28 @@ import { User } from "./User";
 import { Basic } from "./Basic";
 import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
-import { WebhookTypes } from "../types/index";
+import { RawDiscordAPIMessageData, WebhookTypes } from "../types/index";
 import { Snowflake } from "../types/Snowflake";
-import type { MessageResolvable, RawDiscordAPIChannelData, RawGuild, RawDiscordAPIWebhookData, RawWebhook, WebhookEditOptions, WebhookMessageEditOptions, WebhookMessageSlackCreateOptions } from "../types/index";
+import { WebhookPlatform } from "../utils/Routes";
+import type { MessageResolvable, RawDiscordAPIChannelData, RawGuild, RawDiscordAPIWebhookData, WebhookEditOptions, WebhookMessageEditOptions, WebhookMessageSlackCreateOptions } from "../types/index";
+import { Message } from "./Message";
 
-export class Webhook extends Basic implements RawWebhook {
+export class Webhook extends Basic {
     public id: Snowflake;
     public type: WebhookTypes;
-    public guild_id: Snowflake | undefined;
-    public channel_id: Snowflake | undefined;
+    public guildId: Snowflake | undefined;
+    public channelId: Snowflake | undefined;
     public user: User | undefined | undefined;
     public name: string | undefined;
     public avatar: string | undefined;
     public token: string | undefined;
-    public application_id: Snowflake | undefined;
-    public source_guild: Partial<RawGuild> | undefined;
-    public source_channel: Partial<RawDiscordAPIChannelData> | undefined;
+    public applicationId: Snowflake | undefined;
+    public sourceGuild: Partial<RawGuild> | undefined;
+    public sourceChannel: Partial<RawDiscordAPIChannelData> | undefined;
     public url: string | undefined;
-    public creation_timestamp: number;
-    public creation_date: Date;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    public creationTimestamp: number;
+    public creationDate: Date;
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
     private readonly requestUrl: string;
 
     constructor(data: RawDiscordAPIWebhookData, client: Client) {
@@ -29,19 +31,19 @@ export class Webhook extends Basic implements RawWebhook {
 
         this.id = data.id;
         this.type = data.type;
-        this.guild_id = data.guild_id;
-        this.channel_id = data.channel_id;
+        this.guildId = data.guild_id;
+        this.channelId = data.channel_id;
         this.user = data.user ? new User(data.user, this.client) : data.user;
         this.name = data.name;
         this.avatar = data.avatar;
         this.token = data.token;
-        this.application_id = data.application_id;
-        this.source_guild = data.source_guild;
-        this.source_channel = data.source_channel;
+        this.applicationId = data.application_id;
+        this.sourceGuild = data.source_guild;
+        this.sourceChannel = data.source_channel;
         this.url = data.url;
-        this.creation_date = new Date((+this.id / 4194304) + 1420070400000);
-        this.creation_timestamp = this.creation_date.getTime();
-        this.axios_config = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.creationDate = new Date((+this.id / 4194304) + 1420070400000);
+        this.creationTimestamp = this.creationDate.getTime();
+        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
         this.requestUrl = `/webhooks/${this.id}`;
 
         Object.assign(this, data);
@@ -67,7 +69,7 @@ export class Webhook extends Basic implements RawWebhook {
      */
 
     async deleteMessage(message: MessageResolvable, threadId?: Snowflake): Promise<void> {
-        const { data }: { data: void } = await rest.delete(`/webhooks/${this.id}/${this.token}/messages/${message}${threadId ? '?threadId=' + threadId : ''}`, this.axios_config);
+        const { data }: { data: void } = await rest.delete(`/webhooks/${this.id}/${this.token}/messages/${message}${threadId ? '?threadId=' + threadId : ''}`, this.axiosConfig);
 
         return data;
     };
@@ -92,7 +94,7 @@ export class Webhook extends Basic implements RawWebhook {
      */
 
     async editMessage(message: MessageResolvable, options: WebhookMessageEditOptions): Promise<object> {
-        const { data }: { data: object /* replace to message object */ } = await rest.patch(`/webhooks/${this.id}/${this.id}/messages/${message}${options.thread_id ? '?threadId=' + options.thread_id : ''}`, (delete options.thread_id, options), this.axios_config);
+        const { data }: { data: object /* replace to message object */ } = await rest.patch(`/webhooks/${this.id}/${this.id}/messages/${message}${options.thread_id ? '?threadId=' + options.thread_id : ''}`, (delete options.thread_id, options), this.axiosConfig);
 
         return data;
     };
@@ -101,13 +103,13 @@ export class Webhook extends Basic implements RawWebhook {
      * Fetch a message sent by the webhook
      * @param {MessageResolvable} message - The message to be fetched
      * @param {Snowflake} threadId - The id of the thread the webhook is on
-     * @returns {Promise<object>}
+     * @returns {Promise<Message>}
      */
 
-    async fetchMessage(message: Snowflake, threadId?: Snowflake): Promise<object> {
-        const { data }: { data: object /* replace to message object */ } = await rest.get(`/webhooks/${this.id}/${this.token}/messages/${message}${threadId ? '?threadId=' + threadId : ''}`, this.axios_config);
+    async fetchMessage(message: Snowflake, threadId?: Snowflake): Promise<Message> {
+        const { data }: { data: RawDiscordAPIMessageData } = await rest.get(`/webhooks/${this.id}/${this.token}/messages/${message}${threadId ? '?threadId=' + threadId : ''}`, this.axiosConfig);
 
-        return data;
+        return new Message(data, this.client);
     };
 
     /**
@@ -154,8 +156,8 @@ export class Webhook extends Basic implements RawWebhook {
      */
 
     async sendSlackMessage(body: object, options: WebhookMessageSlackCreateOptions): Promise<boolean> {
-        const queryStringParams: string = new URLSearchParams(options as unknown as Record<string, string>).toString();
-        const { data }: { data: boolean } = await rest.post(`/webhooks/${this.id}/${this.token}/slack?${queryStringParams}`, body, this.axios_config);
+        const queryStringParams: string = '?' + new URLSearchParams(options as {}).toString();
+        const { data }: { data: boolean } = await rest.post(WebhookPlatform(this.id, this.token!, 'slack') + queryStringParams, body, this.axiosConfig);
 
         return data;
     };

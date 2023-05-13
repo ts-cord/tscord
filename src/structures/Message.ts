@@ -5,86 +5,86 @@ import { Webhook } from "./Webhook";
 import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
-import { ChannelMessage, Webhook as WebhookRoute } from "../utils/Routes";
+import { ChannelMessage, Webhook as WebhookRoute, ChannelMessageCrosspost, ChannelThreads } from "../utils/Routes";
 import type { AttachmentData, ChannelMentionData, EmbedData, EmojiResolvable, MessageActivity, MessageComponentData, MessageFlags, MessageInteractionData, MessageReferenceOptions, MessageTypes, RawApplication, RawDiscordAPIChannelData, RawDiscordAPIMessageData, RawDiscordAPIUserData, RawDiscordAPIWebhookData, RawSticker, ReactionData, RoleSubscriptionData, StartThreadOptions, StickerItemData } from "../types";
 
 export class Message extends Basic {
     public id: Snowflake;
-    public channel_id: Snowflake;
+    public channelId: Snowflake;
     public author: User;
     public content: string | undefined;
     public timestamp: number;
-    public edited_timestmap: number | undefined;
+    public editedTimestmap: number | undefined;
     public tts: boolean;
-    public mention_everyone: boolean;
+    public mentionEveryone: boolean;
     public mentions: RawDiscordAPIUserData[];
-    public mention_roles: Snowflake[];
-    public mention_channels: ChannelMentionData[] | undefined;
+    public mentionRoles: Snowflake[];
+    public mentionChannels: ChannelMentionData[] | undefined;
     public attachments: AttachmentData[];
     public embeds: EmbedData[];
     public reactions: ReactionData[] | undefined;
     public nonce: string | number | undefined;
     public pinned: boolean;
-    public webhook_id: string | undefined;
+    public webhookId: string | undefined;
     public type: MessageTypes;
     public activity: MessageActivity | undefined;
     public application: Partial<RawApplication> | undefined;
-    public application_id: string | undefined;
-    public message_reference: MessageReferenceOptions | undefined;
-    public flags?: MessageFlags | undefined;
-    public referenced_message: RawDiscordAPIMessageData | undefined;
+    public applicationId: string | undefined;
+    public messageReference: MessageReferenceOptions | undefined;
+    public flags: MessageFlags | undefined;
+    public referencedMessage: RawDiscordAPIMessageData | undefined;
     public interaction: MessageInteractionData | undefined;
     public thread: RawDiscordAPIChannelData | undefined;
     public components: MessageComponentData[] | undefined;
-    public sticker_items: StickerItemData[] | undefined;
+    public stickerItems: StickerItemData[] | undefined;
     public stickers: RawSticker[] | undefined;
     public position: number | undefined;
-    public role_subscription_data: RoleSubscriptionData | undefined;
+    public roleSubscriptionData: RoleSubscriptionData | undefined;
     public guild: Guild | undefined;
-    public creation_date: Date;
-    public creation_timestamp: number;
-    private readonly auth: { headers: { Authorization: `Bot ${string}` } };
+    public creationDate: Date;
+    public creationTimestamp: number;
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
     private readonly url: string;
 
     constructor(data: RawDiscordAPIMessageData, client: Client, guild?: Guild) {
         super(client);
 
         this.id = data.id;
-        this.channel_id = data.channel_id;
         this.author = new User(data.author, this.client);
+        this.channelId = data.channel_id;
         this.content = data.content;
         this.timestamp = new Date(data.timestamp).getTime();
-        this.edited_timestmap = data.edited_timestmap ? new Date(data.edited_timestmap).getTime() : data.edited_timestmap;
+        this.editedTimestmap = data.edited_timestmap ? new Date(data.edited_timestmap).getTime() : data.edited_timestmap;
         this.tts = data.tts;
-        this.mention_everyone = data.mention_everyone;
+        this.mentionEveryone = data.mention_everyone;
         this.mentions = data.mentions;
-        this.mention_channels = data.mention_channels;
-        this.mention_roles = data.mention_roles;
+        this.mentionChannels = data.mention_channels;
+        this.mentionRoles = data.mention_roles;
         this.attachments = data.attachments;
         this.embeds = data.embeds;
         this.reactions = data.reactions;
         this.nonce = data.nonce;
         this.pinned = data.pinned;
-        this.webhook_id = data.webhook_id;
+        this.webhookId = data.webhook_id;
         this.type = data.type;
         this.activity = data.activity;
         this.application = data.application;
-        this.application_id = data.application_id;
-        this.message_reference = data.message_reference;
+        this.applicationId = data.application_id;
+        this.messageReference = data.message_reference;
         this.flags = data.flags;
-        this.referenced_message = data.referenced_message;
+        this.referencedMessage = data.referenced_message;
         this.interaction = data.interaction;
         this.thread = data.thread;
         this.components = data.components;
-        this.sticker_items = data.sticker_items;
+        this.stickerItems = data.sticker_items;
         this.stickers = data.stickers;
         this.position = data.position;
-        this.role_subscription_data = data.role_subscription_data;
+        this.roleSubscriptionData = data.role_subscription_data;
         this.guild = guild;
-        this.auth = { headers: { Authorization: `Bot ${this.client.token}` } };
-        this.url = ChannelMessage(this.channel_id, this.id);
-        this.creation_date = new Date((+this.id / 4194304) + 1420070400000);
-        this.creation_timestamp = this.creation_date.getTime();
+        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.url = ChannelMessage(this.channelId, this.id);
+        this.creationDate = new Date((+this.id / 4194304) + 1420070400000);
+        this.creationTimestamp = this.creationDate.getTime();
 
         Object.assign(this, data);
     };
@@ -95,7 +95,7 @@ export class Message extends Basic {
      */
 
     async crosspost(): Promise<Message> {
-        const { data }: { data: RawDiscordAPIMessageData } = await rest.post(this.url + '/crosspost', null, this.auth);
+        const { data }: { data: RawDiscordAPIMessageData } = await rest.post(ChannelMessageCrosspost(this.channelId, this.id), null, this.axiosConfig);
 
         return new Message(data, this.client, this.guild);
     };
@@ -118,7 +118,7 @@ export class Message extends Basic {
      */
 
     async fetch(): Promise<Message> {
-        const { data }: { data: RawDiscordAPIMessageData } = await rest.get(this.url, this.auth);
+        const { data }: { data: RawDiscordAPIMessageData } = await rest.get(this.url, this.axiosConfig);
 
         return new Message(data, this.client, this.guild);
     };
@@ -129,7 +129,7 @@ export class Message extends Basic {
      */
 
     async fetchMessageReference(): Promise<Message> {
-        const { data }: { data: RawDiscordAPIMessageData } = await rest.get(ChannelMessage(this.channel_id, this.referenced_message!.id), this.auth);
+        const { data }: { data: RawDiscordAPIMessageData } = await rest.get(ChannelMessage(this.channelId, this.referencedMessage!.id), this.axiosConfig);
 
         return new Message(data, this.client, this.guild);
     };
@@ -140,7 +140,7 @@ export class Message extends Basic {
      */
 
     async fetchWebhook(): Promise<Webhook> {
-        const { data }: { data: RawDiscordAPIWebhookData } = await rest.get(WebhookRoute(this.webhook_id!), this.auth);
+        const { data }: { data: RawDiscordAPIWebhookData } = await rest.get(WebhookRoute(this.webhookId!), this.axiosConfig);
 
         return new Webhook(data, this.client);
     };
@@ -160,7 +160,7 @@ export class Message extends Basic {
      */
 
     inUncachedGuild(): boolean {
-        return this.client.guilds.cache.has(this.guild?.id as string);
+        return !this.client.guilds.cache.has(this.guild?.id as string);
     };
 
     /**
@@ -194,7 +194,7 @@ export class Message extends Basic {
      */
 
     async react(emoji: EmojiResolvable): Promise<Message> {
-        await rest.put(this.url + `/reactions/${encodeURIComponent(emoji)}/@me`, this.auth);
+        await rest.put(this.url + `/reactions/${encodeURIComponent(emoji)}/@me`, this.axiosConfig);
 
         return this;
     };
@@ -206,7 +206,7 @@ export class Message extends Basic {
      */
 
     async setThreadFrom(options: StartThreadOptions): Promise<RawDiscordAPIChannelData> {
-        const { data }: { data: RawDiscordAPIChannelData } = await rest.post(this.url + `/threads`, options, this.auth);
+        const { data }: { data: RawDiscordAPIChannelData } = await rest.post(ChannelThreads(this.channelId), options, this.axiosConfig);
 
         return data;
     };

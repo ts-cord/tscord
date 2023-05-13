@@ -10,7 +10,7 @@ export class GuildBan extends Basic implements RawGuildBanData {
     public user: User;
     public guild: Guild;
     public reason: string | undefined;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(data: RawGuildBanData, guild: Guild, client: Client) {
         super(client);
@@ -18,7 +18,7 @@ export class GuildBan extends Basic implements RawGuildBanData {
         this.guild = guild;
         this.reason = data.reason;
         this.user = new User(data.user, this.client);
-        this.axios_config = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
     };
 
     /**
@@ -27,7 +27,7 @@ export class GuildBan extends Basic implements RawGuildBanData {
      */
 
     async fetch(): Promise<GuildBan> {
-        const { data }: { data: RawGuildBanData } = await rest.get(GuildBanRoute(this.guild.id, this.user.id), this.axios_config);
+        const { data }: { data: RawGuildBanData } = await rest.get(GuildBanRoute(this.guild.id, this.user.id), this.axiosConfig);
 
         return new GuildBan(data, this.guild, this.client);
     };

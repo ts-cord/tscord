@@ -12,41 +12,41 @@ import type { GuildScheduledEventPrivacyLevel, GuildScheduledEventEntityTypes, V
 
 export class GuildScheduledEvent extends Basic {
     public id: Snowflake;
-    public guild_id: Snowflake;
-    public channel_id: Snowflake | undefined;
-    public creator_id: Snowflake | undefined;
+    public guildId: Snowflake;
+    public channelId: Snowflake | undefined;
+    public creatorId: Snowflake | undefined;
     public name: string;
     public description: string | undefined;
-    public scheduled_start_time: number;
-    public scheduled_end_time: number | undefined;
-    public privacy_level: GuildScheduledEventPrivacyLevel;
+    public scheduledStartTime: number;
+    public scheduledEndTime: number | undefined;
+    public privacyLevel: GuildScheduledEventPrivacyLevel;
     public status: GuildScheduledEventStatus;
-    public entity_type: GuildScheduledEventEntityTypes;
-    public entity_id: Snowflake | undefined;
+    public entityType: GuildScheduledEventEntityTypes;
+    public entityId: Snowflake | undefined;
     public creator: User | undefined;
-    public user_count: number | undefined;
+    public userCount: number | undefined;
     public image: string | undefined;
     public guild: Guild | undefined;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(data: GuildScheduledEventData, client: Client) {
         super(client);
 
         this.id = data.id;
-        this.guild_id = data.guild_id;
-        this.creator_id = data.creator_id;
+        this.guildId = data.guild_id;
+        this.creatorId = data.creator_id;
         this.name = data.name;
         this.description = data.description;
-        this.scheduled_start_time = data.scheduled_start_time;
-        this.scheduled_end_time = data.scheduled_end_time;
-        this.privacy_level = data.privacy_level;
+        this.scheduledStartTime = data.scheduled_start_time;
+        this.scheduledEndTime = data.scheduled_end_time;
+        this.privacyLevel = data.privacy_level;
         this.status = data.status;
-        this.entity_type = data.entity_type;
+        this.entityType = data.entity_type;
         this.creator = data.creator ? new User(data.creator, this.client) : data.creator;
-        this.user_count = data.user_count;
+        this.userCount = data.user_count;
         this.image = data.image;
-        this.guild = this.client.guilds.cache.get(this.guild_id);
-        this.axios_config = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.guild = this.client.guilds.cache.get(this.guildId);
+        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
 
         Object.assign(this, data);
     };
@@ -67,7 +67,7 @@ export class GuildScheduledEvent extends Basic {
      */
 
     async delete(): Promise<GuildScheduledEvent> {
-        await rest.delete(GuildScheduledEventRoute(this.guild_id, this.id), this.axios_config);
+        await rest.delete(GuildScheduledEventRoute(this.guildId, this.id), this.axiosConfig);
 
         return this;
     };
@@ -116,7 +116,7 @@ export class GuildScheduledEvent extends Basic {
      */
 
     async edit(options: GuildScheduledEventEditOptions, reason?: string): Promise<GuildScheduledEvent> {
-        const { data }: { data: GuildScheduledEventData } = await rest.patch(GuildScheduledEventRoute(this.guild_id, this.id), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        const { data }: { data: GuildScheduledEventData } = await rest.patch(GuildScheduledEventRoute(this.guildId, this.id), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return new GuildScheduledEvent(data, this.client);
     };
@@ -162,7 +162,7 @@ export class GuildScheduledEvent extends Basic {
     async fetchUsers(options?: FetchGuildScheduledEventUsersOptions): Promise<Group<Snowflake, GuildScheduledEventUserData>> {
         const queryStringParams: string = new URLSearchParams(options as {}).toString();
         const groupOfUsers: Group<Snowflake, GuildScheduledEventUserData> = new Group<Snowflake, GuildScheduledEventUserData>();
-        const { data }: { data: RawGuildScheduledEventUserData[] } = await rest.get(GuildScheduledEventsUsers(this.guild_id, this.id) + (queryStringParams ? '?' + queryStringParams : ''), this.axios_config);
+        const { data }: { data: RawGuildScheduledEventUserData[] } = await rest.get(GuildScheduledEventsUsers(this.guildId, this.id) + (queryStringParams ? '?' + queryStringParams : ''), this.axiosConfig);
 
         data.forEach((user: RawGuildScheduledEventUserData) => groupOfUsers.set(user.user.id, { guild_scheduled_event_id: user.guild_scheduled_event_id, user: new User(user.user, this.client), member: user.member as undefined }));
     

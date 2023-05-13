@@ -5,57 +5,53 @@ import { Message } from "./Message";
 import { Client } from "../entities/Client";
 import { GuildMember } from "./GuildMember";
 import { Snowflake } from "../types/Snowflake";
-import { IInteractionData } from "../interfaces/IInteractionData";
-import { RawInteractionData } from "../interfaces/IRawInteractionData";
-import { ContextMenuTypes, ComponentTypes, InteractionType } from "../types";
+import { ComponentTypes, InteractionType, RawInteraction, RawInteractionData, ApplicationCommandTypes, Locales } from "../types";
 
-export class BasicInteraction extends Basic implements RawInteractionData {
+export class BasicInteraction extends Basic{
     public id: Snowflake;
-    public application_id: Snowflake;
+    public applicationId: Snowflake;
     public type: InteractionType;
-    public data: IInteractionData | undefined;
+    public data: RawInteractionData | undefined;
     public guild: Guild;
-    public channel_id: Snowflake | undefined;
+    public channelId: Snowflake | undefined;
     public member: GuildMember | undefined;
     public user: User | undefined;
     public token: string;
     public version: number;
     public message: Message | undefined;
-    public app_permissions: string | undefined;
-    public locale: string | undefined;
-    public guild_locale: string | undefined;
-    public component_type: ComponentTypes | undefined;
-    public creation_timestamp: number;
-    public creation_date: Date;
+    public appPermissions: string | undefined;
+    public locale: keyof Locales | undefined;
+    public guildLocale: keyof Locales | undefined;
+    public creationTimestamp: number;
+    public creationDate: Date;
 
     /**
      * Represents a basic discord interaction
-     * @param {RawInteractionData} data - The minimum data for an interaction
+     * @param {RawInteraction} data - The minimum data for an interaction
      * @param {Client} client - The client for this interaction
      * @constructor
      */
 
-    constructor(data: RawInteractionData, client: Client) {
+    constructor(data: RawInteraction, client: Client) {
         super(client);
 
         this.id = data.id;
-        this.application_id = data.application_id;
+        this.applicationId = data.application_id;
         this.type = data.type;
         this.data = data.data;
         this.guild = new Guild(data.guild, this.client);
-        this.channel_id = data.channel_id;
+        this.channelId = data.channel_id;
         this.member = data.member ? new GuildMember(data.member, this.guild, this.client) : void 0;
         this.user = data.user ? new User(data.user, this.client) : void 0;
         this.token = data.token;
         this.version = data.version;
         this.message = data.message ? new Message(data.message, this.client) : void 0;
-        this.app_permissions = data.app_permissions;
+        this.appPermissions = data.app_permissions;
         this.locale = data.locale;
-        this.guild_locale = data.guild_locale;
-        this.component_type = this.data?.component_type;
+        this.guildLocale = data.guild_locale;
         this.data?.type;
-        this.creation_timestamp = (+this.id / 4194304) + 1420070400000;
-        this.creation_date = new Date(this.creation_timestamp);
+        this.creationTimestamp = (+this.id / 4194304) + 1420070400000;
+        this.creationDate = new Date(this.creationTimestamp);
 
         Object.assign(this, data);
     };
@@ -129,7 +125,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
      */
 
     isButton(): boolean {
-        return this.component_type === ComponentTypes.Button;
+        return this.componentType === ComponentTypes.Button;
     };
 
     /**
@@ -138,7 +134,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
      */
 
     isChannelSelectMenu(): boolean {
-        return this.component_type === ComponentTypes.ChannelSelectMenu;
+        return this.componentType === ComponentTypes.ChannelSelectMenu;
     };
 
     /**
@@ -147,7 +143,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
      */
 
     isStringSelectMenu(): boolean {
-        return this.component_type === ComponentTypes.StringSelectMenu;
+        return this.componentType === ComponentTypes.StringSelectMenu;
     };
 
     /**
@@ -156,7 +152,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
      */
 
     isUserSelectMenu(): boolean {
-        return this.component_type === ComponentTypes.UserSelectMenu;
+        return this.componentType === ComponentTypes.UserSelectMenu;
     };
 
     /**
@@ -165,7 +161,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
      */
 
     isRoleSelectMenu(): boolean {
-        return this.component_type === ComponentTypes.RoleSelectMenu;
+        return this.componentType === ComponentTypes.RoleSelectMenu;
     };
 
     /**
@@ -174,7 +170,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
      */
 
     isMentionableSelectMenu(): boolean {
-        return this.component_type === ComponentTypes.MentionableSelectMenu;
+        return this.componentType === ComponentTypes.MentionableSelectMenu;
     };
 
     /**
@@ -183,7 +179,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
      */
 
     isAnySelectMenu(): boolean {
-        return [ComponentTypes.StringSelectMenu, ComponentTypes.ChannelSelectMenu, ComponentTypes.MentionableSelectMenu, ComponentTypes.RoleSelectMenu, ComponentTypes.UserSelectMenu].includes(this.component_type!);
+        return [ComponentTypes.StringSelectMenu, ComponentTypes.ChannelSelectMenu, ComponentTypes.MentionableSelectMenu, ComponentTypes.RoleSelectMenu, ComponentTypes.UserSelectMenu].includes(this.componentType!);
     };
 
     /**
@@ -192,7 +188,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
      */
 
     isTextInput(): boolean {
-        return this.component_type === ComponentTypes.TextInput;
+        return this.componentType === ComponentTypes.TextInput;
     };
 
     /**
@@ -201,7 +197,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
      */
 
     isMessageContextMenu(): boolean {
-        return this.data?.target_id && this.data.type === ContextMenuTypes.Message ? true : false;
+        return this.data?.target_id && this.data.type === ApplicationCommandTypes.Message ? true : false;
     };
 
     /**
@@ -210,7 +206,7 @@ export class BasicInteraction extends Basic implements RawInteractionData {
      */
 
     isUserContextMenu(): boolean {
-        return this.data?.target_id && this.data.type === ContextMenuTypes.User ? true : false;
+        return this.data?.target_id && this.data.type === ApplicationCommandTypes.User ? true : false;
     };
 
     /**

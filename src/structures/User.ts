@@ -3,28 +3,28 @@ import { rest } from "../constants/Api";
 import { DMChannel } from "./DMChannel";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
-import { ChannelMessages, User as UserRoute, OauthChannels, UserAvatar, CndURL, Banner } from "../utils/Routes";
+import { ChannelMessages, User as UserRoute, OauthChannels, UserAvatar, CndURL, Banner, EmbedAvatar } from "../utils/Routes";
 import type { CreateMessageOptions, Locales, RawDiscordAPIUserData, RawUser, UserFlags, UserPremiumTypes, ViewOptions } from "../types/index";
 
-export class User extends Basic implements RawUser {
+export class User extends Basic {
     public id: Snowflake;
     public username: string;
     public discriminator: string;
     public avatar: string | undefined;
     public bot: boolean | undefined;
     public system: boolean | undefined;
-    public mfa_enabled: boolean | undefined;
+    public mfaEnabled: boolean | undefined;
     public banner: string | undefined;
-    public accent_color: string | undefined;
+    public accentColor: string | undefined;
     public locale: (keyof Locales) | undefined
     public verified: boolean | undefined;
     public email: string | undefined;
     public flags: UserFlags | undefined;
-    public premium_type: UserPremiumTypes | undefined;
-    public public_flags: UserFlags | undefined;
-    public creation_timestamp: number;
-    public creation_date: Date;
-    private readonly auth: { headers: { Authorization: `Bot ${string}` } };
+    public premiumType: UserPremiumTypes | undefined;
+    public publicFlags: UserFlags | undefined;
+    public creationTimestamp: number;
+    public creationDate: Date;
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(data: RawDiscordAPIUserData, client: Client) {
         super(client);
@@ -35,18 +35,18 @@ export class User extends Basic implements RawUser {
         this.avatar = data.avatar;
         this.bot = data.bot;
         this.system = data.system;
-        this.mfa_enabled = data.mfa_enabled;
+        this.mfaEnabled = data.mfa_enabled;
         this.banner = data.banner;
-        this.accent_color = data.accent_color;
+        this.accentColor = data.accent_color;
         this.locale = data.locale;
         this.verified = data.verified;
         this.email = data.email;
         this.flags = data.flags;
-        this.premium_type = data.premium_type;
-        this.public_flags = data.public_flags;
-        this.creation_date = new Date((+this.id / 4194304) + 1420070400000);
-        this.creation_timestamp = this.creation_date.getTime();
-        this.auth = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.premiumType = data.premium_type;
+        this.publicFlags = data.public_flags;
+        this.creationDate = new Date((+this.id / 4194304) + 1420070400000);
+        this.creationTimestamp = this.creationDate.getTime();
+        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
 
         Object.assign(this, data);
     };
@@ -58,7 +58,7 @@ export class User extends Basic implements RawUser {
      */
 
     async send(options: CreateMessageOptions | string): Promise<object> {
-        const { data }: { data: object /* replace to message object */ } = await rest.post(ChannelMessages(this.id), typeof options === 'string' ? { content: options } : options, this.auth);
+        const { data }: { data: object /* replace to message object */ } = await rest.post(ChannelMessages(this.id), typeof options === 'string' ? { content: options } : options, this.axiosConfig);
 
         return data;
     };
@@ -71,7 +71,7 @@ export class User extends Basic implements RawUser {
 
     async fetch(force?: boolean): Promise<User | undefined> {
         if (force) {
-            const { data }: { data: RawUser } = await rest.get(UserRoute(this.id), this.auth);
+            const { data }: { data: RawUser } = await rest.get(UserRoute(this.id), this.axiosConfig);
 
             return new User(data, this.client);
         };
@@ -85,7 +85,7 @@ export class User extends Basic implements RawUser {
      */
 
     async createDM(): Promise<DMChannel> {
-        const { data } = await rest.post(OauthChannels, { recipient_id: this.id }, this.auth);
+        const { data } = await rest.post(OauthChannels, { recipient_id: this.id }, this.axiosConfig);
 
         return data;
     };
@@ -117,5 +117,15 @@ export class User extends Basic implements RawUser {
 
     bannerURL(options?: ViewOptions): string | undefined {
         return this.banner && CndURL + Banner(this.id, this.banner) + `.${options?.format ?? this.client.options?.default_image_format}?size=${options?.size ?? this.client.options?.default_image_size}`;
+    };
+
+    /**
+     * User's avatar URL, if it doesn't have one, the default avatar will be returned
+     * @param {ViewOptions} options - Optional image options
+     * @returns {string}
+     */
+
+    displayAvatarURL(options?: ViewOptions): string {
+        return this.avatar ? this.avatarURL(options) as string : CndURL + EmbedAvatar(parseInt(this.discriminator) % 5) + `.${options?.format ?? this.client.options?.default_image_format}?size=${options?.size ?? this.client.options?.default_image_size}`;
     };
 };

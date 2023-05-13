@@ -13,17 +13,17 @@ export class GuildMember extends Basic {
     public nick: string | undefined;
     public avatar: string | undefined;
     public roles: Array<Snowflake>;
-    public joined_at: number;
-    public premium_since: number | undefined;
+    public joinedAt: number;
+    public premiumSince: number | undefined;
     public deaf: boolean;
     public mute: boolean;
     public flags: GuildMemberFlags;
     public pending: boolean | undefined;
     public permissions: string | undefined;
-    public communication_disabled_until: number | undefined;
+    public communicationDisabledUntil: number | undefined;
     public guild: Guild;
     public id: Snowflake;
-    private readonly auth: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(data: GuildMemberData, guild: Guild, client: Client) {
         super(client);
@@ -33,16 +33,16 @@ export class GuildMember extends Basic {
         this.nick = data.nick;
         this.avatar = data.avatar;
         this.roles = data.roles;
-        this.joined_at = new Date(data.joined_at).getTime();
-        this.premium_since = data.premium_since;
+        this.joinedAt = new Date(data.joined_at).getTime();
+        this.premiumSince = data.premium_since;
         this.deaf = data.deaf;
         this.mute = data.mute;
         this.flags = data.flags;
         this.pending = data.pending;
         this.permissions = data.permissions;
-        this.communication_disabled_until = data.communication_disabled_until;
+        this.communicationDisabledUntil = data.communication_disabled_until;
         this.guild = guild;
-        this.auth = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
 
         Object.assign(this, data);
     };
@@ -129,7 +129,7 @@ export class GuildMember extends Basic {
      */
 
     async send(options: CreateMessageOptions | string): Promise<Message> {
-        const { data }: { data: RawDiscordAPIMessageData } = await rest.post(ChannelMessages(this.id!), typeof options === 'string' ? { content: options } : options, this.auth);
+        const { data }: { data: RawDiscordAPIMessageData } = await rest.post(ChannelMessages(this.id!), typeof options === 'string' ? { content: options } : options, this.axiosConfig);
 
         return new Message(data, this.client, this.guild);
     };
@@ -140,7 +140,7 @@ export class GuildMember extends Basic {
      */
 
     async fetch(): Promise<GuildMember> {
-        const { data }: { data: GuildMemberData } = await rest.get(GuildMemberRoute(this.guild.id, this.id!), this.auth);
+        const { data }: { data: GuildMemberData } = await rest.get(GuildMemberRoute(this.guild.id, this.id!), this.axiosConfig);
 
         return new GuildMember(data, this.guild, this.client);
     };
@@ -164,7 +164,7 @@ export class GuildMember extends Basic {
      */
 
     isComunnicationDisabled(): boolean {
-        return this.communication_disabled_until ? true : false;
+        return this.communicationDisabledUntil ? true : false;
     };
 
     /**

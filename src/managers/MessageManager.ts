@@ -11,13 +11,13 @@ import { ChannelMessageCrosspost, ChannelMessage, ChannelPins, ChannelPinnedMess
 export class MessageManager extends BasicManager {
     public channel: GuildChannel;
     override cache: Group<Snowflake, Message> = new Group<Snowflake, Message>();
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(client: Client, channel: GuildChannel) {
         super(client);
 
         this.channel = channel;
-        this.axios_config = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
     };
 
     /**
@@ -36,7 +36,7 @@ export class MessageManager extends BasicManager {
      */
 
     async crosspost(message: MessageResolvable): Promise<Message> {
-        const { data }: { data: RawDiscordAPIMessageData } = await rest.post(ChannelMessageCrosspost(this.channel.id, this.resolveId(message)), null, this.axios_config);
+        const { data }: { data: RawDiscordAPIMessageData } = await rest.post(ChannelMessageCrosspost(this.channel.id, this.resolveId(message)), null, this.axiosConfig);
 
         this.cache.set(data.id, new Message(data, this.client));
 
@@ -50,7 +50,7 @@ export class MessageManager extends BasicManager {
      */
 
     async delete(message: MessageResolvable): Promise<void> {
-        await rest.delete(ChannelMessage(this.channel.id, this.resolveId(message)), this.axios_config);
+        await rest.delete(ChannelMessage(this.channel.id, this.resolveId(message)), this.axiosConfig);
 
         return;
     };
@@ -63,7 +63,7 @@ export class MessageManager extends BasicManager {
 
     async fetchPinned(cache?: boolean): Promise<Group<Snowflake, Message>> {
         const groupOfMessages: Group<Snowflake, Message> = new Group<Snowflake, Message>();
-        const { data }: { data: RawDiscordAPIMessageData[] } = await rest.get(ChannelPins(this.channel.id), this.axios_config);
+        const { data }: { data: RawDiscordAPIMessageData[] } = await rest.get(ChannelPins(this.channel.id), this.axiosConfig);
 
         data.forEach((message: RawDiscordAPIMessageData) => groupOfMessages.set(message.id, new Message(message, this.client)));
 
@@ -106,7 +106,7 @@ export class MessageManager extends BasicManager {
      */
 
     async react(message: MessageResolvable, emoji: EmojiResolvable): Promise<void> {
-        await rest.put(ChannelReactionsUser(this.channel.id, this.resolveId(message), encodeURIComponent(emoji), '@me'), null, this.axios_config);
+        await rest.put(ChannelReactionsUser(this.channel.id, this.resolveId(message), encodeURIComponent(emoji), '@me'), null, this.axiosConfig);
 
         return;
     };

@@ -1,5 +1,5 @@
-import { rest } from "../constants/Api";
 import { Group } from "../utils/Group";
+import { rest } from "../constants/Api";
 import { User } from "../structures/User";
 import { Role } from "../structures/Role";
 import { Client } from "../entities/Client";
@@ -14,7 +14,7 @@ import type { AddGuildMemberOptions, BanOptions, GuildListMembersOptions, GuildM
 export class GuildMemberManager extends BasicManager {
     public guild: Guild;
     public me: GuildMember | undefined;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
     override cache: Group<Snowflake, GuildMember> = new Group<Snowflake, GuildMember>();
 
     constructor(client: Client, guild: Guild) {
@@ -22,7 +22,7 @@ export class GuildMemberManager extends BasicManager {
 
         this.guild = guild;
         this.me = this.cache.get(client.user!.id);
-        this.axios_config = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
     };
 
     /**
@@ -54,7 +54,7 @@ export class GuildMemberManager extends BasicManager {
      */
 
     async fetchMe(): Promise<GuildMember> {
-        const { data }: { data: GuildMemberData } = await rest.get(GuildMemberRoute(this.guild.id, this.client.user!.id), this.axios_config);
+        const { data }: { data: GuildMemberData } = await rest.get(GuildMemberRoute(this.guild.id, this.client.user!.id), this.axiosConfig);
 
         this.me = new GuildMember(data, this.guild, this.client);
 
@@ -83,7 +83,7 @@ export class GuildMemberManager extends BasicManager {
     async list(options?: GuildListMembersOptions): Promise<Group<Snowflake, GuildMember>> {
         const membersGroup: Group<Snowflake, GuildMember> = new Group<Snowflake, GuildMember>();
         const queryStringParams: string = new URLSearchParams({ limit: options?.limit, after: options?.after } as {}).toString();
-        const { data }: { data: GuildMemberData[] } = await rest.get(GuildMembers(this.guild.id) + (queryStringParams.length > 0 ? `?${queryStringParams}` : ''), this.axios_config);
+        const { data }: { data: GuildMemberData[] } = await rest.get(GuildMembers(this.guild.id) + (queryStringParams.length > 0 ? `?${queryStringParams}` : ''), this.axiosConfig);
 
         data.forEach((member: GuildMemberData) => membersGroup.set(member.user!.id, new GuildMember(member, this.guild, this.client)));
 
@@ -100,7 +100,7 @@ export class GuildMemberManager extends BasicManager {
      */
 
     async add(user: UserResolvable, options: AddGuildMemberOptions): Promise<GuildMember> {
-        const { data }: { data: GuildMemberData } = await rest.put(GuildMemberRoute(this.guild.id, this.resolveId(user)), options, this.axios_config);
+        const { data }: { data: GuildMemberData } = await rest.put(GuildMemberRoute(this.guild.id, this.resolveId(user)), options, this.axiosConfig);
 
         this.cache.set(data.user!.id, new GuildMember(data, this.guild, this.client));
 
@@ -114,7 +114,7 @@ export class GuildMemberManager extends BasicManager {
      */
 
     async unban(user: UserResolvable): Promise<User | void> {
-        await rest.delete(GuildBan(this.guild.id, this.resolveId(user)), this.axios_config);
+        await rest.delete(GuildBan(this.guild.id, this.resolveId(user)), this.axiosConfig);
 
         return user instanceof User || user instanceof Message ? user instanceof Message ? user.author : user : void 0;
     };
@@ -140,7 +140,7 @@ export class GuildMemberManager extends BasicManager {
     async search(options: GuildSearchMembersOptions): Promise<Group<Snowflake, GuildMember>> {
         const queryStringParams: string = new URLSearchParams(('limit' in options ? { query: options.query, limit: options.limit } : { query: options.query }) as {}).toString();
         const membersGroup: Group<Snowflake, GuildMember> = new Group<Snowflake, GuildMember>();
-        const { data }: { data: GuildMemberData[] } = await rest.get(GuildSearchMembers(this.guild.id) + `?${queryStringParams}`, this.axios_config);
+        const { data }: { data: GuildMemberData[] } = await rest.get(GuildSearchMembers(this.guild.id) + `?${queryStringParams}`, this.axiosConfig);
 
         data.forEach((member: GuildMemberData) => membersGroup.set(member.user!.id, new GuildMember(member, this.guild, this.client)));
 

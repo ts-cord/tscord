@@ -7,14 +7,14 @@ import type { GuildWelcomeScreenData, GuildWelcomeScreenEditOptions, RawWelcomeS
 
 export class WelcomeScreen extends Basic implements GuildWelcomeScreenData {
     public description: string | undefined;
-    public welcome_channels: RawWelcomeScreenChannel[] | undefined;
+    public welcomeChannels: RawWelcomeScreenChannel[] | undefined;
     public guild: Guild;
 
     constructor(data: GuildWelcomeScreenData, client: Client, guild: Guild) {
         super(client);
 
         this.description = data.description;
-        this.welcome_channels = data.welcome_channels;
+        this.welcomeChannels = data.welcome_channels;
         this.guild = guild;
 
         Object.assign(this, data);

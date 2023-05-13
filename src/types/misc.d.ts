@@ -1,14 +1,7 @@
-import { ActionRowData } from "../interfaces/IActionRowData";
-import { ButtonData } from "../interfaces/IButtonData";
-import { ContextMenuData } from "../interfaces/IContextMenuData";
-import { EmbedData } from "../interfaces/IEmbedData";
-import { SelectMenuData } from "../interfaces/ISelectMenuData";
-import { SlashCommandData } from "../interfaces/ISlashCommandData";
-import { TextInputData } from "../interfaces/ITextInputData";
 import { Snowflake } from "./Snowflake";
-import { Events } from "./client";
+import { Events, MessageComponentData, ApplicationCommandData, ContextMenuData, SelectMenuData, ButtonData, EmbedData, TextInputData } from "./index";
 
-export type GenericBuilderTypes = ButtonData | TextInputData | SelectMenuData | ActionRowData | ContextMenuData | SlashCommandData | EmbedData;
+export type GenericBuilderTypes = ButtonData | TextInputData | SelectMenuData | MessageComponentData | ContextMenuData | ApplicationCommandData | EmbedData;
 
 export interface ViewOptions {
     format?: 'png' | 'jpeg' | 'webp' | 'gif';
@@ -68,3 +61,11 @@ export interface Locales {
     "zh-TW"?: string;
     ko?: string;
 };
+
+export type SnakeCase<S> = S extends `${infer T}${infer U}`
+    ? `${T extends Capitalize<T> ? "_" : ""}${Lowercase<T>}${SnakeCase<U>}`
+    : "";
+
+export type DeepSnakeCase<T> = T extends object
+    ? { [K in keyof T as SnakeCase<string & K>]: DeepSnakeCase<T[K]> }
+    : T;

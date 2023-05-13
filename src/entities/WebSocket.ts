@@ -7,9 +7,9 @@ export class WebSocketStructure {
   private readonly props: ClientWebSocketOptions;
   private readonly client: { token: string; intents: number; } = { token: '', intents: 0 };
 
-  public heartbeat_interval: number | undefined;
-  public connected_interval: any | undefined;
-  public last_hello_timestamp: number | undefined;
+  public heartbeatInterval: number | undefined;
+  public connectedInterval: any | undefined;
+  public lastHelloTimestamp: number | undefined;
 
   constructor(props: ClientWebSocketOptions, token: string, intents: number) {
     this.props = props;
@@ -36,27 +36,27 @@ export class WebSocketStructure {
   };
 
   private stay_connected(): void {
-    this.last_hello_timestamp = Date.now();
+    this.lastHelloTimestamp = Date.now();
 
-    this.connected_interval = setInterval((): void => {
+    this.connectedInterval = setInterval((): void => {
       const hello: { op: number; d: null; } = { op: 1, d: null };
 
       this.ws.send(JSON.stringify(hello));
-    }, this.heartbeat_interval);
+    }, this.heartbeatInterval);
   };
 
   private async message(message: any): Promise<void> {
     const data: any = JSON.parse(message);
 
     if (data.op === 10) {
-      this.heartbeat_interval = data.d.heartbeat_interval;
+      this.heartbeatInterval = data.d.heartbeat_interval;
 
       this.stay_connected();
       this.identify(this.client.token, this.client.intents);
     };
 
     if (data.op === 11) {
-      this.last_hello_timestamp = Date.now();
+      this.lastHelloTimestamp = Date.now();
     };
 
     if (this.props.events.includes(data.t)) {

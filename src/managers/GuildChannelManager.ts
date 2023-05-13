@@ -11,14 +11,14 @@ import type { ChannelPositions, GuildChannelCreateOptions, GuildChannelData, Gui
 
 export class GuildChannelManager extends BasicManager {
     public guild: Guild;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
     override cache: Group<Snowflake, GuildChannel> = new Group<Snowflake, GuildChannel>();
 
     constructor(client: Client, guild: Guild) {
         super(client);
 
         this.guild = guild;
-        this.axios_config = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
     };
 
     /**
@@ -52,7 +52,7 @@ export class GuildChannelManager extends BasicManager {
 
     async fetchWebhooks(channel: GuildChannelResolvable): Promise<Group<Snowflake, Webhook>> {
         const groupOfWebhooks: Group<Snowflake, Webhook> = new Group<Snowflake, Webhook>();
-        const { data }: { data: RawDiscordAPIWebhookData[] } = await rest.get(ChannelWebhooks(this.resolveId(channel)), this.axios_config);
+        const { data }: { data: RawDiscordAPIWebhookData[] } = await rest.get(ChannelWebhooks(this.resolveId(channel)), this.axiosConfig);
 
         data.forEach((webhook: RawDiscordAPIWebhookData) => groupOfWebhooks.set(webhook.id, new Webhook(webhook, this.client)));
 
@@ -66,7 +66,7 @@ export class GuildChannelManager extends BasicManager {
      */
 
     async setPositions(options: ChannelPositions[]): Promise<Guild> {
-        await rest.patch(GuildChannels(this.guild.id), options.map((option: ChannelPositions) => ({ channel: this.resolveId(option.channel), position: option.position, lock_permissions: option.lock_permissions, parent_id: option.parent_id })), this.axios_config);
+        await rest.patch(GuildChannels(this.guild.id), options.map((option: ChannelPositions) => ({ channel: this.resolveId(option.channel), position: option.position, lock_permissions: option.lock_permissions, parent_id: option.parent_id })), this.axiosConfig);
 
         return this.guild;
     };

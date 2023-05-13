@@ -16,13 +16,13 @@ declare class Client extends EventEmitter {
     public intents: number;
     public ws: WebSocketStructure;
     public options: ClientOptions['options'];
-    public cache_sweepers: ClientOptions['cache_sweepers'];
+    public cacheSweepers: ClientOptions['cache_sweepers'];
     public rest: ClientOptions['rest'];
     public app: ClientApplication | undefined;
     public users: UserManager;
     public guilds: GuildManager;
     public channels: ChannelManager;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(options: ClientOptions): this;
 
@@ -38,29 +38,29 @@ declare class ClientApplication implements RawApplication {
     private readonly client: Client;
     public readonly rpc_origins: string[];
     public readonly summary: string;
-    public readonly install_params: InstallParams;
+    public readonly installParams: InstallParams;
     public readonly id: Snowflake;
     public readonly name: string;
     public readonly commands: ApplicationCommandManager;
     public readonly icon: string | undefined;
     public readonly description: string;
-    public readonly rcp_origins: string[] | undefined;
-    public readonly bot_public: boolean;
-    public readonly bot_require_code_grant: boolean;
-    public readonly terms_of_service_url: string | undefined;
-    public readonly privaci_policy_url: string | undefined;
+    public readonly rcpOrigins: string[] | undefined;
+    public readonly botPublic: boolean;
+    public readonly botRequireCodeGrant: boolean;
+    public readonly termsOfServiceUrl: string | undefined;
+    public readonly privaciPolicyUrl: string | undefined;
     public readonly owner: User | undefined;
-    public readonly verify_key: string;
+    public readonly verifyKey: string;
     public readonly team: ApplicationTeam;
-    public readonly guild_id: Snowflake | undefined;
-    public readonly primary_sku_id: Snowflake | undefined;
+    public readonly guildId: Snowflake | undefined;
+    public readonly primarySkuId: Snowflake | undefined;
     public readonly slug: string | undefined;
     public readonly cover_image: string | undefined;
     public readonly flags: number | undefined;
     public readonly tags: string[] | undefined;
-    public readonly custom_install_url: string | undefined;
-    public readonly role_connections_verification_url: string | undefined;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    public readonly customInstallUrl: string | undefined;
+    public readonly roleConnectionsVerificationUrl: string | undefined;
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(app: RawApplication, client: Client): this;
 
@@ -75,6 +75,10 @@ declare class WebSocketStructure {
     readonly ws: Websocket;
     private readonly props: ClientWebSocketOptions;
     private readonly client: { token: string; intents: number; };
+
+    public heartbeatInterval: number | undefined;
+    public connectedInterval: any | undefined;
+    public lastHelloTimestamp: number | undefined;
 
     constructor(props: ClientWebSocketOptions, token: string, intents: number): this;
 

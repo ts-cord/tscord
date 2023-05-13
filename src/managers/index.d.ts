@@ -1,22 +1,22 @@
-import { Client } from "../entities";
-import { ApplicationCommand } from "../structures/ApplicationCommand";
-import { Basic } from "../structures/Basic";
-import { BasicChannel } from "../structures/BasicChannel";
-import { DMChannel } from "../structures/DMChannel";
-import { Guild } from "../structures/Guild";
-import { GuildBan } from "../structures/GuildBan";
-import { GuildChannel } from "../structures/GuildChannel";
-import { GuildMember } from "../structures/GuildMember";
-import { GuildScheduledEvent } from "../structures/GuildScheduledEvent";
-import { Invite } from "../structures/Invite";
-import { Message } from "../structures/Message";
-import { Role } from "../structures/Role";
-import { Sticker } from "../structures/Sticker";
-import { User } from "../structures/User";
-import { Webhook } from "../structures/Webhook";
-import { AddGuildMemberOptions, ApplicationCommandResolvable, BanOptions, ChannelInviteCreateOptions, ChannelPositions, ChannelResolvable, CreateApplicationCommandOptions, CreateMessageOptions, CreateRoleOptions, EditApplicationCommandOptions, EditRoleOptions, EmojiResolvable, FetchGuildScheduledEventUsersOptions, GuildChannelCreateOptions, GuildChannelEditOptions, GuildChannelResolvable, GuildCreateOptions, GuildListMembersOptions, GuildMemberEditOptions, GuildMemberResolvable, GuildPruneMembersOptions, GuildResolvable, GuildScheduledEventCreateOptions, GuildScheduledEventEditOptions, GuildScheduledEventResolvable, GuildScheduledEventUserData, GuildSearchMembersOptions, GuildStickerCreateOptions, GuildStickerEditOptions, InviteResolvable, RoleResolvable, StickerResolvable, UserResolvable, WebhookCreateOptions } from "../types";
-import { Snowflake } from "../types/Snowflake";
 import { Group } from "../utils";
+import { Client } from "../entities";
+import { Role } from "../structures/Role";
+import { User } from "../structures/User";
+import { Basic } from "../structures/Basic";
+import { Guild } from "../structures/Guild";
+import { Invite } from "../structures/Invite";
+import { Snowflake } from "../types/Snowflake";
+import { Message } from "../structures/Message";
+import { Sticker } from "../structures/Sticker";
+import { Webhook } from "../structures/Webhook";
+import { GuildBan } from "../structures/GuildBan";
+import { DMChannel } from "../structures/DMChannel";
+import { GuildMember } from "../structures/GuildMember";
+import { BasicChannel } from "../structures/BasicChannel";
+import { GuildChannel } from "../structures/GuildChannel";
+import { ApplicationCommand } from "../structures/ApplicationCommand";
+import { GuildScheduledEvent } from "../structures/GuildScheduledEvent";
+import { AddGuildMemberOptions, ApplicationCommandResolvable, BanOptions, ChannelInviteCreateOptions, ChannelPositions, ChannelResolvable, CreateApplicationCommandOptions, CreateMessageOptions, CreateRoleOptions, EditApplicationCommandOptions, EditRoleOptions, EmojiResolvable, FetchGuildScheduledEventUsersOptions, GuildChannelCreateOptions, GuildChannelEditOptions, GuildChannelResolvable, GuildCreateOptions, GuildListMembersOptions, GuildMemberEditOptions, GuildMemberResolvable, GuildPruneMembersOptions, GuildResolvable, GuildScheduledEventCreateOptions, GuildScheduledEventEditOptions, GuildScheduledEventResolvable, GuildScheduledEventUserData, GuildSearchMembersOptions, GuildStickerCreateOptions, GuildStickerEditOptions, InviteResolvable, RoleResolvable, StickerResolvable, UserResolvable, WebhookCreateOptions } from "../types";
 
 declare class BasicManager extends Basic {
     cache: Group<Snowflake, any>;
@@ -26,7 +26,7 @@ declare class BasicManager extends Basic {
 
 declare class ApplicationCommandManager extends BasicManager {
     cache: Group<Snowflake, ApplicationCommand>;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(client: Client): this;
 
@@ -39,7 +39,7 @@ declare class ApplicationCommandManager extends BasicManager {
 
 declare class ChannelManager extends BasicManager {
     cache: Group<Snowflake, BasicChannel>;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     resolveId(channel: ChannelResolvable): Snowflake;
     async fetch(channel: ChannelResolvable): Promise<BasicChannel>;
@@ -56,7 +56,7 @@ declare class GuildBanManager extends BasicManager {
 
 declare class GuildChannelManager extends BasicManager {
     public guild: Guild;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
     cache: Group<Snowflake, GuildChannel>;
 
     constructor(client: Client, guild: Guild): this;
@@ -83,7 +83,7 @@ declare class GuildInviteManager extends BasicManager {
 
 declare class GuildManager extends BasicManager {
     cache: Group<Snowflake, Guild>;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(client: Client): this;
 
@@ -95,7 +95,7 @@ declare class GuildManager extends BasicManager {
 declare class GuildMemberManager extends BasicManager {
     public guild: Guild;
     public me: GuildMember | undefined;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
     cache: Group<Snowflake, GuildMember>;
 
     constructor(client: Client, guild: Guild): this;
@@ -114,7 +114,7 @@ declare class GuildMemberManager extends BasicManager {
 
 declare class GuildScheduledEventManager extends BasicManager {
     public guild: Guild;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
     cache: Group<Snowflake, GuildScheduledEvent>;
 
     constructor(guild: Guild, client: Client): this;
@@ -129,7 +129,7 @@ declare class GuildScheduledEventManager extends BasicManager {
 declare class GuildStickerManager extends BasicManager {
     public guild: Guild;
     cache: Group<Snowflake, Sticker>;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(guild: Guild, client: Client): this;
 
@@ -157,7 +157,7 @@ declare class RoleManager extends BasicManager {
 
 declare class UserManager extends BasicManager {
     cache: Group<Snowflake, User>;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(client: Client): this;
 
@@ -169,7 +169,7 @@ declare class UserManager extends BasicManager {
 declare class MessageManager extends BasicManager {
     public channel: GuildChannel;
     cache: Group<Snowflake, Message>;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(client: Client, channel: GuildChannel): this;
 

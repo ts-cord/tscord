@@ -1,19 +1,19 @@
 import { Basic } from "./Basic";
 import { rest } from "../constants/Api";
-import { ChannelTypes } from "../types";
+import { ChannelFlags, ChannelTypes } from "../types";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import type { BasicChannelData } from "../types";
 import { Channel as ChannelRoute } from "../utils/Routes";
 
-export class BasicChannel extends Basic implements BasicChannelData {
+export class BasicChannel extends Basic {
     public id: Snowflake;
     public type: ChannelTypes;
     public flags: number;
-    public creation_timestamp: number;
-    public creation_date: Date;
+    public creationTimestamp: number;
+    public creationDate: Date;
     public readonly route: string;
-    private readonly axios_config: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(data: BasicChannelData, client: Client) {
         super(client);
@@ -22,9 +22,9 @@ export class BasicChannel extends Basic implements BasicChannelData {
         this.type = data.type;
         this.flags = data.flags;
         this.route = ChannelRoute(this.id);
-        this.creation_timestamp = (+this.id / 4194304) + 1420070400000;
-        this.creation_date = new Date(this.creation_timestamp);
-        this.axios_config = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.creationTimestamp = (+this.id / 4194304) + 1420070400000;
+        this.creationDate = new Date(this.creationTimestamp);
+        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
 
         Object.assign(this, data);
     };
@@ -47,7 +47,7 @@ export class BasicChannel extends Basic implements BasicChannelData {
      */
 
     async fetch(): Promise<BasicChannel> {
-        const { data }: { data: BasicChannelData } = await rest.get(this.route, this.axios_config);
+        const { data }: { data: BasicChannelData } = await rest.get(this.route, this.axiosConfig);
 
         return new BasicChannel(data, this.client);
     };
@@ -138,13 +138,13 @@ export class BasicChannel extends Basic implements BasicChannelData {
      * @returns {object}
      */
 
-    toJSON(): object {
+    toJSON(): { id: Snowflake; type: ChannelTypes; flags: ChannelFlags; creationDate: Date; creationTimestamp: number; } {
         return {
             id: this.id,
             type: this.type,
             flags: this.flags,
-            creation_date: this.creation_date,
-            creation_timestamp: this.creation_timestamp
+            creationDate: this.creationDate,
+            creationTimestamp: this.creationTimestamp
         };
     };
 };
