@@ -47,8 +47,8 @@ declare class ClientApplication implements RawApplication {
     public readonly rcpOrigins: string[] | undefined;
     public readonly botPublic: boolean;
     public readonly botRequireCodeGrant: boolean;
-    public readonly termsOfServiceUrl: string | undefined;
-    public readonly privaciPolicyUrl: string | undefined;
+    public readonly termsOfServiceURL: string | undefined;
+    public readonly privaciPolicyURL: string | undefined;
     public readonly owner: User | undefined;
     public readonly verifyKey: string;
     public readonly team: ApplicationTeam;
@@ -58,8 +58,8 @@ declare class ClientApplication implements RawApplication {
     public readonly cover_image: string | undefined;
     public readonly flags: number | undefined;
     public readonly tags: string[] | undefined;
-    public readonly customInstallUrl: string | undefined;
-    public readonly roleConnectionsVerificationUrl: string | undefined;
+    public readonly customInstallURL: string | undefined;
+    public readonly roleConnectionsVerificationURL: string | undefined;
     private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     constructor(app: RawApplication, client: Client): this;

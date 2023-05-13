@@ -1,8 +1,8 @@
-# VS Code
+# Visual Studio Code
 
 .vscode/
 
-# TS config
+# TypeScript config
 
 tsconfig.json
 

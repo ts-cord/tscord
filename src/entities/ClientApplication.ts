@@ -19,8 +19,8 @@ export class ClientApplication {
   public readonly rcpOrigins: string[] | undefined;
   public readonly botPublic: boolean;
   public readonly botRequireCodeGrant: boolean;
-  public readonly termsOfServiceUrl: string | undefined;
-  public readonly privaciPolicyUrl: string | undefined;
+  public readonly termsOfServiceURL: string | undefined;
+  public readonly privaciPolicyURL: string | undefined;
   public readonly owner: User | undefined;
   public readonly verifyKey: string;
   public readonly team: ApplicationTeam;
@@ -30,8 +30,8 @@ export class ClientApplication {
   public readonly coverImage: string | undefined;
   public readonly flags: number | undefined;
   public readonly tags: string[] | undefined;
-  public readonly customInstallUrl: string | undefined;
-  public readonly roleConnectionsVerificationUrl: string | undefined;
+  public readonly customInstallURL: string | undefined;
+  public readonly roleConnectionsVerificationURL: string | undefined;
   private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
   constructor(app: RawApplication, client: Client) {
@@ -44,8 +44,8 @@ export class ClientApplication {
     this.rpcOrigins = app.rpc_origins;
     this.botPublic = app.bot_public;
     this.botRequireCodeGrant = app.bot_require_code_grant;
-    this.termsOfServiceUrl = app.terms_of_service_url;
-    this.privaciPolicyUrl = app.privacy_policy_url;
+    this.termsOfServiceURL = app.terms_of_service_url;
+    this.privaciPolicyURL = app.privacy_policy_url;
     this.owner = this.owner ? new User(this.owner, this.client) : void 0;
     this.verifyKey = app.verify_key;
     this.team = app.team;
@@ -54,8 +54,8 @@ export class ClientApplication {
     this.slug = app.slug;
     this.coverImage = app.cover_image;
     this.flags = app.flags;
-    this.customInstallUrl = app.custom_install_url;
-    this.roleConnectionsVerificationUrl = app.role_connections_verification_url;
+    this.customInstallURL = app.custom_install_url;
+    this.roleConnectionsVerificationURL = app.role_connections_verification_url;
     this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
     this.summary = app.summary;
     this.installParams = app.install_params;

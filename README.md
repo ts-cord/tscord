@@ -1,6 +1,6 @@
 # TypeCord
 
-This repository is a representation of the [TypeCord](https://npmjs.com/package/TypeCord) package.
+This repository is a representation of the TypeCord package.
 
 ## Installation
 
@@ -23,7 +23,7 @@ client.on('connect', (clientUser: ClientUser): void => {
     console.log(`Connected as ${clientUser.username}`);
 });
 
-client.connect(); // Connect to Disco
+client.connect(); // Connect to Discord
 ```
 
 ## TypeCord Features
@@ -31,7 +31,7 @@ client.connect(); // Connect to Disco
 - Typechecks: Typecord is built with TypeScript and provides full support for event typing and function parameters for a safer, error-free development experience.
 - Decorators: Typecord includes a variety of decorators to simplify creating commands and event listeners.
 - ApplicationCommands: Full support with application commands (Slash Commands and Context Menu)
-- Flexible: Lightweight, sppedy and efficient, 100% Promise-based and Object-oriented
+- Flexible: Lightweight, speedy and efficient, 100% Promise-based and Object-oriented
 
 ## Examples
 

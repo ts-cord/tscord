@@ -1,4 +1,4 @@
-import { Locales } from "./index";
+import { ApplicationCommandTypes, Locales } from "./index";
 
 export interface CreateApplicationCommandOptions extends EditApplicationCommandOptions {};
 export interface EditApplicationCommandOptions extends Pick<ApplicationCommandData, 'name' | 'name_localizations' | 'description' | 'description_localizations' | 'options' | 'default_member_permissions' | 'default_permission' | 'nsfw'> {};
@@ -63,7 +63,7 @@ export interface ApplicationCommandOptionsData {
 
 export interface RawApplicationCommandData {
     id: Snowflake;
-    type: ApplicationCommandTypes | ContextMenuTypes;
+    type: ApplicationCommandTypes;
     application_id: Snowflake;
     guild_id?: Snowflake;
     name: string;
