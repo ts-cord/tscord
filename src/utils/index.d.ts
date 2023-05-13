@@ -28,13 +28,18 @@ declare class Group<K, V> extends Map<K, V> {
     reduce(callbackfn: (previousValue: V, currentValue: V, currentIndex: number, array: V[]) => V): V;
     hasAll(...keys: K[]): boolean;
     hasAny(...keys: K[]): boolean;
-    first(amount: number = 1): { [key: string]: V };
-    last(amount: number = this.size): { [key: string]: V };
+    first<T extends number | undefined>(amount: number = 1): T extends undefined ? V : { [key: string]: V; };
+    last<T extends number | undefined = this['size']>(amount: number = this.size): T extends undefined ? V : { [key: string]: V; };
     merge(group: Group<K, V> | Map<K, V>): this;
     get random(): V;
     get empty(): boolean;
     findIndex(predicate: (value: V, index: number, obj: V[]) => unknown): V;
     reduceRight(callbackfn: (previousValue: V, currentValue: V, currentIndex: number, array: V[]) => V): V;
+    get randomKey(): K;
+    sort(compareFunction?: ((a: V, b: V) => number) | undefined): V[];
+    reverse(): V[];
+    get clone(): Group<K, V>;
+    mapValues<U>(callbackfn: (value: V, index: number, array: V[]) => U, thisArg?: any): U[];
 };
 
 declare const CndURL: string = "https://cdn.discordapp.com";
