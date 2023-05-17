@@ -3,9 +3,9 @@ import { User } from "../structures/User";
 import { Role } from "../structures/Role";
 import { Guild } from "../structures/Guild";
 import { Client } from "../entities/Client";
+import { Invite } from "../structures/Invite";
 import { Message } from "../structures/Message";
 import { GuildMember } from "../structures/GuildMember";
-import { Invite } from "../structures/Invite";
 
 export interface ClientEvents {
     messageCreate: (message: Message) => unknown;

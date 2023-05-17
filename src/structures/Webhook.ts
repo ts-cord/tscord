@@ -24,7 +24,7 @@ export class Webhook extends Basic {
     public creationTimestamp: number;
     public creationDate: Date;
     private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
-    private readonly requestUrl: string;
+    private readonly requestURL: string;
 
     constructor(data: RawDiscordAPIWebhookData, client: Client) {
         super(client);
@@ -44,7 +44,7 @@ export class Webhook extends Basic {
         this.creationDate = new Date((+this.id / 4194304) + 1420070400000);
         this.creationTimestamp = this.creationDate.getTime();
         this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
-        this.requestUrl = `/webhooks/${this.id}`;
+        this.requestURL = `/webhooks/${this.id}`;
 
         Object.assign(this, data);
     };
@@ -56,7 +56,7 @@ export class Webhook extends Basic {
      */
 
     async delete(reason?: string): Promise<void> {
-        const { data }: { data: void } = await rest.delete(this.requestUrl, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        const { data }: { data: void } = await rest.delete(this.requestURL, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return data;
     };
@@ -81,7 +81,7 @@ export class Webhook extends Basic {
      */
 
     async edit(options: WebhookEditOptions): Promise<Webhook> {
-        const { data }: { data: RawDiscordAPIWebhookData } = await rest.patch(this.requestUrl, { name: options.name, channel_id: options.channel_id, avatar: options.avatar } as Omit<WebhookEditOptions, 'reason'>, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': options.reason } });
+        const { data }: { data: RawDiscordAPIWebhookData; } = await rest.patch(this.requestURL, { name: options.name, channel_id: options.channel_id, avatar: options.avatar } as Omit<WebhookEditOptions, 'reason'>, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': options.reason } });
 
         return new Webhook(data, this.client);
     };
@@ -90,13 +90,13 @@ export class Webhook extends Basic {
      * Edit a message sent by the webhook
      * @param {MessageResolvable} message - The message to be edited
      * @param {WebhookEditOptions} options - The options to the new message 
-     * @returns {Promise<object>}
+     * @returns {Promise<Message>}
      */
 
-    async editMessage(message: MessageResolvable, options: WebhookMessageEditOptions): Promise<object> {
-        const { data }: { data: object /* replace to message object */ } = await rest.patch(`/webhooks/${this.id}/${this.id}/messages/${message}${options.thread_id ? '?threadId=' + options.thread_id : ''}`, (delete options.thread_id, options), this.axiosConfig);
+    async editMessage(message: MessageResolvable, options: WebhookMessageEditOptions): Promise<Message> {
+        const { data }: { data: RawDiscordAPIMessageData; } = await rest.patch(`/webhooks/${this.id}/${this.id}/messages/${message}${options.thread_id ? '?threadId=' + options.thread_id : ''}`, (delete options.thread_id, options), this.axiosConfig);
 
-        return data;
+        return new Message(data, this.client);
     };
 
     /**
@@ -107,7 +107,7 @@ export class Webhook extends Basic {
      */
 
     async fetchMessage(message: Snowflake, threadId?: Snowflake): Promise<Message> {
-        const { data }: { data: RawDiscordAPIMessageData } = await rest.get(`/webhooks/${this.id}/${this.token}/messages/${message}${threadId ? '?threadId=' + threadId : ''}`, this.axiosConfig);
+        const { data }: { data: RawDiscordAPIMessageData; } = await rest.get(`/webhooks/${this.id}/${this.token}/messages/${message}${threadId ? '?threadId=' + threadId : ''}`, this.axiosConfig);
 
         return new Message(data, this.client);
     };
@@ -157,7 +157,7 @@ export class Webhook extends Basic {
 
     async sendSlackMessage(body: object, options: WebhookMessageSlackCreateOptions): Promise<boolean> {
         const queryStringParams: string = '?' + new URLSearchParams(options as {}).toString();
-        const { data }: { data: boolean } = await rest.post(WebhookPlatform(this.id, this.token!, 'slack') + queryStringParams, body, this.axiosConfig);
+        const { data }: { data: boolean; } = await rest.post(WebhookPlatform(this.id, this.token!, 'slack') + queryStringParams, body, this.axiosConfig);
 
         return data;
     };

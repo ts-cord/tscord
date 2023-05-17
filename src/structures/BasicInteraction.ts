@@ -7,7 +7,7 @@ import { GuildMember } from "./GuildMember";
 import { Snowflake } from "../types/Snowflake";
 import { ComponentTypes, InteractionType, RawInteraction, RawInteractionData, ApplicationCommandTypes, Locales } from "../types";
 
-export class BasicInteraction extends Basic{
+export class BasicInteraction extends Basic {
     public id: Snowflake;
     public applicationId: Snowflake;
     public type: InteractionType;

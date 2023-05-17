@@ -1,6 +1,6 @@
 import { Snowflake } from "./Snowflake";
 import { ApplicationCommand } from "../structures/ApplicationCommand";
-import type { GuildMemberData, Locales, BasicFetchOptions, RawDiscordAPIUserData, ChannelTypes, RawGuildRole, RawDiscordAPIChannelData, RawDiscordAPIMessageData, AttachmentData, ApplicationCommandInteractionOptionData } from "./index";
+import type { GuildMemberData, Locales, BasicFetchOptions, RawDiscordAPIUserData, ChannelTypes, RawGuildRole, RawDiscordAPIChannelData, RawDiscordAPIMessageData, AttachmentData, ApplicationCommandInteractionOptionData, BasicMessageOptions } from "./index";
 
 export enum ComponentTypes {
     ActionRow = 1,
@@ -11,6 +11,11 @@ export enum ComponentTypes {
     RoleSelectMenu,
     MentionableSelectMenu,
     ChannelSelectMenu
+};
+
+export interface InteractionReplyOptions extends BasicMessageOptions {
+    flags?: MessageFlags.SuppressEmbed | MessageFlags.Ephemeral;
+    tts?: boolean;
 };
 
 export interface MessageComponentData {
@@ -178,4 +183,19 @@ export interface RawInteractionData {
     options?: ApplicationCommandInteractionOptionData[];
     guild_id?: Snowflake;
     target_id?: Snowflake;
+};
+
+export enum InteractionCallbackType {
+    Pong = 1,
+    ChannelMessageWithSource = 4,
+    DeferredChannelMessageWithSource,
+    DeferredUpdateMessage,
+    UpdateMessage,
+    ApplicationCommandAutocompleteResult,
+    Modal
+};
+
+export interface ShowModalOptions extends Omit<MessageComponentData, 'type'> {
+    title: string;
+    custom_id: string;
 };

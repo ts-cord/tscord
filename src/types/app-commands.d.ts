@@ -1,4 +1,4 @@
-import { ApplicationCommandTypes, Locales } from "./index";
+import { ApplicationCommandTypes, AttachmentData, GuildMemberData, Locales, RawDiscordAPIUserData, RawGuildRole } from "./index";
 
 export interface CreateApplicationCommandOptions extends EditApplicationCommandOptions {};
 export interface EditApplicationCommandOptions extends Pick<ApplicationCommandData, 'name' | 'name_localizations' | 'description' | 'description_localizations' | 'options' | 'default_member_permissions' | 'default_permission' | 'nsfw'> {};
@@ -90,7 +90,17 @@ export interface ContextMenuData extends Omit<ApplicationCommandData, 'descripti
 export interface ApplicationCommandInteractionOptionData {
     name: string;
     type: ApplicationCommandOptionType;
-    value?: string | number | boolean;
+    value?: SlashCommandValueOption;
     options?: ApplicationCommandInteractionOptionData;
     focused?: boolean;
 };
+
+export interface AutocompleteFocusedOption {
+    name: string;
+    type: ApplicationCommandOptionType;
+    value: string;
+    focused: boolean;
+};
+
+export type SlashCommandMentionableOptionValue = GuildMemberData | RawGuildRole;
+export type SlashCommandValueOption = string | number | boolean | SlashCommandMentionableOptionValue | RawDiscordAPIUserData | AttachmentData;

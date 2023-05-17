@@ -5,8 +5,8 @@ import { Client } from "../entities/Client";
 import { GuildMember } from "./GuildMember";
 import { Snowflake } from "../types/Snowflake";
 import { BasicInteraction } from "./BasicInteraction";
-import { WebhookMessage } from "../utils/Routes";
-import { InteractionType, Locales, MessageResolvable, RawDiscordAPIChannelData, RawDiscordAPIMessageData, RawInteraction, RawInteractionData } from "../types";
+import { WebhookMessage, InteractionCallback, Webhook } from "../utils/Routes";
+import { InteractionCallbackType, InteractionReplyOptions, InteractionType, Locales, MessageResolvable, RawDiscordAPIChannelData, RawDiscordAPIMessageData, RawInteraction, RawInteractionData, ShowModalOptions } from "../types";
 
 export class CommandInteraction extends BasicInteraction {
     public id: Snowflake;
@@ -49,8 +49,9 @@ export class CommandInteraction extends BasicInteraction {
 
     /**
      * Deletes a reply to this interaction
-     * @param {MessageResolvable | '@original'} message - The message to delete
+     * @param {MessageResolvable} message - The message to delete
      * @returns {Promise<void>}
+     * @default '@original'
      */
 
     async deleteReply(message: MessageResolvable = '@original'): Promise<void> {
@@ -65,8 +66,29 @@ export class CommandInteraction extends BasicInteraction {
      */
 
     async fetchReply(): Promise<Message> {
-        const { data }: { data: RawDiscordAPIMessageData } = await rest.get(WebhookMessage(this.id, this.token, '@original'), this.axiosConfig);
+        const { data }: { data: RawDiscordAPIMessageData; } = await rest.get(WebhookMessage(this.id, this.token, '@original'), this.axiosConfig);
 
         return new Message(data, this.client, this.guild);
+    };
+
+    /**
+     * Creates a reply to this interaction
+     * @param {InteractionReplyOptions | string} options - The options to send
+     */
+
+    async reply(options: InteractionReplyOptions | string) {
+        const { data } = await rest.post(InteractionCallback(this.id, this.token), { data: typeof options === 'string' ? { content: options } : options, type: InteractionCallbackType.ChannelMessageWithSource }, this.axiosConfig);
+
+        data;
+    };
+    async showModal(options: ShowModalOptions) {
+        const { data } = await rest.post(InteractionCallback(this.id, this.token), { data: options, type: InteractionCallbackType.Modal }, this.axiosConfig);
+
+        return data;
+    };
+    async followUp(options: InteractionReplyOptions | string) {
+        const { data } = await rest.post(Webhook(this.id, this.token), { data: typeof options === 'string' ? { content: options } : options, type: InteractionCallbackType.ChannelMessageWithSource }, this.axiosConfig);
+
+        return data;
     };
 };
