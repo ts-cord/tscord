@@ -253,7 +253,7 @@ export class Group<K, V> extends Map<K, V> {
    * const newGroup = group.clone();
    */
 
-  get clone(): Group<K, V> {
+  clone(): Group<K, V> {
     const entries: [K, V][] = [...this.entries()];
     const newGroup: Group<K, V> = new Group<K, V>();
 
@@ -267,7 +267,7 @@ export class Group<K, V> extends Map<K, V> {
    * @param func — A function that accepts up to three arguments. The map method calls the callbackfn function one time for each element in this Group.
    * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/map
    * @example
-   * group.map(user => user.id);
+   * group.mapValues(id => id);
    */
 
   mapValues<U>(callbackfn: (value: V, index: number, array: V[]) => U, thisArg?: any): U[] {
