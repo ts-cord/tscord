@@ -63,7 +63,7 @@ export class Guild extends BasicGuild {
     public premiumProgressBarEnabled: boolean;
     public creationTimestamp: number;
     public creationDate: Date;
-    private readonly axiosSuperConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly superAxiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
     /**
      * Create a new Guild
@@ -121,7 +121,7 @@ export class Guild extends BasicGuild {
         this.nsfwLevel = data.nsfw_level;
         this.stickers = data.stickers;
         this.premiumProgressBarEnabled = data.premium_progress_bar_enabled;
-        this.axiosSuperConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.superAxiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
 
         Object.assign(this, data);
     };
@@ -134,7 +134,7 @@ export class Guild extends BasicGuild {
      */
 
     async createTemplate(name: string, description?: string): Promise<GuildTemplate> {
-        const { data }: { data: GuildTemplateData } = await rest.post(GuildTemplatesRoute(this.id), { name, description }, this.axiosSuperConfig);
+        const { data }: { data: GuildTemplateData; } = await rest.post(GuildTemplatesRoute(this.id), { name, description }, this.superAxiosConfig);
 
         return new GuildTemplate(data, this.client);
     };
@@ -145,7 +145,7 @@ export class Guild extends BasicGuild {
      */
 
     async delete(): Promise<Guild> {
-        await rest.delete(GuildRoute(this.id), this.axiosSuperConfig);
+        await rest.delete(GuildRoute(this.id), this.superAxiosConfig);
 
         return this;
     };
@@ -156,7 +156,7 @@ export class Guild extends BasicGuild {
      */
 
     async leave(): Promise<Guild> {
-        await rest.delete(OauthGuild(this.id), this.axiosSuperConfig);
+        await rest.delete(OauthGuild(this.id), this.superAxiosConfig);
 
         return this;
     };
@@ -169,7 +169,7 @@ export class Guild extends BasicGuild {
      */
 
     async edit(options: GuildEditOptions, reason?: string): Promise<Guild> {
-        const { data }: { data: RawGuild } = await rest.patch(GuildRoute(this.id), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
+        const { data }: { data: RawGuild; } = await rest.patch(GuildRoute(this.id), options, { headers: { Authorization: `Bot ${this.client.token}`, 'X-Audit-Log-Reason': reason } });
 
         return new Guild(data, this.client);
     };
@@ -180,7 +180,7 @@ export class Guild extends BasicGuild {
      */
 
     async fetchPreview(): Promise<GuildPreview> {
-        const { data }: { data: RawGuildPreview } = await rest.get(GuildPreviewRoute(this.id), this.axiosSuperConfig);
+        const { data }: { data: RawGuildPreview; } = await rest.get(GuildPreviewRoute(this.id), this.superAxiosConfig);
 
         return new GuildPreview(data, this.client);
     };
@@ -191,7 +191,7 @@ export class Guild extends BasicGuild {
      */
 
     async fetchWidget(): Promise<Widget> {
-        const { data }: { data: GuildWidgetData } = await rest.get(GuildWidgetJSON(this.id), this.axiosSuperConfig);
+        const { data }: { data: GuildWidgetData; } = await rest.get(GuildWidgetJSON(this.id), this.superAxiosConfig);
 
         return new Widget(data, this.client);
     };
@@ -202,7 +202,7 @@ export class Guild extends BasicGuild {
      */
 
     async fetchWidgetSettings(): Promise<GuildWidgetSettingsData> {
-        const { data }: { data: GuildWidgetSettingsData } = await rest.get(GuildWidget(this.id), this.axiosSuperConfig);
+        const { data }: { data: GuildWidgetSettingsData; } = await rest.get(GuildWidget(this.id), this.superAxiosConfig);
 
         return data;
     };
@@ -213,7 +213,7 @@ export class Guild extends BasicGuild {
      */
 
     async fetchWelcomeScreen(): Promise<WelcomeScreen> {
-        const { data }: { data: GuildWelcomeScreenData } = await rest.get(GuildWelcomeScreen(this.id), this.axiosSuperConfig);
+        const { data }: { data: GuildWelcomeScreenData; } = await rest.get(GuildWelcomeScreen(this.id), this.superAxiosConfig);
 
         return new WelcomeScreen(data, this.client, this);
     };
@@ -224,7 +224,7 @@ export class Guild extends BasicGuild {
      */
 
     async fetchOwner(): Promise<User> {
-        const { data }: { data: RawDiscordAPIUserData } = await rest.get(UserRoute(this.ownerId), this.axiosSuperConfig);
+        const { data }: { data: RawDiscordAPIUserData; } = await rest.get(UserRoute(this.ownerId), this.superAxiosConfig);
 
         return new User(data, this.client);
     };
@@ -235,7 +235,7 @@ export class Guild extends BasicGuild {
      */
 
     async fetchVanityURL(): Promise<GuildVanityData> {
-        const { data }: { data: GuildVanityData } = await rest.get(GuildVanityURL(this.id), this.axiosSuperConfig);
+        const { data }: { data: GuildVanityData; } = await rest.get(GuildVanityURL(this.id), this.superAxiosConfig);
 
         return data;
     };
@@ -247,7 +247,7 @@ export class Guild extends BasicGuild {
 
     async fetchIntegrations(): Promise<Group<Snowflake, Integration>> {
         const integrationsGroup: Group<Snowflake, Integration> = new Group<Snowflake, Integration>();
-        const { data }: { data: Array<RawIntegrationData> } = await rest.get(GuildIntegrations(this.id), this.axiosSuperConfig);
+        const { data }: { data: Array<RawIntegrationData>; } = await rest.get(GuildIntegrations(this.id), this.superAxiosConfig);
 
         data.forEach((integration: RawIntegrationData) => integrationsGroup.set(integration.id, new Integration(integration, this.client, this)));
 
@@ -262,9 +262,9 @@ export class Guild extends BasicGuild {
 
     async fetchWebhooks(): Promise<Group<Snowflake, Webhook>> {
         const webhooksGroup: Group<Snowflake, Webhook> = new Group<Snowflake, Webhook>();
-        const { data }: { data: Array<RawDiscordAPIWebhookData> } = await rest.get(GuildWebhooks(this.id), this.axiosSuperConfig);
+        const { data }: { data: Array<RawDiscordAPIWebhookData>; } = await rest.get(GuildWebhooks(this.id), this.superAxiosConfig);
 
-        data.forEach((webhook: RawDiscordAPIWebhookData) => webhooksGroup.set(webhook.id, new Webhook(webhook, this.client)));
+        data.forEach((webhook: RawDiscordAPIWebhookData): Group<Snowflake, Webhook> => webhooksGroup.set(webhook.id, new Webhook(webhook, this.client)));
 
         return webhooksGroup;
     };
@@ -275,7 +275,7 @@ export class Guild extends BasicGuild {
      */
 
     async fetchOnboarding(): Promise<GuildOnboardingData> {
-        const { data }: { data: GuildOnboardingData } = await rest.get(GuildOnboarding(this.id), this.axiosSuperConfig);
+        const { data }: { data: GuildOnboardingData; } = await rest.get(GuildOnboarding(this.id), this.superAxiosConfig);
 
         return data;
     };

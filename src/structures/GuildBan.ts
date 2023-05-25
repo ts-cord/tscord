@@ -27,7 +27,7 @@ export class GuildBan extends Basic implements RawGuildBanData {
      */
 
     async fetch(): Promise<GuildBan> {
-        const { data }: { data: RawGuildBanData } = await rest.get(GuildBanRoute(this.guild.id, this.user.id), this.axiosConfig);
+        const { data }: { data: RawGuildBanData; } = await rest.get(GuildBanRoute(this.guild.id, this.user.id), this.axiosConfig);
 
         return new GuildBan(data, this.guild, this.client);
     };
