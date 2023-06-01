@@ -1,1 +1,1 @@
-'Bye';
+export * from "./src/exports";
