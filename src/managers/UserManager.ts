@@ -9,47 +9,47 @@ import { ChannelMessages, Channel } from "../utils/Routes";
 import type { CreateMessageOptions, UserResolvable } from "../types";
 
 export class UserManager extends BasicManager {
-    override cache: Group<Snowflake, User> = new Group<Snowflake, User>();
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+	override cache: Group<Snowflake, User> = new Group<Snowflake, User>();
+	private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
 
-    constructor(client: Client) {
-        super(client);
+	constructor(client: Client) {
+		super(client);
 
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
-    };
+		this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+	}
 
-    /**
+	/**
      * Resolve a UserResolvable to an User id
      * @param {UserResolvable} user - The user to resolve
      * @returns {Snowflake}
      */
 
-    resolveId(user: UserResolvable): Snowflake {
-        return typeof user === 'string' ? user : user.id;
-    };
+	resolveId(user: UserResolvable): Snowflake {
+		return typeof user === "string" ? user : user.id;
+	}
 
-    /**
+	/**
      * Send a message to an user
      * @param {UserResolvable} user - The user resolvable
      * @param {CreateMessageOptions | string} options - The message options to send
      * @returns {Promise<object>}
      */
 
-    async send(user: UserResolvable, options: CreateMessageOptions | string): Promise<object> {
-        const { data }: { data: object /* replace to message object */ } = await rest.post(ChannelMessages(this.resolveId(user)), typeof options === 'string' ? { content: options } : options, this.axiosConfig);
+	async send(user: UserResolvable, options: CreateMessageOptions | string): Promise<object> {
+		const { data }: { data: object /* replace to message object */ } = await rest.post(ChannelMessages(this.resolveId(user)), typeof options === "string" ? { content: options } : options, this.axiosConfig);
 
-        return data;
-    };
+		return data;
+	}
 
-    /**
+	/**
      * Delete the DM between the client and the user
      * @param {UserResolvable} user - The user to identify
      * @returns {Promise<DMChannel>}
      */
 
-    async deleteDM(user: UserResolvable): Promise<DMChannel> {
-        const { data } = await rest.delete(Channel(this.resolveId(user)), this.axiosConfig);
+	async deleteDM(user: UserResolvable): Promise<DMChannel> {
+		const { data } = await rest.delete(Channel(this.resolveId(user)), this.axiosConfig);
 
-        return data;
-    };
-};
+		return data;
+	}
+}

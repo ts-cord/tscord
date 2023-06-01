@@ -4,7 +4,7 @@ export * from "./builders";
 export * from "./entities";
 export * from "./managers";
 export namespace Routes {
-    export const CndURL: string = "https://cdn.discordapp.com";
+    export const CndURL = "https://cdn.discordapp.com";
 
     // Webhooks
 
@@ -80,22 +80,22 @@ export namespace Routes {
     export const ChannelThreadsMembers = (channelId: Snowflake): string => `/channels/${channelId}/thread-members`;
     export const ChannelTyping = (channelId: Snowflake): string => `/channels/${channelId}/typing`;
     export const GroupRecipient = (channelId: Snowflake, userId: Snowflake): string => `/channels/${channelId}/recipients/${userId}`;
-    export const VoiceRegions: string = "/voice/regions";
+    export const VoiceRegions = "/voice/regions";
     export const GuildVoiceRegions = (guildId: Snowflake): string => `/guilds/${guildId}/regions`;
 
     // OAuth
 
-    export const OauthApplication: string = "/oauth2/applications/@me";
-    export const OauthAuthorize: string = "/oauth2/authorize";
-    export const OauthInfo: string = "/oauth2/@me";
-    export const OauthCurrentUser: string = "/users/@me";
-    export const OauthChannels: string = "/users/@me/channels";
-    export const OauthConnections: string = "/users/@me/connections";
+    export const OauthApplication = "/oauth2/applications/@me";
+    export const OauthAuthorize = "/oauth2/authorize";
+    export const OauthInfo = "/oauth2/@me";
+    export const OauthCurrentUser = "/users/@me";
+    export const OauthChannels = "/users/@me/channels";
+    export const OauthConnections = "/users/@me/connections";
     export const OauthGuild = (guildId: Snowflake): string => `/users/@me/guilds/${guildId}`;
     export const OauthGuildMember = (guildId: Snowflake): string => `${OauthGuild(guildId)}/member`;
-    export const OauthGuilds: string = "/users/@me/guilds";
-    export const OauthToken: string = "/oauth2/token";
-    export const OauthTokenRevoke: string = "/oauth2/token/revoke";
+    export const OauthGuilds = "/users/@me/guilds";
+    export const OauthToken = "/oauth2/token";
+    export const OauthTokenRevoke = "/oauth2/token/revoke";
     export const OauthRoleConnection = (applicationId: Snowflake): string => `/users/@me/applications/${applicationId}/role-connection`;
 
     // Images
@@ -132,14 +132,14 @@ export namespace Routes {
 
     // Misc
 
-    export const Gateway: string = "/gateway";
-    export const GatewayBot: string = "/gateway/bot";
+    export const Gateway = "/gateway";
+    export const GatewayBot = "/gateway/bot";
     export const User = (userId: Snowflake): string => `/users/${userId}`;
     export const MessageLink = (guildId: Snowflake, channelId: Snowflake, messageId: Snowflake): string => `/channels/${guildId}/${channelId}/${messageId}`;
-    export const NitroStickerPacks: string = "/sticker-packs";
+    export const NitroStickerPacks = "/sticker-packs";
     export const Inviter = (code: string): string => `/invites/${code}`;
-    export const StageInstances: string = "/stage-instances";
+    export const StageInstances = "/stage-instances";
     export const StageInstance = (channelId: Snowflake): string => `/stage-instances/${channelId}`;
     export const RoleConnectionMetadata = (applicationId: Snowflake): string => `/applications/${applicationId}/role-connections/metadata`;
-    export const Application: string = "/applications/@me";
-};
+    export const Application = "/applications/@me";
+}

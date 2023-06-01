@@ -8,7 +8,7 @@ export interface BasicEventPayload {
     s: number | null;
     t: string | null;
     d: unknown;
-};
+}
 
 export enum GatewayOpcodes {
     Discpatch,
@@ -22,14 +22,14 @@ export enum GatewayOpcodes {
     InvalidSession,
     Hello,
     HeartbeatACK
-};
+}
 
 export interface BasicDispatchPayload {
     d: unknown;
     op: GatewayOpcodes;
     s: number;
     t: string;
-};
+}
 
 export interface ReadyEventPayload extends BasicDispatchPayload {
     d: {
@@ -39,7 +39,7 @@ export interface ReadyEventPayload extends BasicDispatchPayload {
         session_id: string;
         resume_gateawy_url: string;
         shard?: [number, number];
-        application: Pick<RawApplication, 'id' | 'flags'>;
+        application: Pick<RawApplication, "id" | "flags">;
     };
-    t: 'Ready'
+    t: "Ready"
 }

@@ -1,33 +1,33 @@
 // @ts-ignore
 
-import { Client, Message } from 'typecord';
+import { Client, Message } from "typecord";
 
 const client: Client = new Client({
-    token: 'TOKEN',
-    intents: 0 // Use the correct intents
+	token: "TOKEN",
+	intents: 0 // Use the correct intents
 });
 
 // Triggered when the client is connected
 
-client.on('connect', (): void => {
-    console.log('Wow, connected');
+client.on("connect", (): void => {
+	console.log("Wow, connected");
 });
 
 
 // Triggered when a message is sent
 
-client.on('messageCreate', async (message: Message): Promise<void> => {
-    if (!message.content) return; // Check that the message has content
-    if (message.content.startsWith('!ping')) {
-        await message.channel.send('Pong!');
+client.on("messageCreate", async (message: Message): Promise<void> => {
+	if (!message.content) return; // Check that the message has content
+	if (message.content.startsWith("!ping")) {
+		await message.channel.send("Pong!");
 
-        return;
-    };
-    if (message.content.startsWith('!pong')) {
-        await message.channel.send('Ping!');
+		return;
+	}
+	if (message.content.startsWith("!pong")) {
+		await message.channel.send("Ping!");
 
-        return;
-    };
+		return;
+	}
 });
 
 client.connect(); // Connect to Discord

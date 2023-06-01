@@ -19,7 +19,7 @@ export interface GuildCreateOptions {
     afk_timeout?: number;
     system_channel_id?: Snowflake;
     system_channel_flags?: SystemChannelFlags;
-};
+}
 
 export interface BasicGuildData {
     id: Snowflake;
@@ -29,36 +29,36 @@ export interface BasicGuildData {
     partnered: boolean;
     verified: boolean;
     name_acronym: string;
-};
+}
 
 export enum GuildFeatures {
-    AnimatedBanner = 'ANIMATED_BANNER',
-    AnimatedIcon = 'ANIMATED_ICON',
-    ApplicationCommandPermissionsV2 = 'APPLICATION_COMMAND_PERMISSIONS_V2',
-    AutoModeration = 'AUTO_MODERATION',
-    Banner = 'BANNER',
-    Community = 'COMMUNITY',
-    CreatorMonetizableProvisional = 'CREATOR_MONETIZABLE_PROVISIONAL',
-    CreatorStoragePage = 'CREATOR_STORE_PAGE',
-    DeveloperSupportServer = 'DEVELOPER_SUPPORT_SERVER',
-    Discoverable = 'DISCOVERABLE',
-    Featurable = 'FEATURABLE',
-    InviteDisabled = 'INVITE_DISABLED',
-    InviteSplash = 'IVNITE_SPLASH',
-    MemberVerificationGateEnabled = 'MEMBER_VERIFICATION_GATE_ENABLED',
-    MoreStickers = 'MORE_STICKERS',
-    News = 'NEWS',
-    Partnered = 'PARTNERED',
-    PreviewEnabled = 'PREVIEW_ENABLED',
-    RoleIcons = 'ROLE_ICONS',
-    RoleSubscriptionsAvailableForPurchase = 'ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE',
-    RoleSubscriptionsEnabled = 'ROLE_SUBSCRIPTIONS_ENABLED',
-    TicketedEventsEnabled = 'TICKEDTED_EVENTS_ENABLED',
-    VanityURL = 'VANITY_URL',
-    Verified = 'VERIFIED',
-    VipRegions = 'VIP_REGIONS',
-    WelcomeScreenEnabled = 'WELCOME_SCREEN_ENABLED'
-};
+    AnimatedBanner = "ANIMATED_BANNER",
+    AnimatedIcon = "ANIMATED_ICON",
+    ApplicationCommandPermissionsV2 = "APPLICATION_COMMAND_PERMISSIONS_V2",
+    AutoModeration = "AUTO_MODERATION",
+    Banner = "BANNER",
+    Community = "COMMUNITY",
+    CreatorMonetizableProvisional = "CREATOR_MONETIZABLE_PROVISIONAL",
+    CreatorStoragePage = "CREATOR_STORE_PAGE",
+    DeveloperSupportServer = "DEVELOPER_SUPPORT_SERVER",
+    Discoverable = "DISCOVERABLE",
+    Featurable = "FEATURABLE",
+    InviteDisabled = "INVITE_DISABLED",
+    InviteSplash = "IVNITE_SPLASH",
+    MemberVerificationGateEnabled = "MEMBER_VERIFICATION_GATE_ENABLED",
+    MoreStickers = "MORE_STICKERS",
+    News = "NEWS",
+    Partnered = "PARTNERED",
+    PreviewEnabled = "PREVIEW_ENABLED",
+    RoleIcons = "ROLE_ICONS",
+    RoleSubscriptionsAvailableForPurchase = "ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE",
+    RoleSubscriptionsEnabled = "ROLE_SUBSCRIPTIONS_ENABLED",
+    TicketedEventsEnabled = "TICKEDTED_EVENTS_ENABLED",
+    VanityURL = "VANITY_URL",
+    Verified = "VERIFIED",
+    VipRegions = "VIP_REGIONS",
+    WelcomeScreenEnabled = "WELCOME_SCREEN_ENABLED"
+}
 
 export interface GuildWidgetData {
     id: Snowflake;
@@ -67,12 +67,12 @@ export interface GuildWidgetData {
     channels: Array<Partial<RawDiscordAPIChannelData>>;
     members: Array<Partial<RawDiscordAPIUserData>>;
     presence_count: number;
-};
+}
 
 export interface GuildWidgetSettingsData {
     enabled: boolean;
     channel_id?: Snowflake;
-};
+}
 
 export interface RawGuild extends BasicGuildData {
     icon_hash?: string;
@@ -110,18 +110,18 @@ export interface RawGuild extends BasicGuildData {
     approximate_presence_count?: number;
     welcome_screen?: GuildWelcomeScreenData;
     nsfw_level: GuildNSFWLevels;
-    stickers?: Array<Required<Omit<RawSticker, 'pack_id' | 'sort_value'>>>;
+    stickers?: Array<Required<Omit<RawSticker, "pack_id" | "sort_value">>>;
     premium_progress_bar_enabled: boolean;
     creation_timestamp: number;
     creation_date: Date;
-};
+}
 
 export interface GuildWelcomeScreenEditOptions {
     enabled?: boolean;
     welcome_channels?: Array<RawWelcomeScreenChannel>;
     description?: string;
     reason?: string;
-};
+}
 
 export type GuildVanityData = { code?: string; uses: number; };
 
@@ -145,7 +145,7 @@ export interface GuildEditOptions {
     features?: Array<GuildFeatures>;
     description?: string;
     premium_progress_bar_enabled?: boolean;
-};
+}
 
 export interface RawIntegrationData {
     id: Snowflake;
@@ -164,7 +164,7 @@ export interface RawIntegrationData {
     revoked?: boolean;
     application: IntegrationApplicationData;
     scopes?: Array<string>;
-};
+}
 
 export interface IntegrationApplicationData {
     id: Snowflake;
@@ -172,31 +172,31 @@ export interface IntegrationApplicationData {
     icon?: string;
     description: string;
     user: RawDiscordAPIUserData;
-};
+}
 
 export interface IntegrationAccountData {
     id: Snowflake;
     name: string;
-};
+}
 
 export enum IntegrationExpireBehaviors {
     RemoveRole,
     Kick
-};
+}
 
 export enum IntegrationType {
-    Twitch = 'twitch',
-    Youtube = 'youtube',
-    Discord = 'discord',
-    GuildSubscription = 'guild_subscription'
-};
+    Twitch = "twitch",
+    Youtube = "youtube",
+    Discord = "discord",
+    GuildSubscription = "guild_subscription"
+}
 
 export type GuildMemberResolvable = UserResolvable | GuildMember;
 
 export interface RawGuildPreview extends RawDiscordAPIGuildPreviewData {
     creation_timestamp: number;
     creation_date: Date;
-};
+}
 
 export interface RawDiscordAPIGuildPreviewData {
     id: Snowflake;
@@ -210,7 +210,7 @@ export interface RawDiscordAPIGuildPreviewData {
     approximate_presence_count: number;
     description?: string;
     stickers: Array<RawSticker>;
-};
+}
 
 export interface GuildTemplateData {
     code: string;
@@ -222,9 +222,9 @@ export interface GuildTemplateData {
     created_at: number;
     updated_at: number;
     source_guild_id: Snowflake;
-    serialized_source_guild: Partial<Omit<RawGuild, 'creation_timestamp' | 'creation_date'>>;
+    serialized_source_guild: Partial<Omit<RawGuild, "creation_timestamp" | "creation_date">>;
     is_dirty?: boolean;  
-};
+}
 
 export enum GuildVerificationLevels {
     None,
@@ -232,13 +232,13 @@ export enum GuildVerificationLevels {
     Medium,
     High,
     VeryHigh
-};
+}
 
 export enum ExplicitContentFilterLevels {
     Disabled,
     MembersWithoutRoles,
     AllMembers
-};
+}
 
 export interface RawGuildEmoji {
     id?: Snowflake;
@@ -249,7 +249,7 @@ export interface RawGuildEmoji {
     managed?: boolean;
     animated?: boolean;
     available?: boolean;
-};
+}
 
 export interface RawSticker {
     id: Snowflake;
@@ -264,18 +264,18 @@ export interface RawSticker {
     guild_id?: Snowflake;
     user?: RawDiscordAPIUserData;
     sort_value?: number;
-};
+}
 
 export interface GuildStickerEditOptions {
     name?: string;
     description?: string;
     tags?: string;
-};
+}
 
 export interface GuildStickerCreateOptions extends Required<GuildStickerEditOptions> {
     file: string;
     reason?: string;
-};
+}
 
 export type StickerResolvable = Sticker | Snowflake;
 
@@ -283,45 +283,45 @@ export interface StickerItemData {
     id: Snowflake;
     name: string;
     type: StickerFormatTypes;
-};
+}
 
 export enum StickerFormatTypes {
     PNG = 1,
     APNG,
     LOTTIE,
     GIF
-};
+}
 
 export enum StickerTypes {
     Standard = 1,
     Guild
-};
+}
 
 export enum GuildPremiumTier {
     None,
     Tier1,
     Tier2,
     Tier3
-};
+}
 
 export interface GuildWelcomeScreenData {
     description?: string;
     welcome_channels?: Array<RawWelcomeScreenChannel>;
-};
+}
 
 export enum GuildNSFWLevels {
     Default,
     Explicit,
     Safe,
     AgeRestricted
-};
+}
 
 export interface GuildOnboardingData {
     guild_id: Snowflake;
     prompts: Array<object>;
     default_channel_ids: Array<Snowflake>;
     enabled: boolean;
-};
+}
 
 export interface GuildOnboardingPromptData {
     id: Snowflake;
@@ -331,7 +331,7 @@ export interface GuildOnboardingPromptData {
     single_select: boolean;
     required: boolean;
     is_onboarding: boolean;
-};
+}
 
 export interface GuildOnboardingPromptOption {
     id: Snowflake;
@@ -340,12 +340,12 @@ export interface GuildOnboardingPromptOption {
     emoji: RawGuildEmoji;
     title: string;
     description?: string;
-};
+}
 
 export enum OnboardingPromptType {
     MultipleChoice,
     Dropdown
-};
+}
 
 export interface GuildAuditLogData {
     application_commands: Array<ApplicationCommandData>;
@@ -356,7 +356,7 @@ export interface GuildAuditLogData {
     threads: Array</* TODO, channel object */>;
     users: Array<RawDiscordAPIUserData>;
     webhooks: Array<RawDiscordAPIWebhookData>;9
-};
+}
 
 export interface GuildAuditLogsFetchOptions {
     user_id?: Snowflake;
@@ -364,7 +364,7 @@ export interface GuildAuditLogsFetchOptions {
     before?: Snowflake;
     after?: Snowflake;
     limit?: number;
-};
+}
 
 export interface GuildScheduledEvent {
     id: Snowflake;
@@ -383,13 +383,13 @@ export interface GuildScheduledEvent {
     creator?: RawDiscordAPIUserData;
     user_count?: number;
     image?: string;
-};
+}
 
 export interface RawGuildScheduledEventUserData {
     guild_scheduled_event_id: Snowflake;
     user: RawDiscordAPIUserData;
     member?: GuildMemberData;
-};
+}
 
 export type GuildScheduledEventResolvable = Snowflake | GuildScheduledEventClass;
 
@@ -397,44 +397,44 @@ export interface GuildScheduledEventUserData {
     guild_scheduled_event_id: Snowflake;
     user: User;
     member?: GuildMember;
-};
+}
 
 export interface FetchGuildScheduledEventUsersOptions {
     limit?: number;
     with_member?: boolean;
     before?: Snowflake;
     after?: Snowflake;
-};
+}
 
-export interface GuildScheduledEventEditOptions extends Partial<Omit<GuildScheduledEvent, 'id' | 'guild_id' | 'creator' | 'creator_id' | 'user_count' | 'entity_id'>> {};
-export interface GuildScheduledEventCreateOptions extends GuildScheduledEventEditOptions {};
+export type GuildScheduledEventEditOptions = Partial<Omit<GuildScheduledEvent, "id" | "guild_id" | "creator" | "creator_id" | "user_count" | "entity_id">>;
+export type GuildScheduledEventCreateOptions = GuildScheduledEventEditOptions;
 
 export interface GuildScheduledEventEntityMetadata {
     location?: string;
-};
+}
 
 export enum GuildScheduledEventEntityTypes {
     StageInstance = 1,
     Voice,
     External
-};
+}
 
 export enum GuildScheduledEventStatus {
     Scheduled = 1,
     Active,
     Completed,
     Canceled
-};
+}
 
 export enum GuildScheduledEventPrivacyLevel {
     GuildOnly = 2
-};
+}
 
 export enum AutoModerationRuleKeywordPresetTypes {
     Profanity = 1,
     SexualContent,
     Slurs
-};
+}
 
 export interface AutoModerationRuleData {
     id: Snowflake;
@@ -448,24 +448,24 @@ export interface AutoModerationRuleData {
     enabled: boolean;
     exempt_roles: Array<Snowflake>;
     exempt_channels: Array<Snowflake>;
-};
+}
 
 export interface AutoModerationActionData {
     type: AutoModerationActionType;
     metadata: AutoModerationActionMetadata;
-};
+}
 
 export interface AutoModerationActionMetadata {
     channel_id: Snowflake;
     duration_seconds: number;
     custom_message?: string;
-};
+}
 
 export enum AutoModerationActionType {
     BlockMessage = 1,
     SendAlertMessage,
     Timeout
-};
+}
 
 export interface AutoModerationRuleTriggerMetadata {
     keyword_filter: Array<string>;
@@ -473,18 +473,18 @@ export interface AutoModerationRuleTriggerMetadata {
     presets: Array<AutoModerationRuleKeywordPresetTypes>;
     allow_list: Array<string>;
     mention_total_list: number;
-};
+}
 
 export enum AutoModerationRuleTriggerType {
     Keyword = 1,
     Spam = 3,
     KeywordPresent,
     MentionSpam
-};
+}
 
 export enum AutoModerationRuleEventType {
     MessageSend = 1
-};
+}
 
 export interface GuildAuditLogEntryData {
     target_id?: string;
@@ -494,7 +494,7 @@ export interface GuildAuditLogEntryData {
     action_type: GuildAuditLogActionType;
     options?: Array<OptionalGuildAuditLogEntryInfoData>;
     reason?: string;
-};
+}
 
 export interface OptionalGuildAuditLogEntryInfoData {
     application_id: Snowflake;
@@ -508,20 +508,20 @@ export interface OptionalGuildAuditLogEntryInfoData {
     message_id: Snowflake;
     role_name: string;
     type: string;
-};
+}
 
 export interface GuildAuditLogChangeData {
     new_value?: object;
     old_value?: object;
     key: string;
-};
+}
 
 export type GuildResolvable = Snowflake | Guild;
 
 export interface FetchGuildOptions {
     with_counts?: number;
     guild: GuildResolvable;
-};
+}
 
 export interface GuildMemberData {
     user?: RawDiscordAPIUserData;
@@ -536,13 +536,13 @@ export interface GuildMemberData {
     pending?: boolean;
     permissions?: string;
     communication_disabled_until?: number;
-};
+}
 
 export interface GuildListMembersOptions {
     limit?: number;
     after?: Snowflake;
     cache?: boolean;
-};
+}
 
 export interface AddGuildMemberOptions {
     acess_token: string;
@@ -550,25 +550,25 @@ export interface AddGuildMemberOptions {
     roles?: Snowflake[];
     mute?: boolean;
     deaf?: boolean;
-};
+}
 
 export interface GuildPruneMembersOptions {
     days?: number;
     compute_prune_count?: boolean;
     include_roles?: (Snowflake | Role)[];
     reason?: string;
-};
+}
 
 export interface GuildSearchMembersOptions {
     query: string;
     limit?: number;
     cache?: boolean;
-};
+}
 
 export interface BanOptions {
     delete_message_seconds?: number;
     reason?: string;
-};
+}
 
 export interface GuildMemberEditOptions {
     nick?: string;
@@ -579,14 +579,14 @@ export interface GuildMemberEditOptions {
     communication_disabled_until?: string | null;
     flags?: GuildMemberFlags;
     reason?: string;
-};
+}
 
 export enum GuildMemberFlags {
     DidRejoin = 1 << 0,
     CompletedOnboarding = 1 << 1,
     BypassesVerification = 1 << 2,
     StartedOnboarding = 1 << 3
-};
+}
 
 export enum GuildAuditLogActionType {
     GuildUpdate = 1,
@@ -643,14 +643,14 @@ export enum GuildAuditLogActionType {
     AutoModerationBlockMessage,
     AutoModerationFlagToChannel,
     AutoModerationUserCommunicationDisabled
-};
+}
 
 export interface RawGuildBanData {
     reason?: string;
     user: RawDiscordAPIUserData;
-};
+}
 
 export interface UnavailableGuildData {
     id: Snowflake;
     unavailable: true;
-};
+}

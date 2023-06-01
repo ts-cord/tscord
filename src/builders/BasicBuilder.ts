@@ -1,9 +1,9 @@
 import type { GenericBuilderTypes } from "../types";
 
 export class BasicBuilder<T extends GenericBuilderTypes> {
-    data: T;
+	data: T;
 
-    /**
+	/**
      * Represents a basic builder for all builders
      * @param {T | undefined} data - Data in JSON format
      * @constructor
@@ -14,28 +14,28 @@ export class BasicBuilder<T extends GenericBuilderTypes> {
      * ```
      */
 
-    constructor(data?: T) {
-        this.data = data ?? {} as T;
-    };
+	constructor(data?: T) {
+		this.data = data ?? {} as T;
+	}
 
-    /**
+	/**
      * Returns compatible JSON for the type
      * @returns {T}
      */
 
-    JSON(): T {
-        return this.data;
-    };
+	JSON(): T {
+		return this.data;
+	}
 
-    /**
+	/**
      * Create new data from JSON data
      * @param {T} JSONData - The JSON data
      * @returns {this}
      */
 
-    setDataFrom(JSONData: T): this {
-        this.data = JSONData;
+	setDataFrom(JSONData: T): this {
+		this.data = JSONData;
 
-        return this;
-    };
-};
+		return this;
+	}
+}

@@ -20,19 +20,19 @@ export interface RawDiscordAPIUserData {
     flags?: UserFlags;
     premium_type?: UserPremiumTypes;
     public_flags?: UserFlags;
-};
+}
 
 export interface ClientUserEditOptions {
     username?: string;
     avatar?: string;
-};
+}
 
 export type UserResolvable = User | Snowflake | Message | GuildMember;
 
 export interface RawUser extends RawDiscordAPIUserData {
     creation_timestamp: number;
     creation_date: Date;
-};
+}
 
 export enum UserFlags {
     Staff = 1 << 0,
@@ -50,11 +50,11 @@ export enum UserFlags {
     CertifiedModeration = 1 << 18,
     BotHTPPInteractions = 1 << 19,
     ActiveDeveloper = 1 << 22
-};
+}
 
 export enum UserPremiumTypes {
     None,
     NitroClassic,
     Nitro,
     NitroBasic
-};
+}

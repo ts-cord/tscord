@@ -25,12 +25,12 @@ export interface RawApplication {
     install_params: InstallParams;
     custom_install_url?: string;
     role_connections_verification_url?: string;
-};
+}
 
 export interface InstallParams {
     scopes: Array<string>;
     permissions: string;
-};
+}
 
 export enum ApplicationFlags {
     ApplicationAutoModerationRuleCreateBadge = 1 << 6,
@@ -43,7 +43,7 @@ export enum ApplicationFlags {
     GatewayMessageContent = 1 << 18,
     GatewayMessageContentLimited = 1 << 19,
     ApplicationCommandBadge = 1 << 23
-};
+}
 
 export interface ApplicationTeam {
     icon?: string;
@@ -51,19 +51,19 @@ export interface ApplicationTeam {
     members: Array<ApplicationTeamMember>;
     name: string;
     owner_user_id: Snowflake;
-};
+}
 
 export enum MemberShipStateEnum {
     Invited = 1,
     Accepted
-};
+}
 
 export interface ApplicationTeamMember {
     membership_state: MemberShipStateEnum;
-    permissions: Array<'*'>;
+    permissions: Array<"*">;
     team_id: Snowflake;
-    user: Pick<RawDiscordAPIUserData, 'avatar' | 'discriminator' | 'id' | 'username'>;
-};
+    user: Pick<RawDiscordAPIUserData, "avatar" | "discriminator" | "id" | "username">;
+}
 
 export interface ApplicationRoleConnectionMetadata {
     type: ApplicationRoleConnectionMetadataType;
@@ -72,7 +72,7 @@ export interface ApplicationRoleConnectionMetadata {
     name_localizations?: Locales;
     description: string;
     description_localizations?: Locales;
-};
+}
 
 export enum ApplicationRoleConnectionMetadataType {
     IntegerLessThanOrEqual = 1,
@@ -83,6 +83,6 @@ export enum ApplicationRoleConnectionMetadataType {
     DatetimeGreaterThanOrEqual,
     BooleanEqual,
     BooleanNotEqual
-};
+}
 
-export interface ApplicationRoleConnectionMetadataEditOptions extends ApplicationRoleConnectionMetadata {};
+export type ApplicationRoleConnectionMetadataEditOptions = ApplicationRoleConnectionMetadata;

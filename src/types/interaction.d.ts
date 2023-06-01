@@ -11,17 +11,17 @@ export enum ComponentTypes {
     RoleSelectMenu,
     MentionableSelectMenu,
     ChannelSelectMenu
-};
+}
 
 export interface InteractionReplyOptions extends BasicMessageOptions {
     flags?: MessageFlags.SuppressEmbed | MessageFlags.Ephemeral;
     tts?: boolean;
-};
+}
 
 export interface MessageComponentData {
     type: ComponentTypes.ActionRow;
     components: (ButtonData | TextInputData | SelectMenuData)[];
-};
+}
 
 export interface SelectMenuData {
     type: SelectMenuTypes;
@@ -32,27 +32,27 @@ export interface SelectMenuData {
     min_values?: number;
     max_values?: number;
     disabled?: boolean;
-};
+}
 
-export interface StringSelectMenuData extends Omit<SelectMenuData, 'channel_types'> {
+export interface StringSelectMenuData extends Omit<SelectMenuData, "channel_types"> {
     type: SelectMenuTypes.StringSelect;
-};
+}
 
-export interface RoleSelectMenuData extends Omit<SelectMenuData, 'options' | 'channel_types'> {
+export interface RoleSelectMenuData extends Omit<SelectMenuData, "options" | "channel_types"> {
     type: SelectMenuTypes.RoleSelect;
-};
+}
 
-export interface UserSelectMenuData extends Omit<SelectMenuData, 'options' | 'channel_types'> {
+export interface UserSelectMenuData extends Omit<SelectMenuData, "options" | "channel_types"> {
     type: SelectMenuTypes.UserSelect;
-};
+}
 
 export interface MentionableSelectMenuData extends UserSelectMenuData {
     type: SelectMenuTypes.MentionableSelect;
-};
+}
 
-export interface ChannelSelectMenuData extends Omit<SelectMenuData, 'options'> {
+export interface ChannelSelectMenuData extends Omit<SelectMenuData, "options"> {
     type: SelectMenuTypes.ChannelSelect;
-};
+}
 
 export interface SelectMenuOptionsData {
     label: string;
@@ -64,7 +64,7 @@ export interface SelectMenuOptionsData {
         animated?: boolean;
     };
     default?: boolean;
-};
+}
 
 export enum SelectMenuTypes {
     StringSelect = 3,
@@ -72,7 +72,7 @@ export enum SelectMenuTypes {
     RoleSelect,
     MentionableSelect,
     ChannelSelect
-};
+}
 
 export enum MessageFlags {
     Crossposted = 1 << 0,
@@ -85,13 +85,13 @@ export enum MessageFlags {
     Loading = 1 << 7,
     FailedToMentionSomeRolesInThread = 1 << 8,
     SuppressNotifications = 1 << 12
-};
+}
 
 export enum ApplicationCommandTypes {
     ChatInput = 1,
     User,
     Message
-};
+}
 
 export type ApplicationCommandResolvable = ApplicationCommand | Snowflake;
 
@@ -101,7 +101,7 @@ export interface MessageInteractionData {
     name: string;
     user: RawDiscordAPIUserData;
     member?: Partial<GuildMemberData>;
-};
+}
 
 export enum InteractionType {
     Ping = 1,
@@ -109,7 +109,7 @@ export enum InteractionType {
     MessageComponent,
     ApplicationCommandAutocomplete,
     ModalSubmit
-};
+}
 
 export interface ButtonData {
     type: ComponentTypes.Button;
@@ -123,7 +123,7 @@ export interface ButtonData {
     custom_id?: string;
     url?: string;
     disabled?: boolean;
-};
+}
 
 export enum ButtonStyles {
     Primary = 1,
@@ -131,7 +131,7 @@ export enum ButtonStyles {
     Success,
     Danger,
     Link
-};
+}
 
 export interface TextInputData {
     type: ComponentTypes.TextInput;
@@ -143,12 +143,12 @@ export interface TextInputData {
     required?: boolean;
     value?: string;
     placeholder?: string;
-};
+}
 
 export enum TextInputStyles {
     Short = 1,
     Paragraph
-};
+}
 
 export interface RawInteraction {
     id: Snowflake;
@@ -166,7 +166,7 @@ export interface RawInteraction {
     app_permissions?: string;
     locale?: keyof Locales;
     guild_locale?: keyof Locales;
-};
+}
 
 export interface RawInteractionData {
     id: Snowflake;
@@ -183,7 +183,7 @@ export interface RawInteractionData {
     options?: ApplicationCommandInteractionOptionData[];
     guild_id?: Snowflake;
     target_id?: Snowflake;
-};
+}
 
 export enum InteractionCallbackType {
     Pong = 1,
@@ -193,9 +193,9 @@ export enum InteractionCallbackType {
     UpdateMessage,
     ApplicationCommandAutocompleteResult,
     Modal
-};
+}
 
-export interface ShowModalOptions extends Omit<MessageComponentData, 'type'> {
+export interface ShowModalOptions extends Omit<MessageComponentData, "type"> {
     title: string;
     custom_id: string;
-};
+}

@@ -13,15 +13,15 @@ export interface RawGuildRole {
     managed: boolean;
     mentionable: boolean;
     tags?: GuildRoleTags;
-};
+}
 
 export type RoleResolvable = Role;
 
-export interface EditRoleOptions extends Omit<RawGuildRole, 'id' | 'position' | 'tags'> {
+export interface EditRoleOptions extends Omit<RawGuildRole, "id" | "position" | "tags"> {
     reason?: string;
-};
+}
 
-export interface CreateRoleOptions extends EditRoleOptions {};
+export type CreateRoleOptions = EditRoleOptions;
 
 export interface GuildRoleTags {
     bot_id?: Snowflake;
@@ -30,9 +30,9 @@ export interface GuildRoleTags {
     subscription_listing_id?: Snowflake;
     available_for_purchase?: null;
     guild_connections?: null;
-};
+}
 
 export interface RawRole extends RawGuildRole {
     creation_timestamp: number;
     creation_date: Date;
-};
+}

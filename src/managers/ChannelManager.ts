@@ -8,36 +8,36 @@ import { BasicChannel } from "../structures/BasicChannel";
 import type { ChannelResolvable, RawDiscordAPIChannelData } from "../types";
 
 export class ChannelManager extends BasicManager {
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
-    override cache: Group<Snowflake, BasicChannel> = new Group<Snowflake, BasicChannel>();
+	private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+	override cache: Group<Snowflake, BasicChannel> = new Group<Snowflake, BasicChannel>();
 
-    constructor(client: Client) {
-        super(client);
+	constructor(client: Client) {
+		super(client);
 
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
-    };
+		this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+	}
 
-    /**
+	/**
      * Resolves a ChannelResolvable to the Channel ID
      * @param {ChannelResolvable} channel - The channel
      * @returns {Snowflake}
      */
 
-    resolveId(channel: ChannelResolvable): Snowflake {
-        return typeof channel === 'string' ? channel : channel.id;
-    };
+	resolveId(channel: ChannelResolvable): Snowflake {
+		return typeof channel === "string" ? channel : channel.id;
+	}
 
-    /**
+	/**
      * Fetch a Discord Channel
      * @param {Snowflake} channel - The channel ID
      * @returns {Promise<BasicChannel>}
      */
 
-    async fetch(channel: ChannelResolvable): Promise<BasicChannel> {
-        const { data }: { data: RawDiscordAPIChannelData } = await rest.get(Channel(this.resolveId(channel)), this.axiosConfig);
+	async fetch(channel: ChannelResolvable): Promise<BasicChannel> {
+		const { data }: { data: RawDiscordAPIChannelData } = await rest.get(Channel(this.resolveId(channel)), this.axiosConfig);
 
-        this.cache.set(data.id, new BasicChannel(data, this.client));
+		this.cache.set(data.id, new BasicChannel(data, this.client));
 
-        return this.cache.get(data.id)!;
-    };
-};
+		return this.cache.get(data.id)!;
+	}
+}

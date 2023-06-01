@@ -13,7 +13,7 @@ export interface BasicChannelData {
     flags: ChannelFlags;
     creation_timestamp: number;
     creation_date: Date;
-};
+}
 
 export enum ChannelTypes {
     GuildText,
@@ -28,7 +28,7 @@ export enum ChannelTypes {
     GuildStageVoice,
     GuildDirectory,
     GuildForum
-};
+}
 
 export type ChannelResolvable = Snowflake | BasicChannel;
 export type GuildChannelResolvable = Snowflake | GuildChannel;
@@ -38,7 +38,7 @@ export interface ChannelPositions {
     position?: number;
     lock_permissions?: boolean;
     parent_id?: Snowflake;
-};
+}
 
 export interface GuildChannelData extends BasicChannelData {
     guild_id: Snowflake;
@@ -46,11 +46,11 @@ export interface GuildChannelData extends BasicChannelData {
     permission_overwrites: Array<OverwriteData>;
     name: string;
     parent_id: Snowflake | undefined;
-};
+}
 
 export type MessageResolvable = Snowflake | Message;
 
-export interface RawDiscordAPIChannelData extends Omit<BasicChannelData, 'creationTimestamp' | 'creationDate'> {
+export interface RawDiscordAPIChannelData extends Omit<BasicChannelData, "creationTimestamp" | "creationDate"> {
     guild_id?: Snowflake;
     position?: number;
     permission_overwrites?: Array<OverwriteData>;
@@ -83,23 +83,23 @@ export interface RawDiscordAPIChannelData extends Omit<BasicChannelData, 'creati
     default_thread_rate_limit_per_user?: number;
     default_order_sorter: SortOrderTypes;
     default_forum_layout?: ForumLayoutTypes;
-};
+}
 
 export enum ForumLayoutTypes {
     NotSet,
     ListView,
     GalleryView
-};
+}
 
 export enum SortOrderTypes {
     LatestActivity,
     CreationDate
-};
+}
 
 export interface DefaultReactionData {
     emoji_id?: string;
     emoji_name?: string;
-};
+}
 
 export interface ForumChannelTagData {
     id: Snowflake;
@@ -107,7 +107,7 @@ export interface ForumChannelTagData {
     moderated: boolean;
     emoji_id?: string;
     emoji_name?: string;
-};
+}
 
 export interface RawThreadMemberData {
     id?: Snowflake;
@@ -115,7 +115,7 @@ export interface RawThreadMemberData {
     join_timestamp?: string;
     flags: number;
     member?: object //do later
-};
+}
 
 export interface ThreadMetadata {
     archived: boolean;
@@ -124,7 +124,7 @@ export interface ThreadMetadata {
     locked: boolean;
     invitable?: boolean;
     create_timestamp?: string;
-};
+}
 
 export interface VoiceRegionData {
     id: string;
@@ -132,28 +132,28 @@ export interface VoiceRegionData {
     optimal: boolean;
     deprecated: boolean;
     custom: boolean;
-};
+}
 
 export interface OverwriteData {
     id: Snowflake;
     type: OverwriteTypes;
     allow: string;
     deny: string;
-};
+}
 
 export enum OverwriteTypes {
     Role,
     Member
-};
+}
 
 export interface DMChannelData extends BasicChannelData {
     last_message_id?: Snowflake;
-};
+}
 
 export enum ChannelFlags {
     Pinned = 1 << 1,
     RequireTag = 1 << 4
-};
+}
 
 export enum SystemChannelFlags {
     SuppressJoinNotifications = 1 << 0,
@@ -162,19 +162,19 @@ export enum SystemChannelFlags {
     SuppressJoinNotificationsReplies = 1 << 3,
     SuppressRoleSubscriptionPurchaseNotifications = 1 << 4,
     SuppressRoleSubscriptionPurchaseNotificationReplies = 1 << 5
-};
+}
 
 export enum DefaultMessageNotificationLevel {
     AllMessages,
     OnlyMention
-};
+}
 
 export interface RawWelcomeScreenChannel {
     channel_id: Snowflake;
     description: string;
     emoji_id?: Snowflake;
     emoji_name?: string;
-};
+}
 
 export interface CreateMessageOptions {
     content?: string;
@@ -185,29 +185,29 @@ export interface CreateMessageOptions {
     message_reference?: MessageReferenceOptions;
     components?: Array<MessageComponentData>;
     stickers_id?: Array<Snowflake>;
-    attachments?: Array<Pick<AttachmentData, 'filename' | 'description'>>;
+    attachments?: Array<Pick<AttachmentData, "filename" | "description">>;
     flags?: MessageFlags
-};
+}
 
 export interface MessageReferenceOptions {
     message_id?: Snowflake;
     channel_id?: Snowflake;
     guild_id?: Snowflake;
     fail_if_not_exists?: boolean;
-};
+}
 
 export enum AllowedMentionTypes {
-    RoleMentions = 'roles',
-    UserMentions = 'users',
-    EveryoneMentions = 'everyone'
-};
+    RoleMentions = "roles",
+    UserMentions = "users",
+    EveryoneMentions = "everyone"
+}
 
 export interface AllowedMentionOptions {
     parse?: Array<AllowedMentionTypes>;
     roles?: Array<Snowflake>;
     users?: Array<Snowflake>;
     replied_user?: boolean;
-};
+}
 
 export interface EmbedData {
     title?: string;
@@ -223,51 +223,51 @@ export interface EmbedData {
     provider?: EmbedProviderData;
     author?: EmbedAuthorData;
     fields?: Array<EmbedFieldData>;
-};
+}
 
 export interface EmbedFieldData {
     name: string;
     value: string;
     inline?: boolean;
-};
+}
 
 export interface EmbedFooterData {
     text: string;
     icon_url?: string;
     proxy_icon_url?: string;
-};
+}
 
-export interface EmbedVideoData extends EmbedGenericsData { };
-export interface EmbedImageData extends EmbedGenericsData { };
-export interface EmbedThumbnailData extends EmbedGenericsData { };
+export type EmbedVideoData = EmbedGenericsData;
+export type EmbedImageData = EmbedGenericsData;
+export type EmbedThumbnailData = EmbedGenericsData;
 
 export interface EmbedAuthorData {
     name: string;
     url?: string;
     icon_url?: string;
     proxy_icon_url?: string;
-};
+}
 
 export enum EmbedTypes {
-    Rich = 'rich',
-    Image = 'image',
-    Video = 'video',
-    Gifv = 'gifv',
-    Article = 'article',
-    Link = 'link'
-};
+    Rich = "rich",
+    Image = "image",
+    Video = "video",
+    Gifv = "gifv",
+    Article = "article",
+    Link = "link"
+}
 
 export interface EmbedProviderData {
     name?: string;
     url?: string;
-};
+}
 
 export interface EmbedGenericsData {
     url: string;
     proxy_url?: string;
     height?: number;
     width?: number;
-};
+}
 
 export interface BasicMessageOptions {
     content?: string;
@@ -275,7 +275,7 @@ export interface BasicMessageOptions {
     allowed_mentions?: AllowedMentionOptions;
     files?: Array<AttachmentData>;
     components?: Array<MessageComponentData>
-};
+}
 
 export interface RawDiscordAPIMessageData {
     id: Snowflake;
@@ -309,13 +309,13 @@ export interface RawDiscordAPIMessageData {
     stickers?: Array<RawSticker>;
     position?: number;
     role_subscription_data?: RoleSubscriptionData;
-};
+}
 
 export interface StartThreadOptions {
     name: string;
     auto_archive_duration?: number;
     rate_limit_per_user?: number;
-};
+}
 
 export type EmojiResolvable = string;
 
@@ -324,19 +324,19 @@ export interface RoleSubscriptionData {
     tier_name: string;
     total_months_subscribed: number;
     is_renewal: boolean;
-};
+}
 
 export interface MessageActivity {
     type: MessageActivityTypes;
     party_id?: string;  
-};
+}
 
 export enum MessageActivityTypes {
     Join = 1,
     Spectate,
     Listen,
     JoinRequest
-};
+}
 
 export enum MessageTypes {
     Default,
@@ -370,20 +370,20 @@ export enum MessageTypes {
     StageSpeaker,
     StageTopic = 31,
     GuildApplicationPremiumSubscription
-};
+}
 
 export interface ReactionData {
     count: number;
     me: boolean;
     emoji: Partial<RawGuildEmoji>;
-};
+}
 
 export interface ChannelMentionData {
     id: Snowflake;
     guild_id: Snowflake;
     type: ChannelTypes;
     name: string;
-};
+}
 
 export interface GuildChannelEditOptions {
     name?: string;
@@ -405,7 +405,7 @@ export interface GuildChannelEditOptions {
     default_thread_rate_limit_per_user?: number;
     default_sort_order?: SortOrderTypes;
     default_forum_layout?: ForumLayoutTypes;
-};
+}
 
 export interface GuildChannelCreateOptions {
     name: string;
@@ -424,7 +424,7 @@ export interface GuildChannelCreateOptions {
     default_reaction_emoji?: DefaultReactionData[];
     available_tags?: ForumChannelTagData[];
     default_sort_order?: SortOrderTypes;
-};
+}
 
 export interface RawInviteData {
     code: string;
@@ -443,12 +443,12 @@ export interface RawInviteData {
     max_age: number;
     temporary: boolean;
     created_at: number;
-};
+}
 
 export enum InviteTargetTypes {
     Stream = 1,
     EmbeddedApplication
-};
+}
 
 export type InviteResolvable = string;
 
@@ -460,4 +460,4 @@ export interface ChannelInviteCreateOptions {
     target_type?: InviteTargetTypes;
     target_user_id?: Snowflake;
     target_application_id?: Snowflake;
-};
+}

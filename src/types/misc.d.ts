@@ -4,9 +4,9 @@ import { Events, MessageComponentData, ApplicationCommandData, ContextMenuData, 
 export type GenericBuilderTypes = ButtonData | TextInputData | SelectMenuData | MessageComponentData | ContextMenuData | ApplicationCommandData | EmbedData;
 
 export interface ViewOptions {
-    format?: 'png' | 'jpeg' | 'webp' | 'gif';
+    format?: "png" | "jpeg" | "webp" | "gif";
     size?: number;
-};
+}
 
 export interface AttachmentData {
     id: Snowflake;
@@ -19,12 +19,12 @@ export interface AttachmentData {
     height?: number;
     width?: number;
     ephemeral?: boolean;
-};
+}
 
 export interface BasicFetchOptions {
     forceFetch?: boolean;
     cache?: boolean;
-};
+}
 
 export interface Locales {
     id?: string;
@@ -60,7 +60,7 @@ export interface Locales {
     ja?: string;
     "zh-TW"?: string;
     ko?: string;
-};
+}
 
 export type SnakeCase<S> = S extends `${infer T}${infer U}`
     ? `${T extends Capitalize<T> ? "_" : ""}${Lowercase<T>}${SnakeCase<U>}`

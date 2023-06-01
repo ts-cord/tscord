@@ -1,48 +1,48 @@
-import * as errors from '../constants/errors.json';
+import * as errors from "../constants/errors.json";
 
 declare class TypeCordError<T extends boolean = true> extends Error {
-    constructor(message: T extends true ? keyof typeof errors : string, options?: ErrorOptions);
+	constructor(message: T extends true ? keyof typeof errors : string, options?: ErrorOptions);
 
-    toString(): string;
-    toJSON(): { name: string; message: string; stack?: string; options?: ErrorOptions; };
-    log(): void;
-};
+	toString(): string;
+	toJSON(): { name: string; message: string; stack?: string; options?: ErrorOptions; };
+	log(): void;
+}
 
 declare class TypeCordRangeError extends RangeError {
-    constructor(message: string, options?: ErrorOptions);
+	constructor(message: string, options?: ErrorOptions);
 
-    toString(): string
-    toJSON(): { name: string; message: string; stack?: string; options?: ErrorOptions };
-    log(): void;
-};
+	toString(): string
+	toJSON(): { name: string; message: string; stack?: string; options?: ErrorOptions };
+	log(): void;
+}
 
 declare class Group<K, V> extends Map<K, V> {
-    find(func: (value: V, index: number, obj: V[]) => unknown): V | undefined;
-    map(func: (value: [K, V], index: number, array: [K, V][]) => unknown): unknown[];
-    filter(func: (value: V, index: number, array: V[]) => value is V): V[];
-    every(func: (value: V, index: number, array: V[]) => value is V): this is V[];
-    some(func: (value: V, index: number, array: V[]) => unknown): boolean;
-    toArray<T extends boolean = true>(groupKeyAndValue?: T): T extends true ? [K, V][] : V[];
-    toJSON(): { [k: string]: V };
-    at(index: number): V | undefined;
-    reduce(callbackfn: (previousValue: V, currentValue: V, currentIndex: number, array: V[]) => V): V;
-    hasAll(...keys: K[]): boolean;
-    hasAny(...keys: K[]): boolean;
-    first<T extends number | undefined>(amount: number = 1): T extends undefined ? V : { [key: string]: V; };
-    last<T extends number | undefined = this['size']>(amount: number = this.size): T extends undefined ? V : { [key: string]: V; };
-    merge(group: Group<K, V> | Map<K, V>): this;
-    get random(): V;
-    get empty(): boolean;
-    findIndex(predicate: (value: V, index: number, obj: V[]) => unknown): V;
-    reduceRight(callbackfn: (previousValue: V, currentValue: V, currentIndex: number, array: V[]) => V): V;
-    get randomKey(): K;
-    sort(compareFunction?: ((a: V, b: V) => number) | undefined): V[];
-    reverse(): V[];
-    get clone(): Group<K, V>;
-    mapValues<U>(callbackfn: (value: V, index: number, array: V[]) => U, thisArg?: any): U[];
-};
+	find(func: (value: V, index: number, obj: V[]) => unknown): V | undefined;
+	map(func: (value: [K, V], index: number, array: [K, V][]) => unknown): unknown[];
+	filter(func: (value: V, index: number, array: V[]) => value is V): V[];
+	every(func: (value: V, index: number, array: V[]) => value is V): this is V[];
+	some(func: (value: V, index: number, array: V[]) => unknown): boolean;
+	toArray<T extends boolean = true>(groupKeyAndValue?: T): T extends true ? [K, V][] : V[];
+	toJSON(): { [k: string]: V };
+	at(index: number): V | undefined;
+	reduce(callbackfn: (previousValue: V, currentValue: V, currentIndex: number, array: V[]) => V): V;
+	hasAll(...keys: K[]): boolean;
+	hasAny(...keys: K[]): boolean;
+	first<T extends number | undefined>(amount: number = 1): T extends undefined ? V : { [key: string]: V; };
+	last<T extends number | undefined = this["size"]>(amount: number = this.size): T extends undefined ? V : { [key: string]: V; };
+	merge(group: Group<K, V> | Map<K, V>): this;
+	get random(): V;
+	get empty(): boolean;
+	findIndex(predicate: (value: V, index: number, obj: V[]) => unknown): V;
+	reduceRight(callbackfn: (previousValue: V, currentValue: V, currentIndex: number, array: V[]) => V): V;
+	get randomKey(): K;
+	sort(compareFunction?: ((a: V, b: V) => number) | undefined): V[];
+	reverse(): V[];
+	get clone(): Group<K, V>;
+	mapValues<U>(callbackfn: (value: V, index: number, array: V[]) => U, thisArg?: any): U[];
+}
 
-declare const CndURL: string = "https://cdn.discordapp.com";
+declare const CndURL = "https://cdn.discordapp.com";
 
 declare const ChannelWebhooks = (channelId: Snowflake): string => `/channels/${channelId}/webhooks`;
 declare const GuildWebhooks = (guildId: Snowflake): string => `/guilds/${guildId}/webhooks`;
@@ -112,20 +112,20 @@ declare const ChannelThreadsMember = (channelId: Snowflake, userId: Snowflake): 
 declare const ChannelThreadsMembers = (channelId: Snowflake): string => `/channels/${channelId}/thread-members`;
 declare const ChannelTyping = (channelId: Snowflake): string => `/channels/${channelId}/typing`;
 declare const GroupRecipient = (channelId: Snowflake, userId: Snowflake): string => `/channels/${channelId}/recipients/${userId}`;
-declare const VoiceRegions: string = "/voice/regions";
+declare const VoiceRegions = "/voice/regions";
 declare const GuildVoiceRegions = (guildId: Snowflake): string => `/guilds/${guildId}/regions`;
 
-declare const OauthApplication: string = "/oauth2/applications/@me";
-declare const OauthAuthorize: string = "/oauth2/authorize";
-declare const OauthInfo: string = "/oauth2/@me";
-declare const OauthCurrentUser: string = "/users/@me";
-declare const OauthChannels: string = "/users/@me/channels";
-declare const OauthConnections: string = "/users/@me/connections";
+declare const OauthApplication = "/oauth2/applications/@me";
+declare const OauthAuthorize = "/oauth2/authorize";
+declare const OauthInfo = "/oauth2/@me";
+declare const OauthCurrentUser = "/users/@me";
+declare const OauthChannels = "/users/@me/channels";
+declare const OauthConnections = "/users/@me/connections";
 declare const OauthGuild = (guildId: Snowflake): string => `/users/@me/guilds/${guildId}`;
 declare const OauthGuildMember = (guildId: Snowflake): string => `${OauthGuild(guildId)}/member`;
-declare const OauthGuilds: string = "/users/@me/guilds";
-declare const OauthToken: string = "/oauth2/token";
-declare const OauthTokenRevoke: string = "/oauth2/token/revoke";
+declare const OauthGuilds = "/users/@me/guilds";
+declare const OauthToken = "/oauth2/token";
+declare const OauthTokenRevoke = "/oauth2/token/revoke";
 declare const OauthRoleConnection = (applicationId: Snowflake): string => `/users/@me/applications/${applicationId}/role-connection`;
 
 declare const AchievementIcon = (applicationId: Snowflake, achievementId: Snowflake, hash: string): string => `/app-assets/${applicationId}/achievements/${achievementId}/icons/${hash}`;
@@ -156,13 +156,13 @@ declare const GuildApplicationCommandPermission = (applicationId: Snowflake, gui
 declare const GuildApplicationCommandPermissions = (applicationId: Snowflake, guildId: Snowflake): string => `/applications/${applicationId}/guilds/${guildId}commands/permissions`;
 declare const InteractionCallback = (interactionId: Snowflake, interactionToken: string): string => `/interactions/${interactionId}/${interactionToken}/callback`;
 
-declare const Gateway: string = "/gateway";
-declare const GatewayBot: string = "/gateway/bot";
+declare const Gateway = "/gateway";
+declare const GatewayBot = "/gateway/bot";
 declare const User = (userId: Snowflake): string => `/users/${userId}`;
 declare const MessageLink = (guildId: Snowflake, channelId: Snowflake, messageId: Snowflake): string => `/channels/${guildId}/${channelId}/${messageId}`;
-declare const NitroStickerPacks: string = "/sticker-packs";
+declare const NitroStickerPacks = "/sticker-packs";
 declare const Inviter = (code: string): string => `/invites/${code}`;
-declare const StageInstances: string = "/stage-instances";
+declare const StageInstances = "/stage-instances";
 declare const StageInstance = (channelId: Snowflake): string => `/stage-instances/${channelId}`;
 declare const RoleConnectionMetadata = (applicationId: Snowflake): string => `/applications/${applicationId}/role-connections/metadata`;
 declare const Application: string;
