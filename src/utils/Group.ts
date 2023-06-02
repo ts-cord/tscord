@@ -10,7 +10,7 @@ export class Group<K, V> extends Map<K, V> {
    * group.find(channel => channel.name === 'general');
    */
 
-	find(func: (value: V, index: number, obj: V[]) => unknown, thisArg?: any): V | undefined {
+	find(func: (value: V, index: number, obj: V[]) => unknown, thisArg?: unknown): V | undefined {
 		return this.toArray().find(func, thisArg);
 	}
 
@@ -22,7 +22,7 @@ export class Group<K, V> extends Map<K, V> {
    * group.map(([id, user]) => user.tag);
    */
 
-	map(func: (value: [K, V], index: number, array: [K, V][]) => unknown, thisArg?: any): unknown[] {
+	map(func: (value: [K, V], index: number, array: [K, V][]) => unknown, thisArg?: unknown): unknown[] {
 		return [...this.entries()].map(func, thisArg);
 	}
 
@@ -34,7 +34,7 @@ export class Group<K, V> extends Map<K, V> {
    * group.filter(user => user.username === 'Unreal');
    */
 
-	filter(func: (value: V, index: number, array: V[]) => value is V, thisArg?: any): V[] {
+	filter(func: (value: V, index: number, array: V[]) => value is V, thisArg?: unknown): V[] {
 		return this.toArray().filter(func, thisArg);
 	}
 
@@ -47,12 +47,12 @@ export class Group<K, V> extends Map<K, V> {
    * group.every(user => user.bot);
    */
 
-	every(func: (value: V, index: number, array: V[]) => value is V, thisArg?: any): this is V[] {
+	every(func: (value: V, index: number, array: V[]) => value is V, thisArg?: unknown): this is V[] {
 		return this.toArray().every(func, thisArg);
 	}
 
 	/**
-  * Determines whether the specified callback function returns true for any element of  this group.
+  * Determines whether the specified callback function returns true for unknown element of  this group.
   * @param func 
   * A function that accepts up to three arguments. The some method calls the predicate function for each element in the array until the predicate returns a value which is coercible to the Boolean value true, or until the end of this group.
   * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/some
@@ -60,7 +60,7 @@ export class Group<K, V> extends Map<K, V> {
   * group.some(channel => channel.type === ChannelTypes.GuildText);
   */
 
-	some(func: (value: V, index: number, array: V[]) => unknown, thisArg?: any): boolean {
+	some(func: (value: V, index: number, array: V[]) => unknown, thisArg?: unknown): boolean {
 		return this.toArray().some(func, thisArg);
 	}
 
@@ -119,11 +119,11 @@ export class Group<K, V> extends Map<K, V> {
 	}
 
 	/**
-   * Returns true if any keys is in this group keys.
+   * Returns true if unknown keys is in this group keys.
    * @param {K[]} keys - Keys to be checked .
    * @returns {boolean}
    * @example
-   * group.hasAny('312', '123');
+   * group.hasunknown('312', '123');
    */
 
 	hasAny(...keys: K[]): boolean {
@@ -197,7 +197,7 @@ export class Group<K, V> extends Map<K, V> {
    * group.findIndex(user => user.username === 'Unreal');
    */
 
-	findIndex(predicate: (value: V, index: number, obj: V[]) => unknown, thisArg?: any): number {
+	findIndex(predicate: (value: V, index: number, obj: V[]) => unknown, thisArg?: unknown): number {
 		return this.toArray().findIndex(predicate, thisArg);
 	}
 
@@ -258,7 +258,7 @@ export class Group<K, V> extends Map<K, V> {
 		const newGroup: Group<K, V> = new Group<K, V>();
 
 		entries.forEach(([key, value]: [K, V]): Group<K, V> => newGroup.set(key, value));
-
+      
 		return newGroup;
 	}
 
@@ -270,7 +270,7 @@ export class Group<K, V> extends Map<K, V> {
    * group.mapValues(id => id);
    */
 
-	mapValues<U>(callbackfn: (value: V, index: number, array: V[]) => U, thisArg?: any): U[] {
+	mapValues<U>(callbackfn: (value: V, index: number, array: V[]) => U, thisArg?: unknown): U[] {
 		return this.toArray().map(callbackfn, thisArg);
 	}
 }
