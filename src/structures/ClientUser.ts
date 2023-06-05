@@ -5,47 +5,47 @@ import { OauthCurrentUser } from "../utils/Routes";
 import type { ClientUserEditOptions, RawDiscordAPIUserData } from "../types";
 
 export class ClientUser extends User {
-	private readonly axiosSuperConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosSuperConfig: { headers: { Authorization: `Bot ${string}` } };
 
-	constructor(data: RawDiscordAPIUserData, client: Client) {
-		super(data, client);
+    constructor(data: RawDiscordAPIUserData, client: Client) {
+        super(data, client);
 
-		this.axiosSuperConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
-	}
+        this.axiosSuperConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+    }
 
-	/**
+    /**
      * Set the client username
      * @param {string} username - The username 
      * @returns {Promise<ClientUser>}
      */
 
-	async setUsername(username: string): Promise<ClientUser> {
-		const data: ClientUser = await this.edit({ username });
+    async setUsername(username: string): Promise<ClientUser> {
+        const data: ClientUser = await this.edit({ username });
 
-		return data;
-	}
+        return data;
+    }
 
-	/**
+    /**
      * Set the client avatar
      * @param {string} avatar - The avatar URL
      * @returns {Promise<ClientUser>}
      */
 
-	async setAvatar(avatar: string): Promise<ClientUser> {
-		const data: ClientUser = await this.edit({ avatar });
+    async setAvatar(avatar: string): Promise<ClientUser> {
+        const data: ClientUser = await this.edit({ avatar });
 
-		return data;
-	}
+        return data;
+    }
 
-	/**
+    /**
      * Edit the client user options
      * @param {ClientUserEditOptions} options - Options to edit
      * @returns {Promise<ClientUser>}
      */
 
-	async edit(options: ClientUserEditOptions): Promise<ClientUser> {
-		const { data }: { data: RawDiscordAPIUserData } = await rest.patch(OauthCurrentUser, options, this.axiosSuperConfig);
+    async edit(options: ClientUserEditOptions): Promise<ClientUser> {
+        const { data }: { data: RawDiscordAPIUserData; } = await rest.patch(OauthCurrentUser, options, this.axiosSuperConfig);
 
-		return new ClientUser(data, this.client);
-	}
+        return new ClientUser(data, this.client);
+    }
 }

@@ -1,7 +1,7 @@
 import { Snowflake } from "./Snowflake";
 import { Events, MessageComponentData, ApplicationCommandData, ContextMenuData, SelectMenuData, ButtonData, EmbedData, TextInputData } from "./index";
 
-export type GenericBuilderTypes = ButtonData | TextInputData | SelectMenuData | MessageComponentData | ContextMenuData | ApplicationCommandData | EmbedData;
+export type GenericBuilderTypes<T extends unknown = {}> = ButtonData | TextInputData | SelectMenuData | MessageComponentData | ContextMenuData | ApplicationCommandData | EmbedData | T;
 
 export interface ViewOptions {
     format?: "png" | "jpeg" | "webp" | "gif";
