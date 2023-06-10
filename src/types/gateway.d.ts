@@ -1,13 +1,12 @@
 import { RawApplication } from "./application";
-import { Events } from "./client";
 import { UnavailableGuildData } from "./guild";
 import { RawDiscordAPIUserData } from "./user";
 
-export interface BasicEventPayload {
+export interface BasicEventPayload<T = object> {
     op: GatewayOpcodes;
     s: number | null;
     t: string | null;
-    d: unknown;
+    d: T;
 }
 
 export enum GatewayOpcodes {
