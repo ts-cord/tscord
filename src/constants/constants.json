@@ -1,5 +1,5 @@
 {
-    "api": "https://discord.com/api/v10/",
-    "wss": "wss://gateway.discord.gg/?v=10",
+    "DISCORD_API_URL": "https://discord.com/api/v10/",
+    "WSS": "wss://gateway.discord.gg/?v=10",
     "EMPTY_GROUP_VALUE": 0
 }
