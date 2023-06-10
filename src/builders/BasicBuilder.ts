@@ -28,14 +28,12 @@ export class BasicBuilder<T extends GenericBuilderTypes> {
     }
 
     /**
-     * Create new data from JSON data
-     * @param {T} JSONData - The JSON data
-     * @returns {this}
+     * Create new data from a JSON data
+     * @param {T} data - The JSON data
+     * @returns {BasicBuilder<T>}
      */
 
-    setDataFrom(JSONData: T): this {
-        this.data = JSONData;
-
-        return this;
+    static from<T extends GenericBuilderTypes>(data: T): BasicBuilder<T> {
+        return new BasicBuilder<T>(data);
     }
 }

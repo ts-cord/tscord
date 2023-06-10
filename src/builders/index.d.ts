@@ -7,7 +7,7 @@ declare class BasicBuilder<T extends GenericBuilderTypes> {
     constructor(data?: T): this;
 
     JSON(): T;
-    setDataFrom(JSONData: T): this;
+    static from<T extends GenericBuilderTypes>(data: T): BasicBuilder<T>;
 }
 
 declare class ButtonBuilder extends BasicBuilder<ButtonData> {
@@ -68,14 +68,14 @@ declare class EmbedBuilder extends BasicBuilder<EmbedData> {
     setTitle(title: string): this;
     setURL(URL: string): this;
     setTimestamp(timestamp: number): this;
-    setFooter(footer: EmbedFooter | string): this;
-    setImage(image: EmbedImage | string): this;
-    setThumbnail(thumbnail: EmbedThumbnail | string): this;
-    setVideo(video: EmbedVideo | string): this;
-    setAuthor(author: EmbedAuthor | string): this;
-    addFields(...fields: Array<EmbedField>): this;
-    setFields(...fields: Array<EmbedField>): this;
-    setProvider(provider: EmbedProvider | string): this;
+    setFooter(footer: EmbedFooterData | string): this;
+    setImage(image: EmbedImageData | string): this;
+    setThumbnail(thumbnail: EmbedThumbnailData | string): this;
+    setVideo(video: EmbedVideoData | string): this;
+    setAuthor(author: EmbedAuthorData | string): this;
+    addFields(...fields: Array<EmbedFieldData>): this;
+    setFields(...fields: Array<EmbedFieldData>): this;
+    setProvider(provider: EmbedProviderData | string): this;
 
     static readonly MaxTitleLength: number;
     static readonly MaxFieldsLength: number;
