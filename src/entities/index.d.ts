@@ -1,4 +1,3 @@
-import { WebSocket } from "ws";
 import { EventEmitter } from "events";
 import { User } from "../structures/User";
 import { Snowflake } from "../types/Snowflake";
@@ -8,11 +7,11 @@ import { ClientApplication } from "./ClientApplication";
 import { GuildManager } from "../managers/GuildManager";
 import { ChannelManager } from "../managers/ChannelManager";
 import { ApplicationCommandManager } from "../managers/ApplicationCommandManager";
-import { ApplicationRoleConnectionMetadata, ApplicationRoleConnectionMetadataEditOptions, ApplicationTeam, ClientEditOptions, ClientEvents, ClientOptions, ClientWebSocketOptions, InstallParams, RawApplication, ViewOptions } from "../types";
+import { ApplicationRoleConnectionMetadata, ApplicationRoleConnectionMetadataEditOptions, ApplicationTeam, ClientEditOptions, ClientEvents, ClientOptions, ClientWebSocketOptions, DiscordAuth, InstallParams, RawApplication, ViewOptions } from "../types";
 
 declare class Client extends EventEmitter {
     public user: User | undefined;
-    public token: string;
+    public auth: DiscordAuth;
     public intents: number;
     public ws: WebSocketStructure;
     public options: ClientOptions["options"];
@@ -22,7 +21,7 @@ declare class Client extends EventEmitter {
     public users: UserManager;
     public guilds: GuildManager;
     public channels: ChannelManager;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     constructor(options: ClientOptions): this;
 
@@ -60,7 +59,7 @@ declare class ClientApplication implements RawApplication {
     public readonly tags: string[] | undefined;
     public readonly customInstallURL: string | undefined;
     public readonly roleConnectionsVerificationURL: string | undefined;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     constructor(app: RawApplication, client: Client): this;
 
@@ -77,7 +76,7 @@ declare class WebSocketStructure {
     private readonly client: { token: string; intents: number; };
 
     public heartbeatInterval: number | undefined;
-    public connectedInterval: any | undefined;
+    public connectedInterval: unknown | undefined;
     public lastHelloTimestamp: number | undefined;
 
     constructor(props: ClientWebSocketOptions, token: string, intents: number): this;
@@ -85,6 +84,6 @@ declare class WebSocketStructure {
     setup(): void;
     private identify(token: string, intents: number): void;
     private stay_connected(): void;
-    private async message(message: any): Promise<void>;
-    private close(code: number, reason: string): void;
+    private async message(message: string): Promise<void>;
+    private close(_code: number, reason: string): void;
 }

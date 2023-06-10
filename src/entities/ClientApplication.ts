@@ -4,7 +4,7 @@ import { User } from "../structures/User";
 import { Snowflake } from "../types/Snowflake";
 import { ApplicationCommandManager } from "../managers/ApplicationCommandManager";
 import { RoleConnectionMetadata, ApplicationCover, CndURL } from "../utils/Routes";
-import type { ViewOptions, RawApplication, ApplicationTeam, InstallParams, ApplicationRoleConnectionMetadata, ApplicationRoleConnectionMetadataEditOptions } from "../types";
+import type { ViewOptions, RawApplication, ApplicationTeam, InstallParams, ApplicationRoleConnectionMetadata, ApplicationRoleConnectionMetadataEditOptions, DiscordAuth, RawDiscordAPIUserData } from "../types";
 
 export class ClientApplication {
     private readonly client: Client;
@@ -32,7 +32,7 @@ export class ClientApplication {
     public readonly tags: string[] | undefined;
     public readonly customInstallURL: string | undefined;
     public readonly roleConnectionsVerificationURL: string | undefined;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     constructor(app: RawApplication, client: Client) {
         this.client = client;
@@ -46,7 +46,7 @@ export class ClientApplication {
         this.botRequireCodeGrant = app.bot_require_code_grant;
         this.termsOfServiceURL = app.terms_of_service_url;
         this.privaciPolicyURL = app.privacy_policy_url;
-        this.owner = this.owner ? new User(this.owner, this.client) : void 0;
+        this.owner = app.owner ? new User(app.owner as Required<RawDiscordAPIUserData>, this.client) : void 0;
         this.verifyKey = app.verify_key;
         this.team = app.team;
         this.guildId = app.guild_id;
@@ -56,7 +56,7 @@ export class ClientApplication {
         this.flags = app.flags;
         this.customInstallURL = app.custom_install_url;
         this.roleConnectionsVerificationURL = app.role_connections_verification_url;
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
         this.summary = app.summary;
         this.installParams = app.install_params;
 

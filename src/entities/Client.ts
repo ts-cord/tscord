@@ -1,19 +1,19 @@
 import EventEmitter from "events";
 import { rest } from "../constants/Api";
-import { User } from "../structures/User";
 import { WebSocketStructure } from "./WebSocket";
 import { OauthCurrentUser } from "../utils/Routes";
+import { ClientUser } from "../structures/ClientUser";
 import { UserManager } from "../managers/UserManager";
 import { GuildManager } from "../managers/GuildManager";
 import { ClientApplication } from "./ClientApplication";
 import { ChannelManager } from "../managers/ChannelManager";
-import { wss as DiscordWss } from "../constants/constants.json";
-import { ClientOptions, ClientWebSocketOptions } from "../types";
+import { WSS as DiscordWss } from "../constants/constants.json";
+import { ClientOptions, ClientWebSocketOptions, DiscordAuth } from "../types";
 import type { ClientEvents, ClientEditOptions, RawDiscordAPIUserData } from "../types";
 
 export class Client extends EventEmitter {
-    public user: User | undefined;
-    public token: string;
+    public user: ClientUser | undefined;
+    public auth: DiscordAuth;
     public intents: number;
     public ws: WebSocketStructure;
     public options: ClientOptions["options"];
@@ -23,14 +23,14 @@ export class Client extends EventEmitter {
     public users: UserManager = new UserManager(this);
     public guilds: GuildManager = new GuildManager(this);
     public channels: ChannelManager = new ChannelManager(this);
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     constructor(options: ClientOptions) {
         super();
 
-        this.token = options.token;
+        this.auth = options.auth;
         this.intents = options.intents ?? 0;
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.auth } };
         this.rest = { baseURL: options.rest?.baseURL ?? "https://discord.com/api/v10/", request_timeout: options.rest?.request_timeout ?? 15000 };
         this.options = { default_image_format: options.options?.default_image_format ?? "png", default_image_size: options.options?.default_image_size ?? 1024 };
 
@@ -40,7 +40,7 @@ export class Client extends EventEmitter {
             client: this
         };
 
-        this.ws = new WebSocketStructure(wsProps, this.token, this.intents);
+        this.ws = new WebSocketStructure(wsProps, this.auth, this.intents);
     }
 
     /**
@@ -77,11 +77,11 @@ export class Client extends EventEmitter {
     /**
    * Set client's username
    * @param {string} username - New username
-   * @returns {Promise<User>}
+   * @returns {Promise<ClientUser>}
    */
 
-    async setUsername(username: string): Promise<User> {
-        const data: User = await this.edit({ username });
+    async setUsername(username: string): Promise<ClientUser> {
+        const data: ClientUser = await this.edit({ username });
 
         return data;
     }
@@ -89,11 +89,11 @@ export class Client extends EventEmitter {
     /**
    * Set client's avatar
    * @param {string} avatar - New avatar URL
-   * @returns {Promise<User>}
+   * @returns {Promise<ClientUser>}
    */
 
-    async setAvatar(avatar: string): Promise<User> {
-        const data: User = await this.edit({ avatar });
+    async setAvatar(avatar: string): Promise<ClientUser> {
+        const data: ClientUser = await this.edit({ avatar });
 
         return data;
     }
@@ -101,13 +101,13 @@ export class Client extends EventEmitter {
     /**
    * Edit client's options
    * @param {ClientEditOptions} options - Options to edit
-   * @returns {Promise<User>}
+   * @returns {Promise<ClientUser>}
    */
 
-    async edit(options: ClientEditOptions): Promise<User> {
-        const { data }: { data: RawDiscordAPIUserData } = await rest.patch(OauthCurrentUser, options, this.axiosConfig);
+    async edit(options: ClientEditOptions): Promise<ClientUser> {
+        const { data }: { data: RawDiscordAPIUserData; } = await rest.patch(OauthCurrentUser, options, this.axiosConfig);
 
-        this.user = new User(data, this);
+        this.user = new ClientUser(data, this);
 
         return this.user;
     }
