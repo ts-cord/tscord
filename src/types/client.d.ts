@@ -18,8 +18,10 @@ export interface ClientEditOptions {
     avatar?: string;
 }
 
+export type DiscordAuth = `${"Bot" | "Bearer"} ${string}`;
+
 export interface ClientOptions {
-    token: string;
+    auth: DiscordAuth;
     intents?: number;
     options?: {
         default_image_format?: ViewOptions["format"];
@@ -38,7 +40,7 @@ export interface ClientSweeperOptions {
     invites?: ClientSweeperConfig<(invite: Invite) => unknown>;
 }
 
-export interface ClientSweeperConfig<T extends Function> {
+export interface ClientSweeperConfig<T extends (...args: unknown[]) => unknown> {
     limit?: number;
     filter?: T;
     lifetime?: number;
