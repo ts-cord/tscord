@@ -3,7 +3,7 @@ import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import { GuildPreview as GuildPreviewRoute, GuildDiscoverySplash, GuildIcon, GuildSplash } from "../utils/Routes";
-import type { GuildFeatures, RawDiscordAPIGuildPreviewData, RawGuildEmoji, RawSticker, ViewOptions } from "../types";
+import type { DiscordAuth, GuildFeatures, RawDiscordAPIGuildPreviewData, RawGuildEmoji, RawSticker, ViewOptions } from "../types";
 
 export class GuildPreview extends Basic {
     public id: Snowflake;
@@ -19,7 +19,7 @@ export class GuildPreview extends Basic {
     public stickers: Array<RawSticker>;
     public creationTimestamp: number;
     public creationDate: Date;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     constructor(data: RawDiscordAPIGuildPreviewData, client: Client) {
         super(client);
@@ -37,7 +37,7 @@ export class GuildPreview extends Basic {
         this.stickers = data.stickers;
         this.creationDate = new Date((+this.id / 4194304) + 1420070400000);
         this.creationTimestamp = this.creationDate.getTime();
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
 
         Object.assign(this, data);
     }

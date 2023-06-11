@@ -12,7 +12,6 @@ export class BasicInteraction extends Basic {
     public applicationId: Snowflake;
     public type: InteractionType;
     public data: RawInteractionData | undefined;
-    public guild: Guild;
     public channelId: Snowflake | undefined;
     public member: GuildMember | undefined;
     public user: User | undefined;
@@ -24,6 +23,7 @@ export class BasicInteraction extends Basic {
     public guildLocale: keyof Locales | undefined;
     public creationTimestamp: number;
     public creationDate: Date;
+    public guildId: Snowflake | undefined;
 
     /**
      * Represents a basic discord interaction
@@ -39,8 +39,8 @@ export class BasicInteraction extends Basic {
         this.applicationId = data.application_id;
         this.type = data.type;
         this.data = data.data;
-        this.guild = new Guild(data.guild, this.client);
         this.channelId = data.channel_id;
+        this.guildId = data.guild_id;
         this.member = data.member ? new GuildMember(data.member, this.guild, this.client) : void 0;
         this.user = data.user ? new User(data.user, this.client) : void 0;
         this.token = data.token;

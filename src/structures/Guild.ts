@@ -14,7 +14,7 @@ import { Snowflake } from "../types/Snowflake";
 import { GuildTemplate } from "./GuildTemplate";
 import { WelcomeScreen } from "./WelcomeScreen";
 import { GuildTemplates as GuildTemplatesRoute, Guild as GuildRoute, OauthGuild, GuildPreview as GuildPreviewRoute, GuildWidget, GuildWidgetJSON, GuildWelcomeScreen, User as UserRoute, GuildVanityURL, GuildIntegrations, GuildWebhooks, GuildOnboarding } from "../utils/Routes";
-import type { ExplicitContentFilterLevels, GuildEditOptions, GuildFeatures, GuildMemberResolvable, GuildNSFWLevels, GuildOnboardingData, GuildPremiumTier, GuildTemplateData, GuildVanityData, GuildVerificationLevels, GuildWelcomeScreenData, GuildWidgetData, GuildWidgetSettingsData, RawDiscordAPIUserData, RawDiscordAPIWebhookData, RawGuild, RawGuildEmoji, RawGuildPreview, RawGuildRole, RawIntegrationData, RawSticker, SystemChannelFlags } from "../types";
+import type { DiscordAuth, ExplicitContentFilterLevels, GuildEditOptions, GuildFeatures, GuildMemberResolvable, GuildNSFWLevels, GuildOnboardingData, GuildPremiumTier, GuildTemplateData, GuildVanityData, GuildVerificationLevels, GuildWelcomeScreenData, GuildWidgetData, GuildWidgetSettingsData, RawDiscordAPIUserData, RawDiscordAPIWebhookData, RawGuild, RawGuildEmoji, RawGuildPreview, RawGuildRole, RawIntegrationData, RawSticker, SystemChannelFlags } from "../types";
 
 export class Guild extends BasicGuild {
     public id: Snowflake;
@@ -63,7 +63,7 @@ export class Guild extends BasicGuild {
     public premiumProgressBarEnabled: boolean;
     public creationTimestamp: number;
     public creationDate: Date;
-    private readonly superAxiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly superAxiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     /**
      * Create a new Guild
@@ -121,7 +121,7 @@ export class Guild extends BasicGuild {
         this.nsfwLevel = data.nsfw_level;
         this.stickers = data.stickers;
         this.premiumProgressBarEnabled = data.premium_progress_bar_enabled;
-        this.superAxiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.superAxiosConfig = { headers: { Authorization: this.client.auth } };
 
         Object.assign(this, data);
     }
@@ -169,7 +169,7 @@ export class Guild extends BasicGuild {
      */
 
     async edit(options: GuildEditOptions, reason?: string): Promise<Guild> {
-        const { data }: { data: RawGuild; } = await rest.patch(GuildRoute(this.id), options, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        const { data }: { data: RawGuild; } = await rest.patch(GuildRoute(this.id), options, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         return new Guild(data, this.client);
     }

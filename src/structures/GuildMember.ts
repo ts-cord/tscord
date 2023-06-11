@@ -6,7 +6,7 @@ import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import { GuildMember as GuildMemberRoute, ChannelMessages, CndURL, GuildAvatar as GuildMemberAvatar } from "../utils/Routes";
-import type { BanOptions, CreateMessageOptions, GuildMemberData, GuildMemberEditOptions, GuildMemberFlags, RawDiscordAPIMessageData, ViewOptions } from "../types";
+import type { BanOptions, CreateMessageOptions, DiscordAuth, GuildMemberData, GuildMemberEditOptions, GuildMemberFlags, RawDiscordAPIMessageData, RawDiscordAPIUserData, ViewOptions } from "../types";
 
 export class GuildMember extends Basic {
     public user: User;
@@ -23,13 +23,13 @@ export class GuildMember extends Basic {
     public readonly communicationDisabledUntil: number | undefined;
     public guild: Guild;
     public readonly id: Snowflake;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
     public readonly joinedTimestamp: number;
 
     constructor(data: GuildMemberData, guild: Guild, client: Client) {
         super(client);
 
-        this.user = new User(data.user!, this.client);
+        this.user = new User(data.user as RawDiscordAPIUserData, this.client);
         this.id = this.user.id;
         this.nickname = data.nick;
         this.avatar = data.avatar;
@@ -43,7 +43,7 @@ export class GuildMember extends Basic {
         this.permissions = data.permissions;
         this.communicationDisabledUntil = data.communication_disabled_until;
         this.guild = guild;
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
         this.joinedTimestamp = this.joinedAt.getTime();
 
         Object.assign(this, data);
@@ -56,7 +56,7 @@ export class GuildMember extends Basic {
      */
 
     async ban(options?: BanOptions): Promise<GuildMember> {
-        await rest.put(`/guilds/${this.guild.id}/bans/${this.id}`, { delete_message_seconds: options?.delete_message_seconds }, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": options?.reason } });
+        await rest.put(`/guilds/${this.guild.id}/bans/${this.id}`, { delete_message_seconds: options?.delete_message_seconds }, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": options?.reason } });
 
         return this;
     }
@@ -68,7 +68,7 @@ export class GuildMember extends Basic {
      */
 
     async edit(options: GuildMemberEditOptions): Promise<GuildMember> {
-        const { data }: { data: GuildMemberData; } = await rest.patch(GuildMemberRoute(this.guild.id, this.id!), { nick: options.nick, roles: options.roles, mute: options.mute, deaf: options.deaf, channel_id: options.channel_id, communication_disabled_until: options.communication_disabled_until, flags: options.flags }, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": options?.reason } });
+        const { data }: { data: GuildMemberData; } = await rest.patch(GuildMemberRoute(this.guild.id, this.id!), { nick: options.nick, roles: options.roles, mute: options.mute, deaf: options.deaf, channel_id: options.channel_id, communication_disabled_until: options.communication_disabled_until, flags: options.flags }, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": options?.reason } });
 
         return new GuildMember(data, this.guild, this.client);
     }
@@ -80,7 +80,7 @@ export class GuildMember extends Basic {
      */
 
     async kick(reason?: string): Promise<GuildMember> {
-        await rest.delete(GuildMemberRoute(this.guild.id, this.id!), { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        await rest.delete(GuildMemberRoute(this.guild.id, this.id!), { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         return this;
     }
@@ -131,7 +131,7 @@ export class GuildMember extends Basic {
      */
 
     async send(options: CreateMessageOptions | string): Promise<Message> {
-        const { data }: { data: RawDiscordAPIMessageData; } = await rest.post(ChannelMessages(this.id!), typeof options === "string" ? { content: options } : options, this.axiosConfig);
+        const { data }: { data: RawDiscordAPIMessageData; } = await rest.post(ChannelMessages(this.id as Snowflake), typeof options === "string" ? { content: options } : options, this.axiosConfig);
 
         return new Message(data, this.client, this.guild);
     }
@@ -142,7 +142,7 @@ export class GuildMember extends Basic {
      */
 
     async fetch(): Promise<GuildMember> {
-        const { data }: { data: GuildMemberData; } = await rest.get(GuildMemberRoute(this.guild.id, this.id!), this.axiosConfig);
+        const { data }: { data: GuildMemberData; } = await rest.get(GuildMemberRoute(this.guild.id, this.id as Snowflake), this.axiosConfig);
 
         return new GuildMember(data, this.guild, this.client);
     }
@@ -179,7 +179,7 @@ export class GuildMember extends Basic {
     }
 
     /**
-     * Members's avatar URL, if it doesn't have one, the [User#displayAvatarURL](https://github.com/gitpionners/TypeCord/blob/main/src/structures/User.ts#L128) will be returned
+     * Members's avatar URL, if it doesn't have one, the [User#displayAvatarURL](https://github.com/yunreal/TypeCord/blob/main/src/structures/User.ts#L128) will be returned
      * @returns {string}
      */
 

@@ -5,16 +5,16 @@ import { Client } from "../entities/Client";
 import { BasicManager } from "./BasicManager";
 import { Snowflake } from "../types/Snowflake";
 import { ApplicationCommand } from "../structures/ApplicationCommand";
-import type { ApplicationCommandResolvable, CreateApplicationCommandOptions, EditApplicationCommandOptions, RawApplicationCommandData } from "../types";
+import type { ApplicationCommandResolvable, CreateApplicationCommandOptions, DiscordAuth, EditApplicationCommandOptions, RawApplicationCommandData } from "../types";
 
 export class ApplicationCommandManager extends BasicManager {
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
     override cache: Group<Snowflake, ApplicationCommand> = new Group<Snowflake, ApplicationCommand>();
 
     constructor(client: Client) {
         super(client);
 
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
     }
 
     /**
@@ -35,11 +35,11 @@ export class ApplicationCommandManager extends BasicManager {
      */
 
     async create(command: CreateApplicationCommandOptions, guildId?: Snowflake): Promise<ApplicationCommand> {
-        const { data }: { data: RawApplicationCommandData } = await rest.post(guildId ? Routes.GuildApplicationCommands(this.client.app!.id, guildId) : Routes.ApplicationCommands(this.client.app!.id), command, this.axiosConfig);
+        const { data }: { data: RawApplicationCommandData; } = await rest.post(guildId ? Routes.GuildApplicationCommands(this.client.app?.id as string, guildId) : Routes.ApplicationCommands(this.client.app?.id as string), command, this.axiosConfig);
 
         this.cache.set(data.id, new ApplicationCommand(data, this.client));
 
-        return this.cache.get(data.id)!;
+        return this.cache.get(data.id) as ApplicationCommand;
     }
 
     /**
@@ -50,7 +50,7 @@ export class ApplicationCommandManager extends BasicManager {
      */
 
     async delete(command: ApplicationCommandResolvable, guildId?: Snowflake): Promise<ApplicationCommand | void> {
-        const { data }: { data: void } = await rest.delete(guildId ? Routes.GuildApplicationCommand(this.client.app!.id, guildId, this.resolveId(command)) : Routes.ApplicationCommands(this.client.app!.id), this.axiosConfig);
+        const { data }: { data: void; } = await rest.delete(guildId ? Routes.GuildApplicationCommand(this.client.app?.id as string, guildId, this.resolveId(command)) : Routes.ApplicationCommands(this.client.app?.id as string), this.axiosConfig);
 
         this.cache.delete(this.resolveId(command));
 
@@ -66,11 +66,11 @@ export class ApplicationCommandManager extends BasicManager {
      */
 
     async edit(options: EditApplicationCommandOptions, command: ApplicationCommandResolvable, guildId?: Snowflake): Promise<ApplicationCommand> {
-        const { data }: { data: RawApplicationCommandData } = await rest.patch(guildId ? Routes.GuildApplicationCommand(this.client.app!.id, guildId, this.resolveId(command)) : Routes.ApplicationCommand(this.client.app!.id, this.resolveId(command)), options, this.axiosConfig);
+        const { data }: { data: RawApplicationCommandData; } = await rest.patch(guildId ? Routes.GuildApplicationCommand(this.client.app?.id as string, guildId, this.resolveId(command)) : Routes.ApplicationCommand(this.client.app?.id as string, this.resolveId(command)), options, this.axiosConfig);
 
         this.cache.set(data.id, new ApplicationCommand(data, this.client));
 
-        return this.cache.get(data.id)!;
+        return this.cache.get(data.id) as ApplicationCommand;
     }
 
     /**
@@ -84,7 +84,7 @@ export class ApplicationCommandManager extends BasicManager {
      */
 
     async bulkOverwrite(commands: Array<EditApplicationCommandOptions>, guildId?: Snowflake): Promise<Group<Snowflake, ApplicationCommand>> {
-        const { data }: { data: Array<RawApplicationCommandData> } = await rest.put(guildId ? Routes.GuildApplicationCommands(this.client.app!.id, guildId) : Routes.ApplicationCommands(this.client.app!.id), commands, this.axiosConfig);
+        const { data }: { data: Array<RawApplicationCommandData>; } = await rest.put(guildId ? Routes.GuildApplicationCommands(this.client.app?.id as string, guildId) : Routes.ApplicationCommands(this.client.app?.id as string), commands, this.axiosConfig);
         const applicationCommandGroup: Group<Snowflake, ApplicationCommand> = new Group<Snowflake, ApplicationCommand>();
 
         data.forEach((command: RawApplicationCommandData): Group<Snowflake, ApplicationCommand> => applicationCommandGroup.set(command.id, new ApplicationCommand(command, this.client)));

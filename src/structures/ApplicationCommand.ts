@@ -3,7 +3,7 @@ import { Locales } from "../types";
 import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
-import type { RawApplicationCommandData, ApplicationCommandOptionsData, ApplicationCommandTypes, EditApplicationCommandOptions } from "../types";
+import type { RawApplicationCommandData, ApplicationCommandOptionsData, ApplicationCommandTypes, EditApplicationCommandOptions, DiscordAuth } from "../types";
 
 export class ApplicationCommand extends Basic {
     public id: Snowflake;
@@ -23,7 +23,7 @@ export class ApplicationCommand extends Basic {
     public creationTimestamp: number;
     public creationDate: Date;
     private readonly url: string;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     constructor(data: RawApplicationCommandData, client: Client) {
         super(client);
@@ -44,7 +44,7 @@ export class ApplicationCommand extends Basic {
         this.version = data.version;
         this.creationTimestamp = new Date((+this.id / 4194304) + 1420070400000).getTime();
         this.creationDate = new Date(this.creationTimestamp);
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
         this.url = this.guildId ? `/applications/${this.client.app?.id}/guilds/${this.guildId}/commands/${this.id}` : `/applications/${this.client.app?.id}/commands/${this.id}`;
 
         Object.assign(this, data);

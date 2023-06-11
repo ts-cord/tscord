@@ -5,7 +5,7 @@ import { Client } from "../entities/Client";
 import { RawDiscordAPIMessageData, WebhookTypes } from "../types/index";
 import { Snowflake } from "../types/Snowflake";
 import { WebhookPlatform } from "../utils/Routes";
-import type { MessageResolvable, RawDiscordAPIChannelData, RawGuild, RawDiscordAPIWebhookData, WebhookEditOptions, WebhookMessageEditOptions, WebhookMessageSlackCreateOptions } from "../types/index";
+import type { MessageResolvable, RawDiscordAPIChannelData, RawGuild, RawDiscordAPIWebhookData, WebhookEditOptions, WebhookMessageEditOptions, WebhookMessageSlackCreateOptions, DiscordAuth } from "../types/index";
 import { Message } from "./Message";
 
 export class Webhook extends Basic {
@@ -23,7 +23,7 @@ export class Webhook extends Basic {
     public url: string | undefined;
     public creationTimestamp: number;
     public creationDate: Date;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
     private readonly requestURL: string;
 
     constructor(data: RawDiscordAPIWebhookData, client: Client) {
@@ -43,7 +43,7 @@ export class Webhook extends Basic {
         this.url = data.url;
         this.creationDate = new Date((+this.id / 4194304) + 1420070400000);
         this.creationTimestamp = this.creationDate.getTime();
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
         this.requestURL = `/webhooks/${this.id}`;
 
         Object.assign(this, data);
@@ -56,7 +56,7 @@ export class Webhook extends Basic {
      */
 
     async delete(reason?: string): Promise<void> {
-        const { data }: { data: void } = await rest.delete(this.requestURL, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        const { data }: { data: void } = await rest.delete(this.requestURL, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         return data;
     }
@@ -81,7 +81,7 @@ export class Webhook extends Basic {
      */
 
     async edit(options: WebhookEditOptions): Promise<Webhook> {
-        const { data }: { data: RawDiscordAPIWebhookData; } = await rest.patch(this.requestURL, { name: options.name, channel_id: options.channel_id, avatar: options.avatar } as Omit<WebhookEditOptions, "reason">, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": options.reason } });
+        const { data }: { data: RawDiscordAPIWebhookData; } = await rest.patch(this.requestURL, { name: options.name, channel_id: options.channel_id, avatar: options.avatar } as Omit<WebhookEditOptions, "reason">, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": options.reason } });
 
         return new Webhook(data, this.client);
     }
@@ -156,8 +156,8 @@ export class Webhook extends Basic {
      */
 
     async sendSlackMessage(body: object, options: WebhookMessageSlackCreateOptions): Promise<boolean> {
-        const queryStringParams: string = "?" + new URLSearchParams(options as {}).toString();
-        const { data }: { data: boolean; } = await rest.post(WebhookPlatform(this.id, this.token!, "slack") + queryStringParams, body, this.axiosConfig);
+        const queryStringParams: string = "?" + new URLSearchParams(options as unknown as Record<string, string>).toString();
+        const { data }: { data: boolean; } = await rest.post(WebhookPlatform(this.id, this.token as string, "slack") + queryStringParams, body, this.axiosConfig);
 
         return data;
     }

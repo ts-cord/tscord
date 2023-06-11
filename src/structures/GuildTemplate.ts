@@ -4,7 +4,7 @@ import { Guild } from "./Guild";
 import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
-import type { GuildTemplateData, RawGuild } from "../types";
+import type { DiscordAuth, GuildTemplateData, RawGuild } from "../types";
 import { GuildTemplate as GuildTemplateRoute, GuildTemplateCode } from "../utils/Routes";
 
 export class GuildTemplate extends Basic {
@@ -19,7 +19,7 @@ export class GuildTemplate extends Basic {
     public sourceGuildId: Snowflake;
     public serializedSourceGuild: Partial<Omit<RawGuild, "creation_timestamp" | "creation_date">>;
     public isDirty: boolean | undefined;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     constructor(data: GuildTemplateData, client: Client) {
         super(client);
@@ -35,7 +35,7 @@ export class GuildTemplate extends Basic {
         this.sourceGuildId = data.source_guild_id;
         this.serializedSourceGuild = data.serialized_source_guild;
         this.isDirty = data.is_dirty;
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
 
         Object.assign(this, data);
     }
@@ -87,7 +87,7 @@ export class GuildTemplate extends Basic {
 
         this.client.guilds.cache.set(data.id, new Guild(data, this.client));
 
-        return this.client.guilds.cache.get(data.id)!;
+        return this.client.guilds.cache.get(data.id) as Guild;
     }
 
     /**

@@ -5,7 +5,7 @@ import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import { CommandInteraction } from "./CommandInteraction";
 import { CommandInteractionOptionResolver } from "./CommandInteractionOptionResolver";
-import { InteractionType, Locales, RawDiscordAPIChannelData, RawInteraction, RawInteractionData } from "../types";
+import { DiscordAuth, InteractionType, Locales, RawDiscordAPIChannelData, RawInteraction, RawInteractionData } from "../types";
 
 export class ChatInputCommandInteraction extends CommandInteraction {
     public id: Snowflake;
@@ -25,7 +25,7 @@ export class ChatInputCommandInteraction extends CommandInteraction {
     public creationTimestamp: number;
     public creationDate: Date;
     public options: CommandInteractionOptionResolver;
-    private readonly superAxiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly superAxiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     constructor(data: RawInteraction, client: Client) {
         super(data, client);
@@ -48,6 +48,6 @@ export class ChatInputCommandInteraction extends CommandInteraction {
         this.creationTimestamp = super.creationTimestamp;
         this.creationDate = super.creationDate;
         this.options = new CommandInteractionOptionResolver(data.data as RawInteractionData, client);
-        this.superAxiosConfig = { headers: { Authorization: `Bot ${super.client.token}` } };
+        this.superAxiosConfig = { headers: { Authorization: this.client.auth } };
     }
 }

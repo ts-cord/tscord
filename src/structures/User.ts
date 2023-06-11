@@ -4,7 +4,7 @@ import { DMChannel } from "./DMChannel";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import { ChannelMessages, User as UserRoute, OauthChannels, UserAvatar, CndURL, Banner, EmbedAvatar } from "../utils/Routes";
-import type { CreateMessageOptions, Locales, RawDiscordAPIUserData, RawUser, UserFlags, UserPremiumTypes, ViewOptions } from "../types/index";
+import type { CreateMessageOptions, DiscordAuth, Locales, RawDiscordAPIUserData, RawUser, UserFlags, UserPremiumTypes, ViewOptions } from "../types/index";
 
 export class User extends Basic {
     public id: Snowflake;
@@ -24,7 +24,7 @@ export class User extends Basic {
     public publicFlags: UserFlags | undefined;
     public creationTimestamp: number;
     public creationDate: Date;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     constructor(data: RawDiscordAPIUserData, client: Client) {
         super(client);
@@ -46,7 +46,7 @@ export class User extends Basic {
         this.publicFlags = data.public_flags;
         this.creationDate = new Date((+this.id / 4194304) + 1420070400000);
         this.creationTimestamp = this.creationDate.getTime();
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
 
         Object.assign(this, data);
     }

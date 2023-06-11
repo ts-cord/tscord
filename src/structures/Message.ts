@@ -6,7 +6,7 @@ import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import { ChannelMessage, Webhook as WebhookRoute, ChannelMessageCrosspost, ChannelThreads } from "../utils/Routes";
-import type { AttachmentData, ChannelMentionData, EmbedData, EmojiResolvable, MessageActivity, MessageComponentData, MessageFlags, MessageInteractionData, MessageReferenceOptions, MessageTypes, RawApplication, RawDiscordAPIChannelData, RawDiscordAPIMessageData, RawDiscordAPIUserData, RawDiscordAPIWebhookData, RawSticker, ReactionData, RoleSubscriptionData, StartThreadOptions, StickerItemData } from "../types";
+import type { AttachmentData, ChannelMentionData, DiscordAuth, EmbedData, EmojiResolvable, MessageActivity, MessageComponentData, MessageFlags, MessageInteractionData, MessageReferenceOptions, MessageTypes, RawApplication, RawDiscordAPIChannelData, RawDiscordAPIMessageData, RawDiscordAPIUserData, RawDiscordAPIWebhookData, RawSticker, ReactionData, RoleSubscriptionData, StartThreadOptions, StickerItemData } from "../types";
 
 export class Message extends Basic {
     public id: Snowflake;
@@ -43,7 +43,7 @@ export class Message extends Basic {
     public guild: Guild | undefined;
     public creationDate: Date;
     public creationTimestamp: number;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
     private readonly url: string;
 
     constructor(data: RawDiscordAPIMessageData, client: Client, guild?: Guild) {
@@ -81,7 +81,7 @@ export class Message extends Basic {
         this.position = data.position;
         this.roleSubscriptionData = data.role_subscription_data;
         this.guild = guild;
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
         this.url = ChannelMessage(this.channelId, this.id);
         this.creationDate = new Date((+this.id / 4194304) + 1420070400000);
         this.creationTimestamp = this.creationDate.getTime();
@@ -95,7 +95,7 @@ export class Message extends Basic {
      */
 
     async crosspost(): Promise<Message> {
-        const { data }: { data: RawDiscordAPIMessageData } = await rest.post(ChannelMessageCrosspost(this.channelId, this.id), null, this.axiosConfig);
+        const { data }: { data: RawDiscordAPIMessageData; } = await rest.post(ChannelMessageCrosspost(this.channelId, this.id), null, this.axiosConfig);
 
         return new Message(data, this.client, this.guild);
     }
@@ -107,7 +107,7 @@ export class Message extends Basic {
      */
 
     async delete(reason?: string): Promise<Message> {
-        await rest.delete(this.url, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        await rest.delete(this.url, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         return this;
     }
@@ -118,7 +118,7 @@ export class Message extends Basic {
      */
 
     async fetch(): Promise<Message> {
-        const { data }: { data: RawDiscordAPIMessageData } = await rest.get(this.url, this.axiosConfig);
+        const { data }: { data: RawDiscordAPIMessageData; } = await rest.get(this.url, this.axiosConfig);
 
         return new Message(data, this.client, this.guild);
     }
@@ -129,7 +129,7 @@ export class Message extends Basic {
      */
 
     async fetchMessageReference(): Promise<Message> {
-        const { data }: { data: RawDiscordAPIMessageData } = await rest.get(ChannelMessage(this.channelId, this.referencedMessage!.id), this.axiosConfig);
+        const { data }: { data: RawDiscordAPIMessageData; } = await rest.get(ChannelMessage(this.channelId, this.referencedMessage?.id as Snowflake), this.axiosConfig);
 
         return new Message(data, this.client, this.guild);
     }
@@ -140,7 +140,7 @@ export class Message extends Basic {
      */
 
     async fetchWebhook(): Promise<Webhook> {
-        const { data }: { data: RawDiscordAPIWebhookData } = await rest.get(WebhookRoute(this.webhookId!), this.axiosConfig);
+        const { data }: { data: RawDiscordAPIWebhookData; } = await rest.get(WebhookRoute(this.webhookId as Snowflake), this.axiosConfig);
 
         return new Webhook(data, this.client);
     }
@@ -170,7 +170,7 @@ export class Message extends Basic {
      */
 
     async pin(reason?: string): Promise<Message> {
-        await rest.put(this.url, null, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        await rest.put(this.url, null, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         return this;
     }
@@ -182,7 +182,7 @@ export class Message extends Basic {
      */
 
     async unpin(reason?: string): Promise<Message> {
-        await rest.put(this.url, null, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        await rest.put(this.url, null, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         return this;
     }

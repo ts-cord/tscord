@@ -26,7 +26,6 @@ export class Integration extends Basic {
     public scopes: string[] | undefined;
     public guild: Guild;
 
-
     constructor(data: RawIntegrationData, client: Client, guild: Guild) {
         super(client);
 
@@ -58,7 +57,7 @@ export class Integration extends Basic {
      */
 
     async delete(reason?: string): Promise<Integration> {
-        await rest.delete(GuildIntegration(this.guild.id, this.id), { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        await rest.delete(GuildIntegration(this.guild.id, this.id), { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         return this;
     }

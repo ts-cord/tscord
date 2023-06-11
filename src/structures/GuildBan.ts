@@ -3,14 +3,14 @@ import { Basic } from "./Basic";
 import { Guild } from "./Guild";
 import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
-import type { RawGuildBanData } from "../types";
 import { GuildBan as GuildBanRoute } from "../utils/Routes";
+import type { RawGuildBanData, DiscordAuth } from "../types";
 
-export class GuildBan extends Basic implements RawGuildBanData {
+export class GuildBan extends Basic {
     public user: User;
     public guild: Guild;
     public reason: string | undefined;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     constructor(data: RawGuildBanData, guild: Guild, client: Client) {
         super(client);
@@ -18,7 +18,7 @@ export class GuildBan extends Basic implements RawGuildBanData {
         this.guild = guild;
         this.reason = data.reason;
         this.user = new User(data.user, this.client);
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
     }
 
     /**

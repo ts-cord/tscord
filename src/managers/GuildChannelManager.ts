@@ -7,18 +7,18 @@ import { Snowflake } from "../types/Snowflake";
 import { Webhook } from "../structures/Webhook";
 import { GuildChannel } from "../structures/GuildChannel";
 import { Channel, ChannelWebhooks, GuildChannels } from "../utils/Routes";
-import type { ChannelPositions, GuildChannelCreateOptions, GuildChannelData, GuildChannelEditOptions, GuildChannelResolvable, RawDiscordAPIWebhookData, WebhookCreateOptions } from "../types";
+import type { ChannelPositions, DiscordAuth, GuildChannelCreateOptions, GuildChannelData, GuildChannelEditOptions, GuildChannelResolvable, RawDiscordAPIWebhookData, WebhookCreateOptions } from "../types";
 
 export class GuildChannelManager extends BasicManager {
     public guild: Guild;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
     override cache: Group<Snowflake, GuildChannel> = new Group<Snowflake, GuildChannel>();
 
     constructor(client: Client, guild: Guild) {
         super(client);
 
         this.guild = guild;
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
     }
 
     /**
@@ -39,7 +39,7 @@ export class GuildChannelManager extends BasicManager {
      */
 
     async delete(channel: GuildChannelResolvable, reason?: string): Promise<void> {
-        await rest.delete(Channel(this.resolveId(channel)), { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        await rest.delete(Channel(this.resolveId(channel)), { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         return;
     }
@@ -52,7 +52,7 @@ export class GuildChannelManager extends BasicManager {
 
     async fetchWebhooks(channel: GuildChannelResolvable): Promise<Group<Snowflake, Webhook>> {
         const groupOfWebhooks: Group<Snowflake, Webhook> = new Group<Snowflake, Webhook>();
-        const { data }: { data: RawDiscordAPIWebhookData[] } = await rest.get(ChannelWebhooks(this.resolveId(channel)), this.axiosConfig);
+        const { data }: { data: RawDiscordAPIWebhookData[]; } = await rest.get(ChannelWebhooks(this.resolveId(channel)), this.axiosConfig);
 
         data.forEach((webhook: RawDiscordAPIWebhookData) => groupOfWebhooks.set(webhook.id, new Webhook(webhook, this.client)));
 
@@ -80,11 +80,11 @@ export class GuildChannelManager extends BasicManager {
      */
 
     async edit(channel: GuildChannelResolvable, options: GuildChannelEditOptions, reason?: string): Promise<GuildChannel> {
-        const { data }: { data: GuildChannelData } = await rest.patch(Channel(this.resolveId(channel)), options, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        const { data }: { data: GuildChannelData; } = await rest.patch(Channel(this.resolveId(channel)), options, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         this.cache.set(data.id, new GuildChannel(data, this.client, this.guild));
 
-        return this.cache.get(data.id)!;
+        return this.cache.get(data.id) as GuildChannel;
     }
 
     /**
@@ -94,7 +94,7 @@ export class GuildChannelManager extends BasicManager {
      */
 
     async createWebhook(options: WebhookCreateOptions): Promise<Webhook> {
-        const { data }: { data: RawDiscordAPIWebhookData } = await rest.post(ChannelWebhooks(this.resolveId(options.channel)), { name: options.name, avatar: options.avatar }, { headers: { Authorization: `Bot ${this.client.token}` } });
+        const { data }: { data: RawDiscordAPIWebhookData; } = await rest.post(ChannelWebhooks(this.resolveId(options.channel)), { name: options.name, avatar: options.avatar }, { headers: { Authorization: this.client.auth } });
 
         return new Webhook(data, this.client);
     }
@@ -111,10 +111,10 @@ export class GuildChannelManager extends BasicManager {
      */
 
     async create(options: GuildChannelCreateOptions, reason?: string): Promise<GuildChannel> {
-        const { data }: { data: GuildChannelData } = await rest.post(GuildChannels(this.guild.id), options, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        const { data }: { data: GuildChannelData; } = await rest.post(GuildChannels(this.guild.id), options, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         this.cache.set(data.id, new GuildChannel(data, this.client, this.guild));
 
-        return this.cache.get(data.id)!;
+        return this.cache.get(data.id) as GuildChannel;
     }
 }

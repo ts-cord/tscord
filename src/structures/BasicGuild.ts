@@ -4,7 +4,7 @@ import { rest } from "../constants/Api";
 import { GuildFeatures } from "../types";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
-import type { BasicGuildData,RawGuild, ViewOptions } from "../types";
+import type { BasicGuildData,DiscordAuth,RawGuild, ViewOptions } from "../types";
 import { Guild as GuildRoute, GuildIcon as GuildIconRoute } from "../utils/Routes";
 
 export class BasicGuild extends Basic {
@@ -17,7 +17,7 @@ export class BasicGuild extends Basic {
     public nameAcronym: string;
     public creationTimestamp: number;
     public creationDate: Date;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     constructor(data: BasicGuildData, client: Client) {
         super(client);
@@ -29,7 +29,7 @@ export class BasicGuild extends Basic {
         this.partnered = this.features.includes(GuildFeatures.Partnered);
         this.verified = this.features.includes(GuildFeatures.Verified);
         this.nameAcronym = data.name_acronym;
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
         this.creationDate = new Date((+this.id / 4194304) + 1420070400000);
         this.creationTimestamp = this.creationDate.getTime();
     }
@@ -52,7 +52,7 @@ export class BasicGuild extends Basic {
      */
 
     iconURL(options?: ViewOptions): string | undefined {
-        return this.icon && GuildIconRoute(this.id, this.icon) + `.${options?.format ?? this.client.options!.default_image_format}?size=${options!.size}`;
+        return this.icon && GuildIconRoute(this.id, this.icon) + `.${options?.format ?? this.client.options?.default_image_format}?size=${options?.size}`;
     }
 
     /**

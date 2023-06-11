@@ -2,9 +2,9 @@ import { Basic } from "./Basic";
 import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
-import type { BasicChannelData } from "../types";
 import { ChannelFlags, ChannelTypes } from "../types";
 import { Channel as ChannelRoute } from "../utils/Routes";
+import type { BasicChannelData, DiscordAuth } from "../types";
 
 export class BasicChannel extends Basic {
     public id: Snowflake;
@@ -13,7 +13,7 @@ export class BasicChannel extends Basic {
     public creationTimestamp: number;
     public creationDate: Date;
     public readonly route: string;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     constructor(data: BasicChannelData, client: Client) {
         super(client);
@@ -24,7 +24,7 @@ export class BasicChannel extends Basic {
         this.route = ChannelRoute(this.id);
         this.creationTimestamp = (+this.id / 4194304) + 1420070400000;
         this.creationDate = new Date(this.creationTimestamp);
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
 
         Object.assign(this, data);
     }
@@ -36,7 +36,7 @@ export class BasicChannel extends Basic {
      */
 
     async delete(reason?: string): Promise<BasicChannel> {
-        await rest.delete(this.route, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        await rest.delete(this.route, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         return this;
     }

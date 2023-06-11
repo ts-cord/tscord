@@ -6,16 +6,16 @@ import { BasicManager } from "./BasicManager";
 import { Snowflake } from "../types/Snowflake";
 import { DMChannel } from "../structures/DMChannel";
 import { ChannelMessages, Channel } from "../utils/Routes";
-import type { CreateMessageOptions, UserResolvable } from "../types";
+import type { CreateMessageOptions, DiscordAuth, UserResolvable } from "../types";
 
 export class UserManager extends BasicManager {
     override cache: Group<Snowflake, User> = new Group<Snowflake, User>();
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     constructor(client: Client) {
         super(client);
 
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
     }
 
     /**

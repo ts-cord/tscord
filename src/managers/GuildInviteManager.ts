@@ -36,7 +36,7 @@ export class GuildInviteManager extends BasicManager {
      */
 
     async delete(invite: InviteResolvable, reason?: string): Promise<void> {
-        await rest.delete(Inviter(this.resolveId(invite)), { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        await rest.delete(Inviter(this.resolveId(invite)), { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         return;
     }
@@ -50,10 +50,10 @@ export class GuildInviteManager extends BasicManager {
      */
 
     async create(channel: Snowflake, options: ChannelInviteCreateOptions = {}, reason?: string): Promise<Invite> {
-        const { data }: { data: RawInviteData } = await rest.post(ChannelInvites(channel), options, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        const { data }: { data: RawInviteData; } = await rest.post(ChannelInvites(channel), options, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         this.cache.set(data.code, new Invite(data, this.client));
 
-        return this.cache.get(data.code)!;
+        return this.cache.get(data.code) as Invite;
     }
 }

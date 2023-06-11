@@ -5,16 +5,16 @@ import { Client } from "../entities/Client";
 import { BasicManager } from "./BasicManager";
 import { Snowflake } from "../types/Snowflake";
 import { BasicChannel } from "../structures/BasicChannel";
-import type { ChannelResolvable, RawDiscordAPIChannelData } from "../types";
+import type { ChannelResolvable, DiscordAuth, RawDiscordAPIChannelData } from "../types";
 
 export class ChannelManager extends BasicManager {
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
     override cache: Group<Snowflake, BasicChannel> = new Group<Snowflake, BasicChannel>();
 
     constructor(client: Client) {
         super(client);
 
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
     }
 
     /**
@@ -34,10 +34,10 @@ export class ChannelManager extends BasicManager {
      */
 
     async fetch(channel: ChannelResolvable): Promise<BasicChannel> {
-        const { data }: { data: RawDiscordAPIChannelData } = await rest.get(Channel(this.resolveId(channel)), this.axiosConfig);
+        const { data }: { data: RawDiscordAPIChannelData; } = await rest.get(Channel(this.resolveId(channel)), this.axiosConfig);
 
         this.cache.set(data.id, new BasicChannel(data, this.client));
 
-        return this.cache.get(data.id)!;
+        return this.cache.get(data.id) as BasicChannel;
     }
 }

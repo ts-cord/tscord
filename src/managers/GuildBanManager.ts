@@ -25,7 +25,7 @@ export class GuildBanManager extends BasicManager {
      */
 
     async remove(user: Snowflake, reason?: string): Promise<void> {
-        const { data }: { data: void } = await rest.delete(GuildBanRoute(this.guild.id, user), { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        const { data }: { data: void; } = await rest.delete(GuildBanRoute(this.guild.id, user), { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         return data;
     }

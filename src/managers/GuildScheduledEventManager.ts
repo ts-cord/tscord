@@ -7,18 +7,18 @@ import { BasicManager } from "./BasicManager";
 import { Snowflake } from "../types/Snowflake";
 import { GuildScheduledEvent } from "../structures/GuildScheduledEvent";
 import { GuildScheduledEventsUsers, GuildScheduledEvent as GuildScheduledEventRoute, GuildScheduledEvents } from "../utils/Routes";
-import type { FetchGuildScheduledEventUsersOptions, GuildScheduledEventEditOptions, GuildScheduledEventResolvable, GuildScheduledEventUserData, RawGuildScheduledEventUserData, GuildScheduledEvent as GuildScheduledEventData, GuildScheduledEventCreateOptions } from "../types";
+import type { FetchGuildScheduledEventUsersOptions, GuildScheduledEventEditOptions, GuildScheduledEventResolvable, GuildScheduledEventUserData, RawGuildScheduledEventUserData, GuildScheduledEvent as GuildScheduledEventData, GuildScheduledEventCreateOptions, DiscordAuth } from "../types";
 
 export class GuildScheduledEventManager extends BasicManager {
     public guild: Guild;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
     override cache: Group<Snowflake, GuildScheduledEvent> = new Group<Snowflake, GuildScheduledEvent>();
 
     constructor(guild: Guild, client: Client) {
         super(client);
 
         this.guild = guild;
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
     }
 
     /**
@@ -39,11 +39,11 @@ export class GuildScheduledEventManager extends BasicManager {
      */
 
     async fetchUsers(guildScheduledEvent: GuildScheduledEventResolvable, options?: FetchGuildScheduledEventUsersOptions): Promise<Group<Snowflake, GuildScheduledEventUserData>> {
-        const queryStringParams: string = new URLSearchParams(options as {}).toString();
+        const queryStringParams: string = new URLSearchParams(options as Record<string, string>).toString();
         const groupOfUsers: Group<Snowflake, GuildScheduledEventUserData> = new Group<Snowflake, GuildScheduledEventUserData>();
-        const { data }: { data: RawGuildScheduledEventUserData[] } = await rest.get(GuildScheduledEventsUsers(this.guild.id, this.resolveId(guildScheduledEvent)) + (queryStringParams ? "?" + queryStringParams : ""), this.axiosConfig);
+        const { data }: { data: RawGuildScheduledEventUserData[]; } = await rest.get(GuildScheduledEventsUsers(this.guild.id, this.resolveId(guildScheduledEvent)) + (queryStringParams ? "?" + queryStringParams : ""), this.axiosConfig);
 
-        data.forEach((user: RawGuildScheduledEventUserData) => groupOfUsers.set(user.user.id, { guild_scheduled_event_id: user.guild_scheduled_event_id, user: new User(user.user, this.client), member: user.member as undefined }));
+        data.forEach((user: RawGuildScheduledEventUserData): Group<Snowflake, GuildScheduledEventUserData> => groupOfUsers.set(user.user.id, { guild_scheduled_event_id: user.guild_scheduled_event_id, user: new User(user.user, this.client), member: user.member as undefined }));
 
         return groupOfUsers;
     }
@@ -57,11 +57,11 @@ export class GuildScheduledEventManager extends BasicManager {
      */
 
     async edit(guildScheduledEvent: GuildScheduledEventResolvable, options: GuildScheduledEventEditOptions, reason?: string): Promise<GuildScheduledEvent> {
-        const { data }: { data: GuildScheduledEventData } = await rest.patch(GuildScheduledEventRoute(this.guild.id, this.resolveId(guildScheduledEvent)), options, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        const { data }: { data: GuildScheduledEventData; } = await rest.patch(GuildScheduledEventRoute(this.guild.id, this.resolveId(guildScheduledEvent)), options, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         this.cache.set(data.id, new GuildScheduledEvent(data, this.client));
 
-        return this.cache.get(data.id)!;
+        return this.cache.get(data.id) as GuildScheduledEvent;
     }
 
     /**
@@ -86,10 +86,10 @@ export class GuildScheduledEventManager extends BasicManager {
      */
 
     async create(options: GuildScheduledEventCreateOptions, reason?: string): Promise<GuildScheduledEvent> {
-        const { data }: { data: GuildScheduledEventData } = await rest.post(GuildScheduledEvents(this.guild.id), options, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        const { data }: { data: GuildScheduledEventData; } = await rest.post(GuildScheduledEvents(this.guild.id), options, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         this.cache.set(data.id, new GuildScheduledEvent(data, this.client));
 
-        return this.cache.get(data.id)!;
+        return this.cache.get(data.id) as GuildScheduledEvent;
     }
 }

@@ -5,19 +5,19 @@ import { BasicManager } from "./BasicManager";
 import { Snowflake } from "../types/Snowflake";
 import { Message } from "../structures/Message";
 import { GuildChannel } from "../structures/GuildChannel";
-import type { EmojiResolvable, MessageResolvable, RawDiscordAPIMessageData } from "../types";
+import type { DiscordAuth, EmojiResolvable, MessageResolvable, RawDiscordAPIMessageData } from "../types";
 import { ChannelMessageCrosspost, ChannelMessage, ChannelPins, ChannelPinnedMessage, ChannelReactionsUser } from "../utils/Routes";
 
 export class MessageManager extends BasicManager {
     public channel: GuildChannel;
     override cache: Group<Snowflake, Message> = new Group<Snowflake, Message>();
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     constructor(client: Client, channel: GuildChannel) {
         super(client);
 
         this.channel = channel;
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
     }
 
     /**
@@ -40,7 +40,7 @@ export class MessageManager extends BasicManager {
 
         this.cache.set(data.id, new Message(data, this.client));
 
-        return this.cache.get(data.id)!;
+        return this.cache.get(data.id) as Message;
     }
 
     /**
@@ -80,7 +80,7 @@ export class MessageManager extends BasicManager {
      */
 
     async pin(message: MessageResolvable, reason?: string): Promise<void> {
-        await rest.put(ChannelPinnedMessage(this.channel.id, this.resolveId(message)), null, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        await rest.put(ChannelPinnedMessage(this.channel.id, this.resolveId(message)), null, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         return;
     }
@@ -93,7 +93,7 @@ export class MessageManager extends BasicManager {
      */
 
     async unpin(message: MessageResolvable, reason?: string): Promise<void> {
-        await rest.delete(ChannelPinnedMessage(this.channel.id, this.resolveId(message)), { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        await rest.delete(ChannelPinnedMessage(this.channel.id, this.resolveId(message)), { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         return;
     }

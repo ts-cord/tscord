@@ -2,15 +2,15 @@ import { User } from "./User";
 import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { OauthCurrentUser } from "../utils/Routes";
-import type { ClientUserEditOptions, RawDiscordAPIUserData } from "../types";
+import type { ClientUserEditOptions, DiscordAuth, RawDiscordAPIUserData } from "../types";
 
 export class ClientUser extends User {
-    private readonly axiosSuperConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosSuperConfig: { headers: { Authorization: DiscordAuth; } };
 
     constructor(data: RawDiscordAPIUserData, client: Client) {
         super(data, client);
 
-        this.axiosSuperConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosSuperConfig = { headers: { Authorization: this.client.auth } };
     }
 
     /**

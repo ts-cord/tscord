@@ -4,14 +4,14 @@ import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import { Guild as GuildRoute } from "../utils/Routes";
-import type { RawGuild, UnavailableGuildData } from "../types";
+import type { DiscordAuth, RawGuild, UnavailableGuildData } from "../types";
 
 export class UnavailableGuild extends Basic implements UnavailableGuildData {
     public id: Snowflake;
     public unavailable: true;
     public creationDate: Date;
     public creationTimestamp: number;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     constructor(data: UnavailableGuildData, client: Client) {
         super(client);
@@ -20,7 +20,7 @@ export class UnavailableGuild extends Basic implements UnavailableGuildData {
         this.unavailable = data.unavailable;
         this.creationDate = new Date((+this.id / 4194304) + 1420070400000);
         this.creationTimestamp = this.creationDate.getTime();
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
 
         Object.assign(this, data);
     }

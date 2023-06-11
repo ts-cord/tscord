@@ -3,7 +3,7 @@ import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";
 import { GuildWidgetJSON } from "../utils/Routes";
-import type { GuildWidgetData, RawDiscordAPIChannelData, RawDiscordAPIUserData } from "../types";
+import type { DiscordAuth, GuildWidgetData, RawDiscordAPIChannelData, RawDiscordAPIUserData } from "../types";
 
 export class Widget extends Basic {
     public id: Snowflake;
@@ -12,7 +12,7 @@ export class Widget extends Basic {
     public channels: Partial<RawDiscordAPIChannelData>[];
     public members: Partial<RawDiscordAPIUserData>[];
     public presenceCount: number;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     constructor(data: GuildWidgetData, client: Client) {
         super(client);
@@ -23,7 +23,7 @@ export class Widget extends Basic {
         this.channels = data.channels;
         this.members = data.members;
         this.presenceCount = data.presence_count;
-        this.axiosConfig = {  headers: { Authorization: `Bot ${this.client.token}` } };
+        this.axiosConfig = {  headers: { Authorization: this.client.auth } };
 
         Object.assign(this, data);
     }

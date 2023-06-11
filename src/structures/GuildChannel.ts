@@ -6,7 +6,7 @@ import { Client } from "../entities/Client";
 import { BasicChannel } from "./BasicChannel";
 import { Snowflake } from "../types/Snowflake";
 import { Channel, ChannelMessages } from "../utils/Routes";
-import type { CreateMessageOptions, GuildChannelData, GuildChannelEditOptions, OverwriteData, RawDiscordAPIMessageData } from "../types";
+import type { CreateMessageOptions, DiscordAuth, GuildChannelData, GuildChannelEditOptions, OverwriteData, RawDiscordAPIMessageData } from "../types";
 
 export class GuildChannel extends BasicChannel  {
     public id: Snowflake;
@@ -20,7 +20,7 @@ export class GuildChannel extends BasicChannel  {
     public name: string;
     public parentId: string | undefined;
     public guild: Guild;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly superAxiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     constructor(data: GuildChannelData, client: Client, guild: Guild) {
         super(data, client);
@@ -36,7 +36,7 @@ export class GuildChannel extends BasicChannel  {
         this.permissionOverwrites = data.permission_overwrites;
         this.name = data.name;
         this.parentId = data.parent_id;
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.superAxiosConfig = { headers: { Authorization: this.client.auth } };
 
         Object.assign(this, data);
     }
@@ -48,7 +48,7 @@ export class GuildChannel extends BasicChannel  {
      */
 
     async send(options: CreateMessageOptions): Promise<Message> {
-        const { data }: { data: RawDiscordAPIMessageData } = await rest.post(ChannelMessages(this.id), options, this.axiosConfig);
+        const { data }: { data: RawDiscordAPIMessageData } = await rest.post(ChannelMessages(this.id), options, this.superAxiosConfig);
 
         return new Message(data, this.client, this.guild);
     }
@@ -61,7 +61,7 @@ export class GuildChannel extends BasicChannel  {
      */
 
     async edit(options: GuildChannelEditOptions, reason?: string): Promise<GuildChannel> {
-        const { data }: { data: GuildChannelData } = await rest.patch(Channel(this.id), options, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        const { data }: { data: GuildChannelData } = await rest.patch(Channel(this.id), options, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         return new GuildChannel(data, this.client, this.guild);
     }

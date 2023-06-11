@@ -9,20 +9,20 @@ import { Snowflake } from "../types/Snowflake";
 import { Message } from "../structures/Message";
 import { GuildMember } from "../structures/GuildMember";
 import { GuildBan, GuildMember as GuildMemberRoute, GuildMembers, GuildPrune, GuildSearchMembers } from "../utils/Routes";
-import type { AddGuildMemberOptions, BanOptions, GuildListMembersOptions, GuildMemberData, GuildMemberEditOptions, GuildMemberResolvable, GuildPruneMembersOptions, GuildSearchMembersOptions, UserResolvable } from "../types";
+import type { AddGuildMemberOptions, BanOptions, DiscordAuth, GuildListMembersOptions, GuildMemberData, GuildMemberEditOptions, GuildMemberResolvable, GuildPruneMembersOptions, GuildSearchMembersOptions, UserResolvable } from "../types";
 
 export class GuildMemberManager extends BasicManager {
     public guild: Guild;
     public me: GuildMember | undefined;
-    private readonly axiosConfig: { headers: { Authorization: `Bot ${string}` } };
+    private readonly axiosConfig: { headers: { Authorization: DiscordAuth; } };
     override cache: Group<Snowflake, GuildMember> = new Group<Snowflake, GuildMember>();
 
     constructor(client: Client, guild: Guild) {
         super(client);
 
         this.guild = guild;
-        this.me = this.cache.get(client.user!.id);
-        this.axiosConfig = { headers: { Authorization: `Bot ${this.client.token}` } };
+        this.me = this.cache.get(client.user?.id as string);
+        this.axiosConfig = { headers: { Authorization: this.client.auth } };
     }
 
     /**
@@ -43,7 +43,7 @@ export class GuildMemberManager extends BasicManager {
      */
 
     async ban(user: GuildMemberResolvable, options?: BanOptions): Promise<GuildMember | User | Snowflake> {
-        await rest.put(GuildBan(this.guild.id, this.resolveId(user)), { delete_message_seconds: options?.delete_message_seconds }, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": options?.reason } });
+        await rest.put(GuildBan(this.guild.id, this.resolveId(user)), { delete_message_seconds: options?.delete_message_seconds }, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": options?.reason } });
 
         return user instanceof User || user instanceof GuildMember ? user : user instanceof Message ? user.author : user;
     }
@@ -54,7 +54,7 @@ export class GuildMemberManager extends BasicManager {
      */
 
     async fetchMe(): Promise<GuildMember> {
-        const { data }: { data: GuildMemberData } = await rest.get(GuildMemberRoute(this.guild.id, this.client.user!.id), this.axiosConfig);
+        const { data }: { data: GuildMemberData; } = await rest.get(GuildMemberRoute(this.guild.id, this.client.user?.id as string), this.axiosConfig);
 
         this.me = new GuildMember(data, this.guild, this.client);
 
@@ -69,7 +69,7 @@ export class GuildMemberManager extends BasicManager {
      */
 
     async kick(member: GuildMemberResolvable, reason?: string): Promise<GuildMember | User | Snowflake> {
-        await rest.delete(GuildMemberRoute(this.guild.id, this.resolveId(member)), { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        await rest.delete(GuildMemberRoute(this.guild.id, this.resolveId(member)), { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         return member instanceof User || member instanceof GuildMember ? member : member instanceof Message ? member.author : member;
     }
@@ -82,10 +82,10 @@ export class GuildMemberManager extends BasicManager {
 
     async list(options?: GuildListMembersOptions): Promise<Group<Snowflake, GuildMember>> {
         const membersGroup: Group<Snowflake, GuildMember> = new Group<Snowflake, GuildMember>();
-        const queryStringParams: string = new URLSearchParams({ limit: options?.limit, after: options?.after } as {}).toString();
-        const { data }: { data: GuildMemberData[] } = await rest.get(GuildMembers(this.guild.id) + (queryStringParams.length > 0 ? `?${queryStringParams}` : ""), this.axiosConfig);
+        const queryStringParams: string = new URLSearchParams({ limit: options?.limit, after: options?.after } as unknown as Record<string, string>).toString();
+        const { data }: { data: GuildMemberData[]; } = await rest.get(GuildMembers(this.guild.id) + (queryStringParams.length > 0 ? `?${queryStringParams}` : ""), this.axiosConfig);
 
-        data.forEach((member: GuildMemberData) => membersGroup.set(member.user!.id, new GuildMember(member, this.guild, this.client)));
+        data.forEach((member: GuildMemberData) => membersGroup.set(member.user?.id as string, new GuildMember(member, this.guild, this.client)));
 
         options?.cache ? this.cache.merge(membersGroup) : void 0;
 
@@ -100,11 +100,11 @@ export class GuildMemberManager extends BasicManager {
      */
 
     async add(user: UserResolvable, options: AddGuildMemberOptions): Promise<GuildMember> {
-        const { data }: { data: GuildMemberData } = await rest.put(GuildMemberRoute(this.guild.id, this.resolveId(user)), options, this.axiosConfig);
+        const { data }: { data: GuildMemberData; } = await rest.put(GuildMemberRoute(this.guild.id, this.resolveId(user)), options, this.axiosConfig);
 
-        this.cache.set(data.user!.id, new GuildMember(data, this.guild, this.client));
+        this.cache.set(data.user?.id as string, new GuildMember(data, this.guild, this.client));
 
-        return this.cache.get(data.user!.id)!;
+        return this.cache.get(data.user?.id as string) as GuildMember;
     }
 
     /**
@@ -126,7 +126,7 @@ export class GuildMemberManager extends BasicManager {
      */
 
     async prune(options?: GuildPruneMembersOptions): Promise<number> {
-        const { data }: { data: { pruned: number; }; } = await rest.post(GuildPrune(this.guild.id), { days: options?.days, compute_prune_count: options?.compute_prune_count, include_roles: options?.include_roles?.map((role: Snowflake | Role) => typeof role === "string" ? role : role.id) }, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": options?.reason } });
+        const { data }: { data: { pruned: number; }; } = await rest.post(GuildPrune(this.guild.id), { days: options?.days, compute_prune_count: options?.compute_prune_count, include_roles: options?.include_roles?.map((role: Snowflake | Role) => typeof role === "string" ? role : role.id) }, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": options?.reason } });
 
         return data.pruned;
     }
@@ -138,11 +138,11 @@ export class GuildMemberManager extends BasicManager {
      */
 
     async search(options: GuildSearchMembersOptions): Promise<Group<Snowflake, GuildMember>> {
-        const queryStringParams: string = new URLSearchParams(("limit" in options ? { query: options.query, limit: options.limit } : { query: options.query }) as {}).toString();
+        const queryStringParams: string = new URLSearchParams(("limit" in options ? { query: options.query, limit: options.limit } : { query: options.query }) as Record<string, string>).toString();
         const membersGroup: Group<Snowflake, GuildMember> = new Group<Snowflake, GuildMember>();
-        const { data }: { data: GuildMemberData[] } = await rest.get(GuildSearchMembers(this.guild.id) + `?${queryStringParams}`, this.axiosConfig);
+        const { data }: { data: GuildMemberData[]; } = await rest.get(GuildSearchMembers(this.guild.id) + `?${queryStringParams}`, this.axiosConfig);
 
-        data.forEach((member: GuildMemberData) => membersGroup.set(member.user!.id, new GuildMember(member, this.guild, this.client)));
+        data.forEach((member: GuildMemberData) => membersGroup.set(member.user?.id as string, new GuildMember(member, this.guild, this.client)));
 
         options.cache ? this.cache.merge(membersGroup) : void 0;
 
@@ -157,10 +157,10 @@ export class GuildMemberManager extends BasicManager {
      */
 
     async edit(member: GuildMemberResolvable, options: GuildMemberEditOptions): Promise<GuildMember> {
-        const { data }: { data: GuildMemberData } = await rest.patch(GuildMemberRoute(this.guild.id, this.resolveId(member)), { nick: options.nick, roles: options.roles, mute: options.mute, deaf: options.deaf, channel_id: options.channel_id, communication_disabled_until: options.communication_disabled_until, flags: options.flags }, { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": options.reason } });
+        const { data }: { data: GuildMemberData; } = await rest.patch(GuildMemberRoute(this.guild.id, this.resolveId(member)), { nick: options.nick, roles: options.roles, mute: options.mute, deaf: options.deaf, channel_id: options.channel_id, communication_disabled_until: options.communication_disabled_until, flags: options.flags }, { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": options.reason } });
 
-        this.cache.set(data.user!.id, new GuildMember(data, this.guild, this.client));
+        this.cache.set(data.user?.id as string, new GuildMember(data, this.guild, this.client));
 
-        return this.cache.get(data.user!.id)!;
+        return this.cache.get(data.user?.id as string) as GuildMember;
     }
 }

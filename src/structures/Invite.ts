@@ -52,7 +52,7 @@ export class Invite extends Basic {
      */
 
     async delete(reason?: string): Promise<Invite> {
-        await rest.delete(Inviter(this.code), { headers: { Authorization: `Bot ${this.client.token}`, "X-Audit-Log-Reason": reason } });
+        await rest.delete(Inviter(this.code), { headers: { Authorization: this.client.auth, "X-Audit-Log-Reason": reason } });
 
         return this;
     }
