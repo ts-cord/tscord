@@ -1,24 +1,12 @@
-import * as errors from "../constants/errors.json";
+import { TypeCordError as TypeCordErrorStructure } from "../types";
 
-export class TypeCordError<T extends boolean = true> extends Error {
+export class TypeCordError extends Error {
+    public code: number;
     override name = "TypeCordError";
 
-    constructor(message: T extends true ? keyof typeof errors : string, options?: ErrorOptions) {
-        super(typeof message === "string" ? message : errors[message], options);
-    }
+    constructor({ message, options, code }: TypeCordErrorStructure) {
+        super(message, options);
 
-    toString(): string {
-        return `${this.name}: ${this.message}`;
-    }
-    toJSON(): { name: string; message: string; stack: string | undefined; options?: unknown; } {
-        return {
-            name: this.name,
-            message: this.message,
-            stack: this.stack,
-            options: this.cause
-        };
-    }
-    log(): void {
-        return console.error(this.message);
+        this.code = code;
     }
 }
