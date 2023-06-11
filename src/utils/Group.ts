@@ -7,7 +7,7 @@ export class Group<K, V> extends Map<K, V> {
    * find calls predicate once for each element of this group, in ascending order, until it finds one where predicate returns true. If such an element is found, find immediately returns that element value. Otherwise, find returns undefined.
    * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/find
    * @example
-   * group.find(channel => channel.name === 'general');
+   * group.find((channel) => channel.name === 'general');
    */
 
     find(func: (value: V, index: number, obj: V[]) => unknown, thisArg?: unknown): V | undefined {
@@ -31,7 +31,7 @@ export class Group<K, V> extends Map<K, V> {
    * @param func — A function that accepts up to three arguments. The filter method calls the predicate function one, time for each element in  this group.
    * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
    * @example
-   * group.filter(user => user.username === 'Unreal');
+   * group.filter((user) => user.bot);
    */
 
     filter(func: (value: V, index: number, array: V[]) => value is V, thisArg?: unknown): V[] {
@@ -44,7 +44,7 @@ export class Group<K, V> extends Map<K, V> {
    * A function that accepts up to three arguments. The every method calls the predicate function for each element in this group until the predicate returns a value which is coercible to the Boolean value false, or until the end of the array.
    * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/every
    * @example
-   * group.every(user => user.bot);
+   * group.every((user) => user.bot);
    */
 
     every(func: (value: V, index: number, array: V[]) => value is V, thisArg?: unknown): this is V[] {
@@ -52,12 +52,12 @@ export class Group<K, V> extends Map<K, V> {
     }
 
     /**
-  * Determines whether the specified callback function returns true for unknown element of  this group.
+  * Determines whether the specified callback function returns true for unknown element of this group.
   * @param func 
   * A function that accepts up to three arguments. The some method calls the predicate function for each element in the array until the predicate returns a value which is coercible to the Boolean value true, or until the end of this group.
   * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/some
   * @example
-  * group.some(channel => channel.type === ChannelTypes.GuildText);
+  * group.some((channel) => channel.type === ChannelTypes.GuildText);
   */
 
     some(func: (value: V, index: number, array: V[]) => unknown, thisArg?: unknown): boolean {
@@ -115,7 +115,7 @@ export class Group<K, V> extends Map<K, V> {
    */
 
     hasAll(...keys: K[]): boolean {
-        return keys.every((key: K) => super.has(key));
+        return keys.every((key: K): boolean => super.has(key));
     }
 
     /**
@@ -123,20 +123,20 @@ export class Group<K, V> extends Map<K, V> {
    * @param {K[]} keys - Keys to be checked .
    * @returns {boolean}
    * @example
-   * group.hasunknown('312', '123');
+   * group.hasAny('312', '123');
    */
 
     hasAny(...keys: K[]): boolean {
-        return keys.some((key: K) => super.has(key));
+        return keys.some((key: K): boolean => super.has(key));
     }
 
     /**
    * Get the first x entries of this group.
    * @param {number} amount - The amount of items to return.
-   * @returns { { [key: string]: V; } }
+   * @returns {T extends 1 ? V : { [key: string]: V; }}
    */
 
-    first<T extends number | undefined = 1>(amount?: T): T extends undefined ? V : { [key: string]: V; } {
+    first<T extends number = 1>(amount?: T): T extends 1 ? V : { [key: string]: V; } {
         const entries: [K, V][] = [...this.entries()];
 
         return typeof amount !== "undefined" ? Object.fromEntries(entries.slice(0, amount)) : entries.at(0);
@@ -145,10 +145,10 @@ export class Group<K, V> extends Map<K, V> {
     /**
    * Get the last x entries of this group.
    * @param {number} amount - The amount of items to return.
-   * @returns { { [key: string]: V; } }
+   * @returns { T extends this["size"] ? V : { [key: string]: V; } }
    */
 
-    last<T extends number | undefined = this["size"]>(amount?: T): T extends undefined ? V : { [key: string]: V; } {
+    last<T extends number = this["size"]>(amount?: T): T extends this["size"] ? V : { [key: string]: V; } {
         const entries: [K, V][] = [...this.entries()];
 
         return typeof amount !== "undefined" ? Object.fromEntries(entries.slice(-amount)) : entries.at(0);
@@ -189,16 +189,18 @@ export class Group<K, V> extends Map<K, V> {
     }
 
     /**
-   * Returns the index of the first element in this group where predicate is true, and -1 otherwise.
-   * @param predicate find calls predicate once for each element of this group, in ascending order, until it finds one where predicate returns true. If such an element is found, findIndex immediately returns that element index. Otherwise, findIndex returns -1.
-   * @returns {number}
+   * Returns the key of the first element in this group where predicate is true, and undefined otherwise.
+   * @param predicate find calls predicate once for each element of this group, in ascending order, until it finds one where predicate returns true. If such an element is found, findKey immediately returns that key. Otherwise, findKey returns undefined.
+   * @returns {K | undefined}
    * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex
    * @example
-   * group.findIndex(user => user.username === 'Unreal');
+   * group.finKey((user) => user.username === 'Unreal');
    */
 
-    findIndex(predicate: (value: V, index: number, obj: V[]) => unknown, thisArg?: unknown): number {
-        return this.toArray().findIndex(predicate, thisArg);
+    findKey(predicate: (value: V, index: number, obj: V[]) => unknown, thisArg?: unknown): K | undefined {
+        const index: number = this.toArray().findIndex(predicate, thisArg);
+
+        return [...this.keys()][index];
     }
 
     /**
@@ -258,7 +260,7 @@ export class Group<K, V> extends Map<K, V> {
         const newGroup: Group<K, V> = new Group<K, V>();
 
         entries.forEach(([key, value]: [K, V]): Group<K, V> => newGroup.set(key, value));
-      
+
         return newGroup;
     }
 
@@ -267,10 +269,25 @@ export class Group<K, V> extends Map<K, V> {
    * @param func — A function that accepts up to three arguments. The map method calls the callbackfn function one time for each element in this Group.
    * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/map
    * @example
-   * group.mapValues(id => id);
+   * group.mapValues((id) => id);
    */
 
     mapValues<U>(callbackfn: (value: V, index: number, array: V[]) => U, thisArg?: unknown): U[] {
         return this.toArray().map(callbackfn, thisArg);
+    }
+
+    /**
+     * Sweep this group, delete the keys that satisfy the condition
+     * @param predicate A function that accepts up to three arguments. The filter method calls the predicate function one, time for each element in  this group.
+     * @see https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Map/delete
+     * @returns 
+     */
+
+    sweep(predicate: (value: [K, V], index: number, array: [K, V][]) => unknown, thisArg?: unknown): this {
+        const filtered: [K, V][] = [...this.entries()].filter(predicate, thisArg);
+
+        filtered.forEach(([key]: [K, V]): boolean => this.delete(key));
+
+        return this;
     }
 }
