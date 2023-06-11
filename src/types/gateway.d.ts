@@ -42,3 +42,9 @@ export interface ReadyEventPayload extends BasicDispatchPayload {
     };
     t: "Ready"
 }
+
+export interface TypeCordError {
+    message: string;
+    options?: ErrorOptions;
+    code: number;
+}

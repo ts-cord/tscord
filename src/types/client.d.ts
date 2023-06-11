@@ -31,6 +31,8 @@ export interface ClientOptions {
     cache_sweepers?: ClientSweeperOptions;
 }
 
+
+
 export interface ClientSweeperOptions {
     messages?: ClientSweeperConfig<(message: Message) => unknown>;
     guilds?: ClientSweeperConfig<(guild: Guild) => unknown>;
