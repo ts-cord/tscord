@@ -3,7 +3,7 @@
 import { Client, Message } from "typecord";
 
 const client: Client = new Client({
-    token: "TOKEN",
+    auth: "Bot TOKEN",
     intents: 0 // Use the correct intents
 });
 

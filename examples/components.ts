@@ -2,8 +2,8 @@
 
 import { Client, ActionRowBuilder, ButtonBuilder, ComponentTypes, ButtonStyles, Interaction, Message } from "typecord";
 
-const client: Client = new Client({
-    token: "TOKEN",
+const client = new Client({
+    auth: "Bot TOKEN",
     intents: 0 // Use the correct intents
 });
 
@@ -13,7 +13,7 @@ client.on("connect", (): void => {
 
 client.on("messageCreate", async (message: Message): Promise<void> => {
     if (message.content && message.content.startsWith("!components")) {
-        const actionRowWithButton: ActionRowBuilder<ButtonBuilder> = new ActionRowBuilder<ButtonBuilder>().setComponents(
+        const actionRowWithButton = new ActionRowBuilder<ButtonBuilder>().setComponents(
             new ButtonBuilder({
                 type: ComponentTypes.Button,
                 style: ButtonStyles.Primary,
