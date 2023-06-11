@@ -15,12 +15,12 @@ To get started with Typecord, you'll need to create a new instance of the Typeco
 ```ts
 import { Client, ClientUser } from "typecord";
 
-const client: Client = new Client({
-    token: 'TOKEN_HERE'
+const client = new Client({
+    auth: 'Bot TOKEN_HERE' // Replace `TOKEN_HERE` with your bot's token
 }); // If intents are not passed, it will be set to `0`
 
-client.on('connect', (clientUser: ClientUser): void => {
-    console.log(`Connected as ${clientUser.username}`);
+client.on('connect', (): void => {
+    console.log(`Connected as ${client.username}`);
 });
 
 client.connect(); // Connect to Discord
@@ -30,8 +30,8 @@ client.connect(); // Connect to Discord
 
 - Typechecks: Typecord is built with TypeScript and provides full support for event typing and function parameters for a safer, error-free development experience.
 - Decorators: Typecord includes a variety of decorators to simplify creating commands and event listeners.
-- ApplicationCommands: Full support with application commands (Slash Commands and Context Menu)
-- Flexible: Lightweight, speedy and efficient, 100% Promise-based and Object-oriented
+- ApplicationCommands: Full support with application commands.
+- Flexible: Lightweight, speedy, efficient, 100% Promise-based and Object-oriented.
 
 ## Examples
 
