@@ -31,8 +31,6 @@ export interface ClientOptions {
     cache_sweepers?: ClientSweeperOptions;
 }
 
-
-
 export interface ClientSweeperOptions {
     messages?: ClientSweeperConfig<(message: Message) => unknown>;
     guilds?: ClientSweeperConfig<(guild: Guild) => unknown>;
@@ -50,7 +48,7 @@ export interface ClientSweeperConfig<T extends (...args: unknown[]) => unknown> 
 
 export interface ClientRESTOptions {
     baseURL?: string;
-    request_timeout?: number;
+    requestTimeout?: number;
 }
 
 export interface ClientWebSocketOptions {
