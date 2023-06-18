@@ -1,5 +1,5 @@
 import { Snowflake } from "./Snowflake";
-import type { AttachmentData, BasicFetchOptions, BasicMessageOptions, GuildChannelResolvable, MessageFlags, RawDiscordAPIChannelData, RawDiscordAPIUserData, RawGuild } from "./index";
+import type { AttachmentData, BasicMessageOptions, GuildChannelResolvable, MessageFlags, RawDiscordAPIChannelData, RawDiscordAPIUserData, RawGuild } from "./index";
 
 export interface RawDiscordAPIWebhookData {
     id: Snowflake;
