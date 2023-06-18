@@ -1,11 +1,10 @@
 import { Snowflake } from "./Snowflake";
-import { Guild } from "../structures/Guild";
 import type { AttachmentData } from "./misc";
-import type { MessageComponentData, MessageFlags, MessageInteractionData } from "./interaction";
-import type { GuildMemberData, GuildScheduledEvent, RawApplication, RawDiscordAPIUserData, RawGuild, RawGuildEmoji, RawSticker, StickerFormatTypes, StickerItemData } from ".";
 import { Message } from "../structures/Message";
 import { BasicChannel } from "../structures/BasicChannel";
 import { GuildChannel } from "../structures/GuildChannel";
+import type { MessageComponentData, MessageFlags, MessageInteractionData } from "./interaction";
+import type { GuildScheduledEvent, RawApplication, RawDiscordAPIUserData, RawGuild, RawGuildEmoji, RawSticker, StickerItemData } from ".";
 
 export interface BasicChannelData {
     id: Snowflake;
