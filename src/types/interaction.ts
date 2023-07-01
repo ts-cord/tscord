@@ -1,6 +1,6 @@
 import { Snowflake } from "./Snowflake";
 import { ApplicationCommand } from "../structures/ApplicationCommand";
-import type { GuildMemberData, Locales, BasicFetchOptions, RawDiscordAPIUserData, ChannelTypes, RawGuildRole, RawDiscordAPIChannelData, RawDiscordAPIMessageData, AttachmentData, ApplicationCommandInteractionOptionData, BasicMessageOptions } from "./index";
+import type { GuildMemberData, Locales, RawDiscordAPIUserData, ChannelTypes, RawGuildRole, RawDiscordAPIChannelData, RawDiscordAPIMessageData, AttachmentData, ApplicationCommandInteractionOptionData, BasicMessageOptions } from "./index";
 
 export enum ComponentTypes {
     ActionRow = 1,
@@ -46,7 +46,7 @@ export interface UserSelectMenuData extends Omit<SelectMenuData, "options" | "ch
     type: SelectMenuTypes.UserSelect;
 }
 
-export interface MentionableSelectMenuData extends UserSelectMenuData {
+export interface MentionableSelectMenuData extends Omit<UserSelectMenuData, "type"> {
     type: SelectMenuTypes.MentionableSelect;
 }
 

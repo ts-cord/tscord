@@ -1,4 +1,5 @@
-import { ApplicationCommandTypes, AttachmentData, GuildMemberData, Locales, RawDiscordAPIUserData, RawGuildRole } from "./index";
+import { Snowflake } from "./Snowflake";
+import { ApplicationCommandTypes, AttachmentData, BasicFetchOptions, ChannelTypes, GuildMemberData, Locales, RawDiscordAPIUserData, RawGuildRole } from "./index";
 
 export type CreateApplicationCommandOptions = EditApplicationCommandOptions;
 export type EditApplicationCommandOptions = Pick<ApplicationCommandData, "name" | "name_localizations" | "description" | "description_localizations" | "options" | "default_member_permissions" | "default_permission" | "nsfw">;
@@ -21,7 +22,7 @@ export interface SlashCommandStringOption extends BasicSlashCommandOption {
     setMinLength: (length: number) => this;
     setMaxLength: (length: number) => this;
     setAutocomplete: (autocomplete: boolean) => this;
-    addChoices: (choices: { setName: (name: string) => this; setValue: (value: string | number) => this; setNameLocalizations: (locales: Locales) => this }) => this;
+    addChoices: (choices: { setName: (name: string) => typeof choices; setValue: (value: string | number) => typeof choices; setNameLocalizations: (locales: Locales) => typeof choices }) => this;
 }
 
 export interface BasicSlashCommandOption {

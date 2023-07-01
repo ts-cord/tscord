@@ -1,11 +1,11 @@
 import { Snowflake } from "./Snowflake";
-import { User } from "../managers/User";
+import { User } from "../structures/User";
 import { Role } from "../structures/Role";
 import { Guild } from "../structures/Guild";
 import { Sticker } from "../structures/Sticker";
 import { GuildMember } from "../structures/GuildMember";
 import { GuildScheduledEvent as GuildScheduledEventClass } from "../structures/GuildScheduledEvent";
-import type { Locales, RawDiscordAPIUserData, UserResolvable , RawGuildRole, DefaultMessageNotificationLevel, RawWelcomeScreenChannel, SystemChannelFlags, ApplicationCommandData, RawDiscordAPIWebhookData, RawDiscordAPIChannelData } from "../types";
+import type { Locales, RawDiscordAPIUserData, UserResolvable , RawGuildRole, DefaultMessageNotificationLevel, RawWelcomeScreenChannel, SystemChannelFlags, ApplicationCommandData, RawDiscordAPIWebhookData, RawDiscordAPIChannelData, GuildChannelData } from "../types";
 
 export interface GuildCreateOptions {
     name: string;
@@ -353,9 +353,9 @@ export interface GuildAuditLogData {
     auto_moderation_rules: Array<AutoModerationRuleData>;
     guild_scheduled_events: Array<GuildScheduledEvent>;
     integrations: Array<Partial<RawIntegrationData>>;
-    threads: Array</* TODO, channel object */>;
+    threads: Array<GuildChannelData>;
     users: Array<RawDiscordAPIUserData>;
-    webhooks: Array<RawDiscordAPIWebhookData>;9
+    webhooks: Array<RawDiscordAPIWebhookData>;
 }
 
 export interface GuildAuditLogsFetchOptions {

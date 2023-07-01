@@ -40,7 +40,7 @@ export interface ClientSweeperOptions {
     invites?: ClientSweeperConfig<(invite: Invite) => unknown>;
 }
 
-export interface ClientSweeperConfig<T extends (...args: unknown[]) => unknown> {
+export interface ClientSweeperConfig<T extends (args: any) => unknown> {
     limit?: number;
     filter?: T;
     lifetime?: number;
@@ -104,7 +104,6 @@ export enum Events {
     InteractionCreate = "interactionCreate",
     InviteCreate = "inviteCreate",
     InviteDelete = "inviteDelete",
-    MessageCreate = "messageCreate",
     MessageUpdate = "messageUpdate",
     MessageDelete = "messageDelete",
     MessageDeleteBulk = "messageDeleteBulk",
