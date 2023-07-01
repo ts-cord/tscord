@@ -8,8 +8,7 @@ import { GuildManager } from "../managers/GuildManager";
 import { ClientApplication } from "./ClientApplication";
 import { ChannelManager } from "../managers/ChannelManager";
 import { WSS as DiscordWss } from "../constants/constants.json";
-import { ClientOptions, ClientWebSocketOptions, DiscordAuth } from "../types";
-import type { ClientEvents, ClientEditOptions, RawDiscordAPIUserData } from "../types";
+import type { ClientOptions, ClientWebSocketOptions,ClientEvents, ClientEditOptions, RawDiscordAPIUserData, DiscordAuth } from "../types";
 
 export class Client extends EventEmitter {
     public user: ClientUser | undefined;
@@ -31,7 +30,7 @@ export class Client extends EventEmitter {
         this.auth = options.auth;
         this.intents = options.intents ?? 0;
         this.axiosConfig = { headers: { Authorization: this.auth } };
-        this.rest = { baseURL: options.rest?.baseURL ?? "https://discord.com/api/v10/", request_timeout: options.rest?.request_timeout ?? 15000 };
+        this.rest = { baseURL: options.rest?.baseURL ?? "https://discord.com/api/v10/", requestTimeout: options.rest?.requestTimeout ?? 15000 };
         this.options = { default_image_format: options.options?.default_image_format ?? "png", default_image_size: options.options?.default_image_size ?? 1024 };
 
         const wsProps: ClientWebSocketOptions = {
