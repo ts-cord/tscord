@@ -3,6 +3,6 @@
 node_modules/
 package-lock.json
 
-# TypeCord tests
+# Lib tests
 
-test.ts
+index.spec.ts

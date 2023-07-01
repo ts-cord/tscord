@@ -8,8 +8,8 @@ tsconfig.json
 
 # TypeCord examples
 
-examples
+examples/
 
-# Tests
+# Lib tests
 
-test.ts
+index.spec.ts
