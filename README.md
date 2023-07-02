@@ -1,4 +1,4 @@
-# TypeCord
+# TypeCord (Discontinued)
 
 This repository is a representation of the TypeCord package.
 
