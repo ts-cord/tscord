@@ -19,7 +19,7 @@ export class WebSocketStructure {
     }
 
     setup(): void {
-        if (!this.ws) throw new TypeCordError("WEBSOCKET_NOT_CONNECTED");
+        if (!this.ws) throw new TypeCordError({});
 
         this.ws.on("message", this.message);
         this.ws.on("close", this.close);
@@ -55,6 +55,8 @@ export class WebSocketStructure {
             this.identify(this.client.token, this.client.intents);
         }
 
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         if (data.op === 11) {
             this.lastHelloTimestamp = Date.now();
         }
