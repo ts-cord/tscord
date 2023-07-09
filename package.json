@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "dev": "tsx index.ts",
-    "test": "tsx test.ts",
+    "test": "tsx index.spec.ts",
     "lint:fix": "eslint . --fix"
   },
   "keywords": [
