@@ -1,9 +1,10 @@
 import WebSocket from "ws";
 import { TypeCordError } from "../utils/TypeCordError";
+import { WEBSOCKET_NOT_CONNECTED } from "../constants/errors.json";
 import type { BasicEventPayload, ClientWebSocketOptions } from "../types";
 
 export class WebSocketStructure {
-    readonly ws: WebSocket;
+    public readonly ws: WebSocket;
     private readonly props: ClientWebSocketOptions;
     private readonly client: { token: string; intents: number; } = { token: "", intents: 0 };
 
@@ -19,16 +20,16 @@ export class WebSocketStructure {
     }
 
     setup(): void {
-        if (!this.ws) throw new TypeCordError({});
+        if (!this.ws) throw new TypeCordError({ message: WEBSOCKET_NOT_CONNECTED, code: 404 });
 
-        this.ws.on("message", this.message);
-        this.ws.on("close", this.close);
+        this.ws.on("message", this.message.bind(this));
+        this.ws.on("close", this.close.bind(this));
     }
 
     private identify(token: string, intents: number): void {
         const properties: { os: string; browser: string; device: string; } = { os: "linux", browser: "typecord", device: "typecord" };
 
-        const ido: { op: number; d: { token: string; intents: number; properties: { os: string; browser: string; device: string; }; } } = {
+        const ido: { op: number; d: { token: string; intents: number; properties: { os: string; browser: string; device: string; }; }; } = {
             op: 2, d: { token, intents, properties }
         };
 
@@ -67,7 +68,7 @@ export class WebSocketStructure {
             event(data, this.props.client);
         }
     }
-    private close(_code: number, reason: string): void {
-        throw new TypeError(reason);
+    private close(code: number, message: string): void {
+        throw new TypeCordError({ message, code });
     }
 }
