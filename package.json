@@ -2,7 +2,7 @@
   "name": "typecord",
   "version": "1.0.0",
   "description": "Interact with the Discord API in an easy and powerful way",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
     "dev": "tsx index.ts",
     "test": "tsx index.spec.ts",
