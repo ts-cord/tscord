@@ -1,4 +1,4 @@
-import { Group } from "../utils/Group";
+import { Group } from "@ts-cord/group";
 import { rest } from "../constants/Api";
 import * as Routes from "../utils/Routes";
 import { Client } from "../entities/Client";

@@ -1,4 +1,4 @@
-import { Group } from "../utils/Group";
+import { Group } from "@ts-cord/group";
 import { rest } from "../constants/Api";
 import { User } from "../structures/User";
 import { Role } from "../structures/Role";
@@ -87,7 +87,7 @@ export class GuildMemberManager extends BasicManager {
 
         data.forEach((member: GuildMemberData) => membersGroup.set(member.user?.id as string, new GuildMember(member, this.guild, this.client)));
 
-        options?.cache ? this.cache.merge(membersGroup) : void 0;
+        options?.cache ? this.cache.concact(membersGroup) : void 0;
 
         return membersGroup;
     }
@@ -144,7 +144,7 @@ export class GuildMemberManager extends BasicManager {
 
         data.forEach((member: GuildMemberData) => membersGroup.set(member.user?.id as string, new GuildMember(member, this.guild, this.client)));
 
-        options.cache ? this.cache.merge(membersGroup) : void 0;
+        options.cache ? this.cache.concact(membersGroup) : void 0;
 
         return membersGroup;
     }

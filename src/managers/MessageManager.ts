@@ -1,4 +1,4 @@
-import { Group } from "../utils/Group";
+import { Group } from "@ts-cord/group";
 import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { BasicManager } from "./BasicManager";
@@ -67,7 +67,7 @@ export class MessageManager extends BasicManager {
 
         data.forEach((message: RawDiscordAPIMessageData) => groupOfMessages.set(message.id, new Message(message, this.client)));
 
-        if (cache) this.cache.merge(groupOfMessages);
+        if (cache) this.cache.concact(groupOfMessages);
 
         return groupOfMessages;
     }

@@ -1,4 +1,4 @@
-import { Group } from "../utils/Group";
+import { Group } from "@ts-cord/group";
 import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
 import { Guild } from "../structures/Guild";

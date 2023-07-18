@@ -1,4 +1,4 @@
-import { Group } from "../utils/Group";
+import { Group } from "@ts-cord/group";
 import { rest } from "../constants/Api";
 import { Role } from "../structures/Role";
 import { Guild } from "../structures/Guild";
@@ -10,7 +10,6 @@ import { Snowflake } from "../types/Snowflake";
 import type { CreateRoleOptions, EditRoleOptions, RawGuildRole, RoleResolvable } from "../types";
 
 export class RoleManager extends BasicManager {
-    public highest: Role;
     public guild: Guild;
     public everyone: Role;
     override cache: Group<Snowflake, Role> = new Group<Snowflake, Role>();
@@ -20,7 +19,6 @@ export class RoleManager extends BasicManager {
 
         this.guild = this.client.guilds.cache.get(this.cache.first().guildId as string) as Guild;
         this.everyone = this.cache.get(this.guild.id) as Role;
-        this.highest = this.cache.reduce((maxRole: Role, role: Role): Role => maxRole.position > role.position ? maxRole : role);
     }
 
     /**
