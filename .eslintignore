@@ -1,3 +1,2 @@
-# TypeCord tests
-
-test.ts
+# Lib tests
+index.spec.ts

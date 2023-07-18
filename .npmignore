@@ -1,15 +1,5 @@
-# VS Code
-
-.vscode/
-
-# TS config
-
-tsconfig.json
-
-# TypeCord examples
-
+# Lib examples
 examples/
 
 # Lib tests
-
 index.spec.ts
