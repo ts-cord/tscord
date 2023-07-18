@@ -1,8 +1,8 @@
 import { User } from "./User";
 import { Basic } from "./Basic";
 import { Guild } from "./Guild";
+import { Group } from "@ts-cord/group";
 import { rest } from "../constants/Api";
-import { Group } from "../utils/Group";
 import { CndURL } from "../utils/Routes";
 import { Client } from "../entities/Client";
 import { Snowflake } from "../types/Snowflake";

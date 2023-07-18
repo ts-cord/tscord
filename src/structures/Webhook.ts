@@ -1,12 +1,12 @@
 import { User } from "./User";
 import { Basic } from "./Basic";
+import { Message } from "./Message";
 import { rest } from "../constants/Api";
 import { Client } from "../entities/Client";
-import { RawDiscordAPIMessageData, WebhookTypes } from "../types/index";
 import { Snowflake } from "../types/Snowflake";
 import { WebhookPlatform } from "../utils/Routes";
+import { RawDiscordAPIMessageData, WebhookTypes } from "../types/index";
 import type { MessageResolvable, RawDiscordAPIChannelData, RawGuild, RawDiscordAPIWebhookData, WebhookEditOptions, WebhookMessageEditOptions, WebhookMessageSlackCreateOptions, DiscordAuth } from "../types/index";
-import { Message } from "./Message";
 
 export class Webhook extends Basic {
     public id: Snowflake;

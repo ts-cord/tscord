@@ -4,7 +4,7 @@ import { Locales } from "../types";
 import { Message } from "./Message";
 import { Webhook } from "./Webhook";
 import { rest } from "../constants/Api";
-import { Group } from "../utils/Group";
+import { Group } from "@ts-cord/group";
 import { BasicGuild } from "./BasicGuild";
 import { Client } from "../entities/Client";
 import { Integration } from "./Integration";
@@ -13,6 +13,7 @@ import { GuildPreview } from "./GuildPreview";
 import { Snowflake } from "../types/Snowflake";
 import { GuildTemplate } from "./GuildTemplate";
 import { WelcomeScreen } from "./WelcomeScreen";
+import { ChannelManager } from "../managers/ChannelManager";
 import { GuildTemplates as GuildTemplatesRoute, Guild as GuildRoute, OauthGuild, GuildPreview as GuildPreviewRoute, GuildWidget, GuildWidgetJSON, GuildWelcomeScreen, User as UserRoute, GuildVanityURL, GuildIntegrations, GuildWebhooks, GuildOnboarding } from "../utils/Routes";
 import type { DiscordAuth, ExplicitContentFilterLevels, GuildEditOptions, GuildFeatures, GuildMemberResolvable, GuildNSFWLevels, GuildOnboardingData, GuildPremiumTier, GuildTemplateData, GuildVanityData, GuildVerificationLevels, GuildWelcomeScreenData, GuildWidgetData, GuildWidgetSettingsData, RawDiscordAPIUserData, RawDiscordAPIWebhookData, RawGuild, RawGuildEmoji, RawGuildPreview, RawGuildRole, RawIntegrationData, RawSticker, SystemChannelFlags } from "../types";
 
@@ -63,6 +64,8 @@ export class Guild extends BasicGuild {
     public premiumProgressBarEnabled: boolean;
     public creationTimestamp: number;
     public creationDate: Date;
+    public client: Client;
+    public channels: ChannelManager = new ChannelManager(this.client);
     private readonly superAxiosConfig: { headers: { Authorization: DiscordAuth; } };
 
     /**
@@ -76,6 +79,7 @@ export class Guild extends BasicGuild {
         super(data, client);
 
         this.id = super.id;
+        this.client = client;
         this.name = super.name;
         this.features = super.features;
         this.icon = super.icon;
