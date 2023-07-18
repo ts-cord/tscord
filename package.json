@@ -25,6 +25,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "@ts-cord/group": "^0.0.1",
     "ws": "^8.13.0"
   }
 }
